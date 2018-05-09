@@ -33,10 +33,6 @@
             android:name=".MensajesIPMActivity"
             android:label="@string/title_activity_mensajes_ipm"
             android:theme="@style/PueblaTheme" />
-        <activity
-            android:name=".Main2Activity"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/PueblaTheme" />
         <activity android:name=".RegistroUsuarioActivity" />
         <activity android:name=".AjustesActivity" />
         <activity

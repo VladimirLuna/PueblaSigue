@@ -1,8 +1,10 @@
 package com.vlim.puebla;
 
+import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,5 +35,14 @@ public class LoginActivity extends AppCompatActivity {
         et_usuario.setTypeface(tf);
         et_password.setTypeface(tf);
         btn_login.setTypeface(tf);
+
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(loginIntent);
+                finish();
+            }
+        });
     }
 }

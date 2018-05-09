@@ -1,9 +1,233 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_bienvenida"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/white">
 
-</android.support.constraint.ConstraintLayout>
+    <include
+        android:id="@+id/toolbar_main"
+        layout="@layout/appbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <View android:id="@+id/separator"
+        android:background="@color/separator"
+        android:layout_width = "fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@+id/toolbar_main"
+        android:layout_centerVertical ="true"/>
+
+    <ImageView
+        android:id="@+id/btn_nueveonce"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/separator"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/cuadro_blanco"
+        android:padding="5dp"
+        android:src="@drawable/p911"
+        app:layout_heightPercent="25%"
+        app:layout_widthPercent="50%"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp"
+        app:srcCompat="@drawable/p911" />
+
+    <ImageView
+        android:id="@+id/btn_denunciaanonima"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/separator"
+        android:layout_toEndOf="@+id/btn_llamar"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/cuadro_blanco"
+        android:padding="5dp"
+        android:src="@drawable/p089"
+        app:layout_heightPercent="25%"
+        app:layout_widthPercent="50%"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp"
+        app:srcCompat="@drawable/p089" />
+
+    <ImageView
+        android:id="@+id/btn_llamar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/cuadro_blanco"
+        android:padding="25dp"
+        android:src="@drawable/telmujerg"
+        app:layout_heightPercent="25%"
+        app:layout_widthPercent="50%"
+        android:layout_below="@+id/btn_nueveonce"
+        android:layout_alignStart="@+id/btn_nueveonce" />
+
+    <ImageView
+        android:id="@+id/btn_panico"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignTop="@+id/btn_llamar"
+        android:layout_toEndOf="@+id/btn_llamar"
+        android:layout_below="@+id/btn_denunciaanonima"
+        android:background="@drawable/cuadro_blanco"
+        android:paddingBottom="50dp"
+        android:paddingEnd="25dp"
+        android:paddingStart="25dp"
+        android:paddingTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/btng"
+        app:layout_heightPercent="25%"
+        app:layout_widthPercent="50%"
+        app:srcCompat="@drawable/btng" />
+
+    <ImageView
+        android:id="@+id/btn_sigueme"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignStart="@+id/btn_llamar"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/cuadro_naranja"
+        android:paddingBottom="15dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:layout_below="@+id/btn_llamar"
+        android:paddingTop="10dp"
+        android:src="@drawable/siguemem"
+        app:layout_heightPercent="12%"
+        app:layout_widthPercent="100%"
+        app:srcCompat="@drawable/siguemem" />
+
+    <ImageView
+        android:id="@+id/btn_chatvecinal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/cuadro_naranja"
+        android:layout_below="@+id/btn_sigueme"
+        android:paddingBottom="50dp"
+        android:paddingEnd="25dp"
+        android:paddingStart="25dp"
+        android:paddingTop="10dp"
+        android:src="@drawable/chatg"
+        app:layout_heightPercent="12%"
+        app:layout_widthPercent="100%"
+        app:srcCompat="@drawable/chatg" />
+
+    <ImageView
+        android:id="@+id/btn_mensajesipm"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/cuadro_naranja"
+        android:layout_below="@+id/btn_chatvecinal"
+        android:paddingBottom="50dp"
+        android:paddingEnd="25dp"
+        android:paddingStart="25dp"
+        android:paddingTop="10dp"
+        android:src="@drawable/msmg"
+        app:layout_heightPercent="12%"
+        app:layout_widthPercent="100%"
+        app:srcCompat="@drawable/msmg" />
+
+
+
+
+
+    <TextView
+        android:id="@+id/tv_sigueme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btn_sigueme"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/btn_llamar"
+        android:text="Spigueme y cuídame"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btn_chatvecinal"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@+id/tv_vecinal"
+        android:text="CHAT"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_vecinal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VECINAL"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        android:layout_alignBaseline="@+id/tv_chat"
+        android:layout_alignBottom="@+id/tv_chat"
+        android:layout_toEndOf="@+id/btn_llamar" />
+
+    <TextView
+        android:id="@+id/tv_botonmujer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_botonpanico"
+        android:layout_alignBottom="@+id/tv_botonpanico"
+        android:layout_alignEnd="@+id/btn_mujer"
+        android:layout_alignStart="@+id/btn_mujer"
+        android:text="MUJERES LIBRES\nDE VIOLENCIA"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_botonpanico"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_presionado"
+        android:layout_alignEnd="@+id/btn_panico"
+        android:layout_alignStart="@+id/btn_panico"
+        android:text="BOTÓN DE PÁNICO"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_presionado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btn_panico"
+        android:layout_alignEnd="@+id/tv_botonpanico"
+        android:layout_alignStart="@+id/tv_botonpanico"
+        android:layout_marginBottom="14dp"
+        android:text="(Mantener presionado 3 segundos)"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="8sp" />
+
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btn_avisos"
+        android:layout_alignStart="@+id/btn_avisos"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="5dp"
+        android:text="v2.5"
+        android:textColor="@android:color/white"
+        android:textSize="8sp" />
+
+
+</android.support.percent.PercentRelativeLayout>
