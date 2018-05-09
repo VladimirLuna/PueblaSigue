@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.vlim.puebla">
+
+    <application
+        android:allowBackup="true"
+        android:hardwareAccelerated="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/PueblaTheme">
+        <activity
+            android:name=".SplashActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".NueveOnceActivity" />
+        <activity android:name=".DenunciaAnonimaActivity" />
+        <activity android:name=".BotonPanicoActivity" />
+        <activity android:name=".SiguemeActivity" />
+        <activity android:name=".ChatVecinalActivity" />
+        <activity
+            android:name=".MensajesIPMActivity"
+            android:label="@string/title_activity_mensajes_ipm"
+            android:theme="@style/PueblaTheme" />
+        <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/PueblaTheme" />
+        <activity android:name=".RegistroUsuarioActivity" />
+        <activity android:name=".AjustesActivity" />
+        <activity
+            android:name=".AjustesInfoActivity"
+            android:label="@string/title_activity_ajustes_info"
+            android:theme="@style/PueblaTheme" />
+        <activity android:name=".AjustesChatActivity"></activity>
+    </application>
+
+</manifest>

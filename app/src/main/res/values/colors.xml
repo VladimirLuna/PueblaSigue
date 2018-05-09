@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#ea7e01</color>
+    <color name="white">#3c3f41</color>
+    <color name="naranjaToolbar">#ea7e01</color>
+    <color name="grayIconTint">#aaaaaa</color>
+</resources>
