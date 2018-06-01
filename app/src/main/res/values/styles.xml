@@ -33,5 +33,15 @@
 
     <style name="PueblaTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!--style name="mySpinnerItemStyle" parent="Base.Widget.AppCompat.Spinner">
+        <item name="android:textColor">@android:color/white</item>
+    </style -->
+
+    <style name="App_SpinnerStyle" parent="@android:style/Widget.Spinner">
+        <item name="android:background">@drawable/spinner_style</item>
+        <item name="android:textColor">@color/grayIconTint</item>
+        <item name="android:padding">5dip</item>
+        <item name="android:gravity">right</item>
+    </style>
 
 </resources>

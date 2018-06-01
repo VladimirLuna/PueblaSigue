@@ -1,9 +1,183 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_bienvenida"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NueveOnceActivity">
+    android:background="@color/white">
 
-</android.support.constraint.ConstraintLayout>
+    <include
+        android:id="@+id/toolbar_nueve_once"
+        layout="@layout/appbar_nueve_once"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="71dp"
+        android:text="Escriba los datos del reporte"
+        android:textColor="@color/grayIconTint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_nueve_once" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/btn_camara"
+        android:layout_marginTop="127dp"
+        android:text="Título del reporte"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/textView"
+        android:layout_marginTop="204dp"
+        android:text="Descripción"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <Spinner
+        android:id="@+id/spinner_aquiennotifica"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="255dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:elevation="2dp"
+        style="@style/App_SpinnerStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+
+    <ImageView
+        android:id="@+id/btn_camara"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/editText"
+        android:layout_marginBottom="135dp"
+        android:background="@drawable/circulo_naranja"
+        android:padding="25dp"
+        android:src="@drawable/foto"
+        app:layout_heightPercent="19%"
+        app:layout_widthPercent="30%"
+        app:srcCompat="@drawable/foto" />
+
+    <ImageView
+        android:id="@+id/btn_galeria"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignTop="@+id/btn_camara"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/circulo_naranja"
+        android:padding="24dp"
+        android:src="@drawable/video"
+        app:layout_heightPercent="19%"
+        app:layout_widthPercent="30%"
+        app:srcCompat="@drawable/video" />
+
+    <ImageView
+        android:id="@+id/btn_video"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignTop="@+id/btn_galeria"
+        android:layout_marginBottom="61dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/btn_galeria"
+        android:background="@drawable/circulo_naranja"
+        android:padding="25dp"
+        android:src="@drawable/audio"
+        app:layout_heightPercent="19%"
+        app:layout_widthPercent="30%"
+        app:srcCompat="@drawable/audio" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/cuadro_boton"
+        android:text="Enviar"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_camara"
+        android:layout_marginTop="-135dp"
+        android:layout_toStartOf="@+id/textView5"
+        android:text="Fotografía"
+        android:textColor="@color/naranjaToolbar" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView6"
+        android:layout_centerHorizontal="true"
+        android:text="Video"
+        android:textColor="@color/naranjaToolbar" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/textView6"
+        android:layout_marginEnd="45dp"
+        android:text="Micrófono"
+        android:textColor="@color/naranjaToolbar" />
+
+</android.support.percent.PercentRelativeLayout>

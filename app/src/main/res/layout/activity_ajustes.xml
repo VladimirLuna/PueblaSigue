@@ -1,9 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_bienvenida"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AjustesActivity">
+    android:background="@color/white">
 
-</android.support.constraint.ConstraintLayout>
+    <include
+        android:id="@+id/toolbar_ajustes"
+        layout="@layout/appbar_ajustes"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="71dp"
+        android:text="Selecciona la opción que deseas editar"
+        android:textColor="@color/grayIconTint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_nueve_once" />
+
+    <ImageView
+        android:id="@+id/btn_camara"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="178dp"
+        android:src="@drawable/info"
+        app:layout_heightPercent="25%"
+        app:layout_widthPercent="40%"
+        app:srcCompat="@drawable/info" />
+
+    <ImageView
+        android:id="@+id/btn_galeria"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/btn_camara"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/infopersonal"
+        app:layout_heightPercent="25%"
+        app:layout_widthPercent="40%"
+        app:srcCompat="@drawable/infopersonal" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView7"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="60dp"
+        android:text="Información"
+        android:textColor="@color/naranjaToolbar"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/btn_galeria"
+        android:layout_marginEnd="87dp"
+        android:text="Chat"
+        android:textColor="@color/naranjaToolbar"
+        android:textSize="20sp" />
+
+</android.support.percent.PercentRelativeLayout>
