@@ -4,7 +4,8 @@ public class Config {
 
     // http://54.183.159.116:8182/Escudo_Puebla/servicios/estatus
 
-    private static final String HOST = "http://187.217.215.234:8080/";   /* Puebla */
+    //private static final String HOST = "http://187.217.215.234:8080/";   /* Puebla */
+    private static final String HOST = "http://54.183.159.116:8182/";   /* VLIM */
 
     // En Puebla
     public static final String LOGIN_URL = HOST + "Escudo_Puebla/servicios/validaUsuario";

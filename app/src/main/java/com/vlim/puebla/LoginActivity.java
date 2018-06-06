@@ -89,9 +89,17 @@ public class LoginActivity extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(loginIntent);
-                finish();
+                usr = et_usuario.getText().toString().trim();
+                pass = et_password.getText().toString().trim();
+                if(usr.equalsIgnoreCase("")){
+                    et_usuario.setError("Ingresa tu nombre de usuario");
+                }
+                else if(pass.equalsIgnoreCase("")){
+                    et_password.setError("Ingresa tu contraseña");
+                }
+                else{
+                    preparaLogin(usr, pass);
+                }
             }
         });
     }

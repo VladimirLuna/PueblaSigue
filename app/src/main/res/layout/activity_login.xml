@@ -51,9 +51,9 @@
                 android:layout_marginTop="1dp"
                 android:elevation="1dp"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="textEmailAddress"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="@color/textogris"
                 android:textSize="20sp" />
 
             <TextView
@@ -79,7 +79,7 @@
                 android:ems="10"
                 android:inputType="textPersonName|textPassword"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="@color/textogris"
                 android:textSize="22sp" />
 
             <!-- android.support.design.widget.TextInputLayout

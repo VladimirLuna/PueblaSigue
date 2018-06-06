@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:focusable="true">
+
+    <ImageView
+        android:layout_width="60dp"
+        android:scaleType="fitXY"
+        android:layout_height="40dp"
+        android:id="@+id/ivFish"/>
+
+    <TextView
+        android:id="@+id/textNick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toLeftOf="@+id/textPrice"
+        android:layout_toRightOf="@id/ivFish"
+        android:text="Usuario"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="."
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/colorAccent" />
+
+    <TextView
+        android:id="@+id/textComentario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textNick"
+        android:layout_marginLeft="5dp"
+        android:layout_toEndOf="@id/ivFish"
+        android:layout_toRightOf="@id/ivFish"
+        android:text="Comentario"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#666" />
+
+    <TextView
+        android:id="@+id/textFecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textComentario"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/ivFish"
+        android:text="fecha"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#666" />
+
+</RelativeLayout>

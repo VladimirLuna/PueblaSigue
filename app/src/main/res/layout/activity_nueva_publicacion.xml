@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_nuevapublicacion"
+        layout="@layout/appbar_nuevapublicacion"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".NuevaPublicacionActivity"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
+
+            <TextView
+                android:id="@+id/tv_nuevapub1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="24dp"
+                android:text="ESCRIBA LOS DATOS DE SU PUBLICACIÓN" />
+
+            <TextView
+                android:id="@+id/tv_nuevousr1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/tv_nuevapub1"
+                android:layout_below="@+id/tv_nuevapub1"
+                android:layout_marginTop="43dp"
+                android:text="* Título de la publicación" />
+
+            <TextView
+                android:id="@+id/tv_nuevousr2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/et_nombreusr"
+                android:layout_below="@+id/et_nombreusr"
+                android:layout_marginTop="29dp"
+                android:text="* Descripción" />
+
+            <EditText
+                android:id="@+id/et_nombreusr"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/tv_nuevapub1"
+                android:layout_alignStart="@+id/tv_nuevousr1"
+                android:layout_below="@+id/tv_nuevousr1"
+                android:layout_marginTop="12dp"
+                android:ems="10"
+                android:hint="Título..."
+                android:inputType="text|textCapSentences" />
+
+            <EditText
+                android:id="@+id/et_domicilio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/et_nombreusr"
+                android:layout_alignStart="@+id/tv_nuevousr2"
+                android:layout_below="@+id/tv_nuevousr2"
+                android:layout_marginTop="12dp"
+                android:ems="10"
+                android:inputType="text|textCapSentences|textMultiLine" />
+
+            <TextView
+                android:id="@+id/tv_nuevousr5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/btn_enviar911"
+                android:layout_below="@+id/et_domicilio"
+                android:layout_marginTop="24dp"
+                android:text="Seleccione el tipo de archivo que desea adjuntar"
+                android:textSize="10sp"
+                android:textStyle="italic" />
+
+            <ImageView
+                android:id="@+id/btn_camara"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignStart="@+id/et_domicilio"
+                android:layout_below="@+id/tv_nuevousr5"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/boton_naranja_circular"
+                android:padding="12dp"
+                app:srcCompat="@drawable/foto" />
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/imageCameraPreview"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignStart="@+id/et_domicilio"
+                android:layout_below="@+id/tv_nuevousr5"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/boton_naranja_circular"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="0dp" />
+
+            <ImageView
+                android:id="@+id/btn_video"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignTop="@+id/btn_camara"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/boton_naranja_circular"
+                android:padding="15dp"
+                app:srcCompat="@drawable/video" />
+
+            <ImageView
+                android:id="@+id/btn_galeria"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignEnd="@+id/tv_nuevapub1"
+                android:layout_alignTop="@+id/btn_video"
+                android:background="@drawable/boton_naranja_circular"
+                android:padding="15dp"
+                app:srcCompat="@drawable/galeria" />
+
+            <TextView
+                android:id="@+id/btn_enviar911"
+                android:layout_width="200dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/txtPercentage"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/roundedbutton"
+                android:gravity="center"
+                android:text="ENVIAR"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <!-- ImageView
+                android:id="@+id/Galeriaprev"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignStart="@+id/btn_galeria"
+                android:layout_alignTop="@+id/btn_galeria"
+                app:srcCompat="@drawable/boton_gris_circular" / -->
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/Galeriaprev"
+                android:layout_alignStart="@+id/btn_galeria"
+                android:layout_alignTop="@+id/btn_galeria"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/boton_naranja_circular"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="0dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:layout_below="@+id/tv_nuevousr5"
+                android:layout_marginBottom="35dp" />
+
+            <VideoView
+                android:id="@+id/videoPreview"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignStart="@+id/btn_video"
+                android:layout_alignTop="@+id/btn_video"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/txtPercentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_video"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/colorAccent"
+                android:textSize="18dp" />
+
+            <ImageView
+                android:id="@+id/Videoprev2"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignStart="@+id/btn_video"
+                android:layout_alignTop="@+id/btn_video"
+                app:srcCompat="@drawable/boton_naranja_circular" />
+
+            <TextView
+                android:id="@+id/tv_videocapturado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/btn_video"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="19dp"
+                android:gravity="center_horizontal"
+                android:text="Video \nCapturado"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_videocapturadogal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tv_videocapturado"
+                android:layout_alignBottom="@+id/tv_videocapturado"
+                android:layout_alignStart="@+id/btn_galeria"
+                android:layout_marginStart="6dp"
+                android:gravity="center_horizontal"
+                android:text="Video \nSeleccionado"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>

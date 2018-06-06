@@ -1,9 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ChatVecinalActivity">
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_refresh_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="1dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
+        android:weightSum="1"
+        tools:context=".ChatVecinalActivity">
+
+        <include
+            android:id="@+id/toolbar_chat"
+            layout="@layout/appbar_chat"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.81" />
+
+        <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:paddingTop="8dp">
+
+            <LinearLayout
+                android:id="@+id/bloque1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="0dp"
+                app:layout_heightPercent="10%"
+                app:layout_widthPercent="20%">
+
+                <ImageView
+                    android:id="@+id/img_msjprivado"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
+                    android:src="@drawable/chatedit" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bloque2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/bloque1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="5dp"
+                app:layout_heightPercent="10%"
+                app:layout_widthPercent="60%">
+
+                <!-- TextView
+                    android:id="@+id/btn_enviarreporte"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/roundedbutton"
+                    android:gravity="center"
+                    android:padding="7dp"
+                    android:text="NUEVA PUBLICACIÓN"
+                    android:textColor="#fff"
+                    android:textSize="15sp" / -->
+                <Button
+                    android:id="@+id/btn_enviarreporte"
+                    android:layout_width="200dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/roundedbutton"
+                    android:text="NUEVA PUBLICACIÓN"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bloque3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/bloque2"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="0dp"
+                app:layout_heightPercent="10%"
+                app:layout_widthPercent="20%">
+
+                <ImageView
+                    android:id="@+id/img_settings"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
+                    android:src="@drawable/enviar" />
+            </LinearLayout>
+
+
+        </android.support.percent.PercentRelativeLayout>
+
+
+    </LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
