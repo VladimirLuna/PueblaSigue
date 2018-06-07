@@ -11,6 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
+    <View android:id="@+id/separator"
+        android:background="@color/separator"
+        android:layout_width = "fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@+id/toolbar_ajustes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_centerVertical ="true"/>
+
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"

@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_GPS = 24;
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
+    Integer MY_LOCATION_REQUEST_CODE = 23;
 
     private long timeElapsed = 0L;
     private Toolbar toolbar;
@@ -160,16 +161,29 @@ public class MainActivity extends AppCompatActivity {
         btn_nueveonce.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent nueveOnceIntent = new Intent(MainActivity.this, Maps911Activity.class);
-                startActivity(nueveOnceIntent);
-
+                nt_check = new NetworkConnection(getApplicationContext());
+                if(nt_check.isOnline()){
+                    Intent nueveOnceIntent = new Intent(MainActivity.this, Maps911Activity.class);
+                    nueveOnceIntent.putExtra("idusuario", idusuario);
+                    startActivity(nueveOnceIntent);
+                }else{
+                    Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
         btn_denunciaanonima.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // Comprueba conexion a Internet
+                nt_check = new NetworkConnection(getApplicationContext());
+                if(nt_check.isOnline()){
+                    Intent secretarioIntent = new Intent(MainActivity.this, DenunciaAnonimaActivity.class);
+                    secretarioIntent.putExtra("idusuario", idusuario);
+                    startActivity(secretarioIntent);
+                }else{
+                    Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -197,10 +211,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_botonpanico.setOnClickListener(new View.OnClickListener() {
+        btn_botonpanico.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
+                // Comprueba conexion a Internet
+                nt_check = new NetworkConnection(getApplicationContext());
+                if(nt_check.isOnline()){
+                    // Mantener presionado por 3 segundos
+                    if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                            PackageManager.PERMISSION_GRANTED &&
+                            ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                                    PackageManager.PERMISSION_GRANTED) {
+                        Intent btnpanico = new Intent(MainActivity.this, BotonPanicoActivity.class);
+                        btnpanico.putExtra("idusuario", idusuario);
+                        ///////startActivity(btnpanico);
 
+                    } else {
+                        //Toast.makeText(getApplicationContext(), "Error en permiso mapa", Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "Error en permisos ubicacion");
+
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {
+                                        Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION },
+                                MY_LOCATION_REQUEST_CODE);
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
+                }
+                return false;
             }
         });
 

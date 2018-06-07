@@ -17,6 +17,11 @@
         android:weightSum="1"
         tools:context=".ChatVecinalActivity">
 
+        <View android:id="@+id/separator"
+            android:background="@color/separator"
+            android:layout_width = "fill_parent"
+            android:layout_height="1dip"/>
+
         <include
             android:id="@+id/toolbar_chat"
             layout="@layout/appbar_chat"

@@ -1,9 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DenunciaAnonimaActivity">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+    <include
+        android:id="@+id/toolbar_anonima"
+        layout="@layout/appbar_anonima"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
 
-</android.support.constraint.ConstraintLayout>
+    <View android:id="@+id/separator"
+        android:background="@color/separator"
+        android:layout_width = "fill_parent"
+        android:layout_height="1dip"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".DenunciaAnonimaActivity">
+
+            <TextView
+                android:id="@+id/tv_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="ESCRIBA LOS DATOS DE SU DENUNCIA"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_titulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/tv_1"
+                android:layout_below="@+id/tv_1"
+                android:layout_marginTop="33dp"
+                android:text="*Descripción lugar"
+                android:textColor="@android:color/background_dark"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="92dp" />
+
+            <EditText
+                android:id="@+id/et_descripcion_lugar"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/tv_1"
+                android:layout_alignLeft="@+id/tv_titulo"
+                android:layout_alignStart="@+id/tv_titulo"
+                android:layout_below="@+id/tv_titulo"
+                android:layout_marginTop="7dp"
+                android:ems="10"
+                android:inputType="text|textCapSentences|textShortMessage" />
+
+            <TextView
+                android:id="@+id/tv_descripcionaviso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/et_descripcion_lugar"
+                android:layout_alignStart="@+id/et_descripcion_lugar"
+                android:layout_below="@+id/et_descripcion_lugar"
+                android:layout_marginTop="9dp"
+                android:text="*Descripción denuncia"
+                android:textColor="@android:color/background_dark"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="92dp" />
+
+            <EditText
+                android:id="@+id/et_descripcion_reporte"
+                android:layout_width="344dp"
+                android:layout_height="100dp"
+                android:layout_alignEnd="@+id/et_descripcion_lugar"
+                android:layout_alignStart="@+id/tv_descripcionaviso"
+                android:layout_below="@+id/tv_descripcionaviso"
+                android:ems="10"
+                android:inputType="text|textCapSentences|textMultiLine|textLongMessage"
+                android:lines="3"
+                android:maxLines="3"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="109dp" />
+
+
+            <TextView
+                android:id="@+id/tv_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_descripcion_reporte"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="11dp"
+                android:text="Seleccione el tipo de archivo que desee adjuntar"
+                android:textSize="10sp"
+                android:textStyle="italic" />
+
+
+            <ImageView
+                android:id="@+id/btn_camara"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignStart="@+id/et_descripcion_reporte"
+                android:layout_below="@+id/progressBarAnonima"
+                android:background="@drawable/boton_naranja_circular"
+                android:padding="12dp"
+                android:src="@drawable/foto" />
+
+            <ImageView
+                android:id="@+id/btn_video"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignStart="@+id/imgvideoPrev"
+                android:layout_below="@+id/progressBarAnonima"
+                android:background="@drawable/boton_naranja_circular"
+                android:padding="15dp"
+                app:srcCompat="@drawable/video" />
+
+            <Button
+                android:id="@+id/btn_enviardenuncia"
+                android:layout_width="200dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/btn_camara"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="35dp"
+                android:background="@drawable/roundedbutton"
+                android:text="ENVIAR"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                app:srcCompat="@drawable/enviar" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/Imageprev"
+                android:layout_alignBottom="@+id/btn_camara"
+                android:layout_alignStart="@+id/btn_camara"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/boton_naranja_circular"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="0dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <VideoView
+                android:id="@+id/videoPreview"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignStart="@+id/btn_video"
+                android:layout_alignTop="@+id/btn_video"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/progressBarAnonima"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:layout_below="@+id/tv_2"
+                android:layout_centerHorizontal="true"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/txtPercentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_camara"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:text=""
+                android:textColor="@color/colorAccent"
+                android:textSize="18dp" />
+
+            <ImageView
+                android:id="@+id/imgvideoPrev"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_below="@+id/progressBarAnonima"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/boton_naranja_circular" />
+
+            <TextView
+                android:id="@+id/tv_videocapturado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/progressBarAnonima"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="19dp"
+                android:gravity="center_horizontal"
+                android:text="Video \nCapturado"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/btn_galeria"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignEnd="@+id/et_descripcion_reporte"
+                android:layout_below="@+id/progressBarAnonima"
+                android:background="@drawable/boton_naranja_circular"
+                android:padding="15dp"
+                app:srcCompat="@drawable/galeria" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/Galeriaprev"
+                android:layout_alignStart="@+id/btn_galeria"
+                android:layout_alignTop="@+id/btn_galeria"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/boton_naranja_circular"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="0dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_videocapturadogal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tv_videocapturado"
+                android:layout_alignBottom="@+id/tv_videocapturado"
+                android:layout_alignStart="@+id/btn_galeria"
+                android:layout_marginStart="6dp"
+                android:gravity="center_horizontal"
+                android:text="Video \nSeleccionado"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>
