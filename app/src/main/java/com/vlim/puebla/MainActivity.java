@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView btn_cerrar_sesion, btn_ajustes, btn_nueveonce, btn_denunciaanonima, btn_telmujer, btn_botonpanico;
     Button btn_sigueme, btn_chat, btn_mensajesipm;
-    TextView tv_version, tv_sigueme, tv_chat, tv_mensajes, tv_botonmujer, tv_botonpanico, tv_servicios;
+    TextView tv_version, tv_sigueme, tv_chat, tv_chat2, tv_mensajes, tv_botonmujer, tv_botonpanico, tv_servicios;
     String TAG = "PUEBLA";
     // Toolbar
     TextView tv_titulo_toolbar;
@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         tv_sigueme.setTypeface(tf);
         tv_chat = findViewById(R.id.tv_chat);
         tv_chat.setTypeface(tf);
+        tv_chat2 = findViewById(R.id.tv_chat2);
+        tv_chat2.setTypeface(tf);
         tv_mensajes = findViewById(R.id.tv_mensajes);
         tv_mensajes.setTypeface(tf);
         tv_botonmujer = findViewById(R.id.tv_botonmujer);

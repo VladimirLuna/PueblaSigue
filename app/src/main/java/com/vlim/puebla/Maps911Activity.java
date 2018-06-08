@@ -39,7 +39,7 @@ public class Maps911Activity extends FragmentActivity implements OnMapReadyCallb
     private GoogleMap mMap;
     LatLng myPosition;
     FloatingActionButton imageButton;
-    ConstraintLayout menu_map;
+    ConstraintLayout menu_map, mensaje_map;
     boolean isUp;
     View myView;
     double latitude, longitude;
@@ -48,7 +48,7 @@ public class Maps911Activity extends FragmentActivity implements OnMapReadyCallb
     Location location;
     Double latEnvia = 0.0, lngEnvia = 0.0;
     // Toolbar
-    TextView tv_titulo_toolbar, tv_emergenciareportar;
+    TextView tv_titulo_toolbar, tv_emergencia_a_reportar, tv_medica, tv_bomberos, tv_policia, tv_mensaje_click_mapa;
     ImageView btn_back;
     String idusuario;
     String TAG = "PUEBLA";
@@ -80,7 +80,19 @@ public class Maps911Activity extends FragmentActivity implements OnMapReadyCallb
         tv_titulo_toolbar.setTypeface(tf);
         btn_back = (ImageView) findViewById(R.id.btn_back);
 
+        tv_mensaje_click_mapa = findViewById(R.id.tv_mensaje_click_mapa);
+        tv_mensaje_click_mapa.setTypeface(tf);
+        tv_emergencia_a_reportar = findViewById(R.id.tv_emergencia_a_reportar);
+        tv_emergencia_a_reportar.setTypeface(tf);
+        tv_medica = findViewById(R.id.tv_medica);
+        tv_medica.setTypeface(tf);
+        tv_bomberos = findViewById(R.id.tv_bomberos);
+        tv_bomberos.setTypeface(tf);
+        tv_policia = findViewById(R.id.tv_policia);
+        tv_policia.setTypeface(tf);
+
         menu_map = findViewById(R.id.menu_map);
+        mensaje_map = findViewById(R.id.mensaje_map);
 
         /*imageButton = findViewById(R.id.imageButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
@@ -193,11 +205,14 @@ public class Maps911Activity extends FragmentActivity implements OnMapReadyCallb
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-
                 if (isUp) {
                     slideDown(menu_map);
+                    //mensaje_map.setVisibility(View.VISIBLE);
+                    slideUp(mensaje_map);
                 } else {
                     slideUp(menu_map);
+                    //mensaje_map.setVisibility(View.INVISIBLE);
+                    slideDown(mensaje_map);
                 }
                 isUp = !isUp;
 
