@@ -104,7 +104,7 @@
         app:srcCompat="@drawable/foto" />
 
     <ImageView
-        android:id="@+id/btn_galeria"
+        android:id="@+id/btn_video"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_alignTop="@+id/btn_camara"
@@ -117,14 +117,14 @@
         app:srcCompat="@drawable/video" />
 
     <ImageView
-        android:id="@+id/btn_video"
+        android:id="@+id/btn_audio"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_alignTop="@+id/btn_galeria"
+        android:layout_alignTop="@+id/btn_video"
         android:layout_marginBottom="61dp"
         android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
-        android:layout_toEndOf="@+id/btn_galeria"
+        android:layout_toEndOf="@+id/btn_video"
         android:background="@drawable/circulo_naranja"
         android:padding="25dp"
         android:src="@drawable/audio"

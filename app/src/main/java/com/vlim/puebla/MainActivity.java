@@ -193,23 +193,40 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Llamando...");
-                Intent btnllamarTelMujer = new Intent(Intent.ACTION_CALL);
-                btnllamarTelMujer.setData(Uri.parse("tel:018006242330"));
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "checando permisos...");
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.CALL_PHONE},
-                            MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                startActivity(btnllamarTelMujer);
+                // dialog preguntar imagen o video
+                final CharSequence[] options = {"Lamar", "Cancelar"};
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Tel Mujer");
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        if (options[item].equals("01 800 624 2330")) {
+                            Intent btnllamarTelMujer = new Intent(Intent.ACTION_CALL);
+                            btnllamarTelMujer.setData(Uri.parse("tel:018006242330"));
+                            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                Log.i(TAG, "checando permisos...");
+                                ActivityCompat.requestPermissions(MainActivity.this,
+                                        new String[]{Manifest.permission.CALL_PHONE},
+                                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                                // TODO: Consider calling
+                                //    ActivityCompat#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for ActivityCompat#requestPermissions for more details.
+                                return;
+                            }
+                            startActivity(btnllamarTelMujer);
+                        } else if (options[item].equals("Cancelar")) {
+                            dialog.dismiss();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+
+
             }
         });
 

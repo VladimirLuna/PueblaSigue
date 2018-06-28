@@ -47,7 +47,7 @@
         app:srcCompat="@drawable/info" />
 
     <ImageView
-        android:id="@+id/btn_galeria"
+        android:id="@+id/btn_video"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_alignParentEnd="true"
@@ -74,7 +74,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/btn_galeria"
+        android:layout_below="@+id/btn_video"
         android:layout_marginEnd="87dp"
         android:text="Chat"
         android:textColor="@color/naranjaToolbar"

@@ -17,7 +17,7 @@ public class Config {
     public static final String AGREGA_COMENTARIOS_URL = HOST + "Escudo_Puebla/servicios/agregarComentario";
     public static final String BOTON_PANICO_URL = HOST + "Escudo_Puebla/servicios/botonPanico";
     // 911
-    public static final String SUBMOTIVOS_URL = HOST + "Escudo_Puebla/servicios/getSubmotivos";
+    public static final String GET_SUBMOTIVOS_URL = HOST + "Escudo_Puebla/servicios/getSubmotivos";
     public static final String NUEVEONCE_URL = HOST + "Escudo_Puebla/servicios/911";
     public static final String NUEVEONCEARCHIVOS_URL = HOST + "Escudo_Puebla/servicios/911Archivos";
     public static final String GET_TIPO_USUARIOS_URL = HOST + "Escudo_Puebla/servicios/getTipoUsuarios";

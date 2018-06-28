@@ -44,4 +44,8 @@
         <item name="android:gravity">right</item>
     </style>
 
+    <style name="mySpinnerItemStyle" parent="android:Widget.DeviceDefault.Spinner">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>

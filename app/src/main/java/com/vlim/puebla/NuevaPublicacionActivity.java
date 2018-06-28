@@ -124,8 +124,8 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         et_titulopub = (EditText) findViewById(R.id.et_nombreusr);
         et_descripcionpub = (EditText) findViewById(R.id.et_domicilio);
         btn_camara = (ImageView) findViewById(R.id.btn_camara);
-        btn_galeria = (ImageView) findViewById(R.id.btn_galeria);
-        btn_video = (ImageView) findViewById(R.id.btn_video);
+        btn_galeria = (ImageView) findViewById(R.id.btn_video);
+        btn_video = (ImageView) findViewById(R.id.btn_audio);
 
         // Toolbar
         tv_titulo_toolbar = (TextView) findViewById(R.id.tv_titulo_toolbar);
@@ -154,7 +154,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         Videoprev2.setVisibility(View.INVISIBLE);
         imageCameraPreview = (ImageView) findViewById(R.id.imageCameraPreview);
         imageCameraPreview.setVisibility(View.INVISIBLE);
-        tv_videocapturado = (TextView) findViewById(R.id.tv_videocapturado);
+        tv_videocapturado = (TextView) findViewById(R.id.tv_audiocapturado);
         tv_videocapturado.setVisibility(View.INVISIBLE);
         tv_videocapturado.setTypeface(tf);
         tv_videocapturadogal = (TextView) findViewById(R.id.tv_videocapturadogal);

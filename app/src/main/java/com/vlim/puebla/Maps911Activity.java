@@ -52,6 +52,7 @@ public class Maps911Activity extends FragmentActivity implements OnMapReadyCallb
     ImageView btn_back;
     String idusuario;
     String TAG = "PUEBLA";
+    ImageView img_medica, img_policia, img_bomberos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,9 @@ public class Maps911Activity extends FragmentActivity implements OnMapReadyCallb
         tv_bomberos.setTypeface(tf);
         tv_policia = findViewById(R.id.tv_policia);
         tv_policia.setTypeface(tf);
+        img_medica = findViewById(R.id.img_medica);
+        img_policia = findViewById(R.id.img_policia);
+        img_bomberos = findViewById(R.id.img_bomberos);
 
         menu_map = findViewById(R.id.menu_map);
         mensaje_map = findViewById(R.id.mensaje_map);
@@ -115,6 +119,36 @@ public class Maps911Activity extends FragmentActivity implements OnMapReadyCallb
                 isUp = !isUp;
             }
         });*/
+
+                img_medica.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent emergenciaMedica = new Intent(Maps911Activity.this, Reporte911Activity.class);
+                        emergenciaMedica.putExtra("idusuario", idusuario);
+                        emergenciaMedica.putExtra("emergencia", "medica");
+                        startActivity(emergenciaMedica);
+                    }
+                });
+
+                img_policia.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent emergenciaPolicia = new Intent(Maps911Activity.this, Reporte911Activity.class);
+                        emergenciaPolicia.putExtra("idusuario", idusuario);
+                        emergenciaPolicia.putExtra("emergencia", "policia");
+                        startActivity(emergenciaPolicia);
+                    }
+                });
+
+                img_bomberos.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent emergenciaBomberos = new Intent(Maps911Activity.this, Reporte911Activity.class);
+                        emergenciaBomberos.putExtra("idusuario", idusuario);
+                        emergenciaBomberos.putExtra("emergencia", "bomberos");
+                        startActivity(emergenciaBomberos);
+                    }
+                });
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override

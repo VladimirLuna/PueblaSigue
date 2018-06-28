@@ -109,7 +109,7 @@
                 app:civ_border_width="0dp" />
 
             <ImageView
-                android:id="@+id/btn_video"
+                android:id="@+id/btn_audio"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignTop="@+id/btn_camara"
@@ -119,11 +119,11 @@
                 app:srcCompat="@drawable/video" />
 
             <ImageView
-                android:id="@+id/btn_galeria"
+                android:id="@+id/btn_video"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignEnd="@+id/tv_nuevapub1"
-                android:layout_alignTop="@+id/btn_video"
+                android:layout_alignTop="@+id/btn_audio"
                 android:background="@drawable/boton_naranja_circular"
                 android:padding="15dp"
                 app:srcCompat="@drawable/galeria" />
@@ -153,8 +153,8 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/Galeriaprev"
-                android:layout_alignStart="@+id/btn_galeria"
-                android:layout_alignTop="@+id/btn_galeria"
+                android:layout_alignStart="@+id/btn_video"
+                android:layout_alignTop="@+id/btn_video"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:src="@drawable/boton_naranja_circular"
@@ -176,15 +176,15 @@
                 android:id="@+id/videoPreview"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_alignStart="@+id/btn_video"
-                android:layout_alignTop="@+id/btn_video"
+                android:layout_alignStart="@+id/btn_audio"
+                android:layout_alignTop="@+id/btn_audio"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/txtPercentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/btn_video"
+                android:layout_below="@+id/btn_audio"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
@@ -195,15 +195,15 @@
                 android:id="@+id/Videoprev2"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_alignStart="@+id/btn_video"
-                android:layout_alignTop="@+id/btn_video"
+                android:layout_alignStart="@+id/btn_audio"
+                android:layout_alignTop="@+id/btn_audio"
                 app:srcCompat="@drawable/boton_naranja_circular" />
 
             <TextView
-                android:id="@+id/tv_videocapturado"
+                android:id="@+id/tv_audiocapturado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/btn_video"
+                android:layout_alignTop="@+id/btn_audio"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="19dp"
                 android:gravity="center_horizontal"
@@ -215,9 +215,9 @@
                 android:id="@+id/tv_videocapturadogal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/tv_videocapturado"
-                android:layout_alignBottom="@+id/tv_videocapturado"
-                android:layout_alignStart="@+id/btn_galeria"
+                android:layout_alignBaseline="@+id/tv_audiocapturado"
+                android:layout_alignBottom="@+id/tv_audiocapturado"
+                android:layout_alignStart="@+id/btn_video"
                 android:layout_marginStart="6dp"
                 android:gravity="center_horizontal"
                 android:text="Video \nSeleccionado"
