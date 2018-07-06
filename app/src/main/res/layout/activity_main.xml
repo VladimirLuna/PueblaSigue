@@ -107,7 +107,7 @@
         android:id="@+id/tv_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tv_mensajes"
+        android:layout_alignBottom="@+id/tv_nuevopass2"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="25dp"
         android:text="Versión"
@@ -116,7 +116,7 @@
         android:textSize="8sp" />
 
     <TextView
-        android:id="@+id/tv_servicios"
+        android:id="@+id/tv_nombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btn_nueveonce"
@@ -153,7 +153,7 @@
         android:background="@drawable/cuadro_naranja" />
 
     <TextView
-        android:id="@+id/tv_sigueme"
+        android:id="@+id/tv_celular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_sigueme"
@@ -165,7 +165,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/tv_chat"
+        android:id="@+id/tv_nuevopass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_chat_vecinal"
@@ -190,7 +190,7 @@
         android:textSize="10sp" />
 
     <TextView
-        android:id="@+id/tv_mensajes"
+        android:id="@+id/tv_nuevopass2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_mensajesipm"

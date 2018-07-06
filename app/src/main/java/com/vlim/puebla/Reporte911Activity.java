@@ -205,7 +205,19 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             tv_audiocapturado.setVisibility(View.INVISIBLE);
             tv_audiocapturado.setTypeface(tf);
 
-            obtieneMotivos();
+            switch(tipo_emergencia){
+                case "medica":
+                    obtieneMotivos(2);
+                    break;
+                case "policia":
+                    obtieneMotivos(1);
+                    break;
+                case "bomberos":
+                    obtieneMotivos(5);
+                    break;
+                    default:
+                        break;
+            }
 
             int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
@@ -219,6 +231,13 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         }
 
         tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     public void showSettingsAlert() {
@@ -274,14 +293,12 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
     }
 
-
-
-    private void obtieneMotivos() {
+    private void obtieneMotivos(int motivo) {
 
         JSONObject post_dict = new JSONObject();
 
         try {
-            post_dict.put("institucion" , 1);
+            post_dict.put("institucion" , motivo);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -580,4 +597,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             locationManager.removeUpdates(this);
         }
     }
+
+    @Override
+    public void onBackPressed() { }
 }

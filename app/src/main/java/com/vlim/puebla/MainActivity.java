@@ -90,19 +90,19 @@ public class MainActivity extends AppCompatActivity {
         tv_version.setTypeface(tf);
         tv_version.setText("v" + BuildConfig.VERSION_NAME);
         tv_version.bringToFront();
-        tv_sigueme = findViewById(R.id.tv_sigueme);
+        tv_sigueme = findViewById(R.id.tv_celular);
         tv_sigueme.setTypeface(tf);
-        tv_chat = findViewById(R.id.tv_chat);
+        tv_chat = findViewById(R.id.tv_nuevopass);
         tv_chat.setTypeface(tf);
         tv_chat2 = findViewById(R.id.tv_chat2);
         tv_chat2.setTypeface(tf);
-        tv_mensajes = findViewById(R.id.tv_mensajes);
+        tv_mensajes = findViewById(R.id.tv_nuevopass2);
         tv_mensajes.setTypeface(tf);
         tv_botonmujer = findViewById(R.id.tv_botonmujer);
         tv_botonmujer.setTypeface(tf);
         tv_botonpanico = findViewById(R.id.tv_botonpanico);
         tv_botonpanico.setTypeface(tf);
-        tv_servicios = findViewById(R.id.tv_servicios);
+        tv_servicios = findViewById(R.id.tv_nombre);
         tv_servicios.setTypeface(tf);
 
         // Get extras

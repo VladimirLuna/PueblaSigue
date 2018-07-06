@@ -87,7 +87,7 @@
                 android:textStyle="italic" />
 
             <ImageView
-                android:id="@+id/btn_camara"
+                android:id="@+id/btn_ajustes_informacion"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignStart="@+id/et_domicilio"
@@ -112,14 +112,14 @@
                 android:id="@+id/btn_audio"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_alignTop="@+id/btn_camara"
+                android:layout_alignTop="@+id/btn_ajustes_informacion"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/boton_naranja_circular"
                 android:padding="15dp"
                 app:srcCompat="@drawable/video" />
 
             <ImageView
-                android:id="@+id/btn_video"
+                android:id="@+id/btn_contactos"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignEnd="@+id/tv_nuevapub1"
@@ -153,8 +153,8 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/Galeriaprev"
-                android:layout_alignStart="@+id/btn_video"
-                android:layout_alignTop="@+id/btn_video"
+                android:layout_alignStart="@+id/btn_contactos"
+                android:layout_alignTop="@+id/btn_contactos"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:src="@drawable/boton_naranja_circular"
@@ -217,7 +217,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/tv_audiocapturado"
                 android:layout_alignBottom="@+id/tv_audiocapturado"
-                android:layout_alignStart="@+id/btn_video"
+                android:layout_alignStart="@+id/btn_contactos"
                 android:layout_marginStart="6dp"
                 android:gravity="center_horizontal"
                 android:text="Video \nSeleccionado"

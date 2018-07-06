@@ -1,12 +1,14 @@
 package com.vlim.puebla;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -88,6 +90,8 @@ public class ChatVecinalActivity extends AppCompatActivity implements SwipeRefre
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(ChatVecinalActivity.this);
 
+        muestraMensaje();
+
         img_settings = (ImageView) findViewById(R.id.img_settings);
         img_settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +153,17 @@ public class ChatVecinalActivity extends AppCompatActivity implements SwipeRefre
                 finish();
             }
         });
+    }
+
+    public void muestraMensaje() {
+        new AlertDialog.Builder(ChatVecinalActivity.this)
+                .setTitle("Chat vecinal")
+                .setMessage("Esta funcionalidad sólo es con fines preventivos, no para emergencias.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                }).show();
     }
 
     @Override
@@ -300,4 +315,5 @@ public class ChatVecinalActivity extends AppCompatActivity implements SwipeRefre
             onRefresh();
         }
     }
+
 }

@@ -5,7 +5,7 @@
     <color name="colorAccent">#ea7e01</color>
     <color name="white">#ffffff</color>
     <color name="naranjaToolbar">#ea7e01</color>
-    <color name="grayIconTint">#aaaaaa</color>
+    <color name="grayIconTint">#ea7e01</color>
     <color name="separator">#dadada</color>
     <color name="textogris">#737373</color>
 </resources>

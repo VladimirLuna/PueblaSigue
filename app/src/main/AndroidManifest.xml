@@ -100,7 +100,9 @@
         <activity android:name=".ChatSettingsActivity" />
         <activity android:name=".NuevaPublicacionActivity" />
         <activity android:name=".TodosMensajesPrivadosActivity" />
-        <activity android:name=".Reporte911Activity"></activity>
+        <activity android:name=".Reporte911Activity" />
+        <activity android:name=".ContactosEmergenciaActivity" />
+        <activity android:name=".RecuperaPasswordActivity"></activity>
     </application>
 
 </manifest>

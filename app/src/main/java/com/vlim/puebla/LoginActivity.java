@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Button btn_login;
     EditText et_usuario, et_password;
-    TextView tv_usuario, tv_pass, tv_olvidepass;
+    TextView tv_usuario, tv_pass, tv_olvidepass, tv_registro;
     String TAG = "PUEBLA";
     String response = null;
     String usr  = null, pass = null;
@@ -51,18 +51,20 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setBackgroundDrawableResource(R.drawable.background);
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
-        tv_usuario = findViewById(R.id.tv_usuario);
+        tv_usuario = findViewById(R.id.tv_celular);
         tv_pass = findViewById(R.id.tv_pass);
         tv_olvidepass = findViewById(R.id.tv_olvidepass);
         et_usuario = findViewById(R.id.et_usuario);
         et_password = findViewById(R.id.et_passusuario);
         btn_login = findViewById(R.id.btn_login);
+        tv_registro = findViewById(R.id.tv_registrar);
         tv_usuario.setTypeface(tf);
         tv_pass.setTypeface(tf);
         tv_olvidepass.setTypeface(tf);
         et_usuario.setTypeface(tf);
         et_password.setTypeface(tf);
         btn_login.setTypeface(tf);
+        tv_registro.setTypeface(tf);
 
         // lee datos del usuario
         userSQLiteHelper usdbh =
@@ -100,6 +102,22 @@ public class LoginActivity extends AppCompatActivity {
                 else{
                     preparaLogin(usr, pass);
                 }
+            }
+        });
+
+        tv_registro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent registro = new Intent(LoginActivity.this, RegistroUsuarioActivity.class);
+                startActivity(registro);
+            }
+        });
+
+        tv_olvidepass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent recuperaPass = new Intent(LoginActivity.this, RecuperaPasswordActivity.class);
+                startActivity(recuperaPass);
             }
         });
     }

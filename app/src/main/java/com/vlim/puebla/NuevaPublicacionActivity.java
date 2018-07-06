@@ -123,8 +123,8 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         btn_nueva_publicacion.setTypeface(tf);
         et_titulopub = (EditText) findViewById(R.id.et_nombreusr);
         et_descripcionpub = (EditText) findViewById(R.id.et_domicilio);
-        btn_camara = (ImageView) findViewById(R.id.btn_camara);
-        btn_galeria = (ImageView) findViewById(R.id.btn_video);
+        btn_camara = (ImageView) findViewById(R.id.btn_ajustes_informacion);
+        btn_galeria = (ImageView) findViewById(R.id.btn_contactos);
         btn_video = (ImageView) findViewById(R.id.btn_audio);
 
         // Toolbar

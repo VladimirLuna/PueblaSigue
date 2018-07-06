@@ -46,4 +46,7 @@ public class NueveOnceActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() { }
 }

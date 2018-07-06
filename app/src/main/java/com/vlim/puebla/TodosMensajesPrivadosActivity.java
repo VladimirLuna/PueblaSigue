@@ -9,4 +9,7 @@ public class TodosMensajesPrivadosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
+    @Override
+    public void onBackPressed() { }
 }

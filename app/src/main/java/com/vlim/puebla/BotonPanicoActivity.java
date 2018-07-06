@@ -10,4 +10,7 @@ public class BotonPanicoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boton_panico);
     }
+
+    @Override
+    public void onBackPressed() { }
 }

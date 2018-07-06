@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/white"
+    android:background="@color/naranjaToolbar"
     android:elevation="10dp"
     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
@@ -18,7 +18,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/next" />
+            android:src="@drawable/back" />
 
     </LinearLayout>
 
@@ -27,8 +27,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Registro Usuario"
-        android:textColor="#aaaaaa"
+        android:text="Ajustes"
+        android:textColor="#ffffff"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_marginEnd="10dp">
+
 
     </LinearLayout>
 </android.support.v7.widget.Toolbar>

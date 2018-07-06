@@ -1,33 +1,105 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_bienvenida"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AjustesInfoActivity">
+    android:background="@color/white">
 
-    <android.support.design.widget.AppBarLayout
+    <include
+        android:id="@+id/toolbar_ajustes"
+        layout="@layout/appbar_ajustes"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/PueblaTheme.AppBarOverlay">
+        android:layout_height="50dp" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/PueblaTheme.PopupOverlay" />
+    <View android:id="@+id/separator"
+        android:background="@color/separator"
+        android:layout_width = "fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@+id/toolbar_ajustes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_centerVertical ="true"/>
 
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_ajustes_info" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <TextView
+        android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="71dp"
+        android:text="Selecciona la opción que deseas editar"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_nueve_once" />
 
-</android.support.design.widget.CoordinatorLayout>
+    <ImageView
+        android:id="@+id/btn_ajustes_informacion"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="130dp"
+        android:src="@drawable/info"
+        app:layout_heightPercent="25%"
+        app:layout_widthPercent="40%"
+        app:srcCompat="@drawable/info" />
+
+    <ImageView
+        android:id="@+id/btn_contactos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/btn_ajustes_informacion"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/infopersonal"
+        app:layout_heightPercent="25%"
+        app:layout_widthPercent="40%"
+        app:srcCompat="@drawable/infopersonal" />
+
+    <ImageView
+        android:id="@+id/btn_cambiar_pass"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="110dp"
+        android:src="@drawable/contracamb"
+        app:layout_heightPercent="25%"
+        app:layout_widthPercent="40%"
+        app:srcCompat="@drawable/contracamb" />
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btn_ajustes_informacion"
+        android:layout_below="@+id/btn_ajustes_informacion"
+        android:text="Información personal"
+        android:textColor="@color/naranjaToolbar"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_contactos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/btn_ajustes_informacion"
+        android:layout_marginEnd="11dp"
+        android:text="Contactos de emergencia"
+        android:textColor="@color/naranjaToolbar"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_cambiar_pass"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-110dp"
+        android:text="Cambiar contraseña"
+        android:textColor="@color/naranjaToolbar"
+        android:textSize="14sp" />
+
+</android.support.percent.PercentRelativeLayout>

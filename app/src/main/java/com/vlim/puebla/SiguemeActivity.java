@@ -10,4 +10,7 @@ public class SiguemeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sigueme);
     }
+
+    @Override
+    public void onBackPressed() { }
 }

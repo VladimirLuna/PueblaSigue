@@ -101,7 +101,7 @@
 
 
             <ImageView
-                android:id="@+id/btn_camara"
+                android:id="@+id/btn_ajustes_informacion"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignStart="@+id/et_descripcion_reporte"
@@ -124,7 +124,7 @@
                 android:id="@+id/btn_enviardenuncia"
                 android:layout_width="200dp"
                 android:layout_height="30dp"
-                android:layout_below="@+id/btn_camara"
+                android:layout_below="@+id/btn_ajustes_informacion"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="30dp"
                 android:layout_marginTop="35dp"
@@ -137,8 +137,8 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/Imageprev"
-                android:layout_alignBottom="@+id/btn_camara"
-                android:layout_alignStart="@+id/btn_camara"
+                android:layout_alignBottom="@+id/btn_ajustes_informacion"
+                android:layout_alignStart="@+id/btn_ajustes_informacion"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:src="@drawable/boton_naranja_circular"
@@ -169,7 +169,7 @@
                 android:id="@+id/txtPercentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/btn_camara"
+                android:layout_below="@+id/btn_ajustes_informacion"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
@@ -198,7 +198,7 @@
                 android:textSize="12sp" />
 
             <ImageView
-                android:id="@+id/btn_video"
+                android:id="@+id/btn_contactos"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignEnd="@+id/et_descripcion_reporte"
@@ -210,8 +210,8 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/Galeriaprev"
-                android:layout_alignStart="@+id/btn_video"
-                android:layout_alignTop="@+id/btn_video"
+                android:layout_alignStart="@+id/btn_contactos"
+                android:layout_alignTop="@+id/btn_contactos"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:src="@drawable/boton_naranja_circular"
@@ -227,7 +227,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/tv_audiocapturado"
                 android:layout_alignBottom="@+id/tv_audiocapturado"
-                android:layout_alignStart="@+id/btn_video"
+                android:layout_alignStart="@+id/btn_contactos"
                 android:layout_marginStart="6dp"
                 android:gravity="center_horizontal"
                 android:text="Video \nSeleccionado"

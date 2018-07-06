@@ -131,7 +131,7 @@
                 app:srcCompat="@drawable/foto" />
 
             <ImageView
-                android:id="@+id/btn_video"
+                android:id="@+id/btn_contactos"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_alignTop="@+id/btn_pdf"
@@ -150,11 +150,11 @@
                 android:id="@+id/btn_audio"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_alignTop="@+id/btn_video"
+                android:layout_alignTop="@+id/btn_contactos"
                 android:layout_marginBottom="61dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="5dp"
-                android:layout_toEndOf="@+id/btn_video"
+                android:layout_toEndOf="@+id/btn_contactos"
                 android:background="@drawable/boton_naranja_circular"
                 android:paddingBottom="10dp"
                 android:paddingEnd="25dp"
@@ -170,7 +170,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/btn_video"
+                android:layout_below="@+id/btn_contactos"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="30dp"

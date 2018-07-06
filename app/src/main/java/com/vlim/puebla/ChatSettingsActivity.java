@@ -10,4 +10,7 @@ public class ChatSettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_settings);
     }
+
+    @Override
+    public void onBackPressed() { }
 }

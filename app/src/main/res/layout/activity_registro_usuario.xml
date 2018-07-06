@@ -1,4 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_registrousuario"
+        layout="@layout/appbar_registro"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.vlim.yctn.escudoyucatan2.RegistroUsuarioActivity"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
+
+
+            <TextView
+                android:id="@+id/tv_nombrecompleto"
+                android:layout_width="500dp"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/switch_acepto"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:text="* Nombre Completo"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_domicilio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/et_nombreusuario"
+                android:layout_below="@+id/et_nombreusuario"
+                android:layout_marginTop="15dp"
+                android:text="* Domicilio"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_nombreusuario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/switch_notificaciones"
+                android:layout_alignStart="@+id/tv_nombrecompleto"
+                android:layout_below="@+id/tv_nombrecompleto"
+                android:ems="10"
+                android:inputType="text|textCapWords|textAutoComplete|textPersonName"
+                android:maxLength="50" />
+
+            <EditText
+                android:id="@+id/et_domicilio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/et_nombreusuario"
+                android:layout_alignStart="@+id/tv_domicilio"
+                android:layout_below="@+id/tv_domicilio"
+                android:ems="10"
+                android:inputType="text|textCapSentences|textPostalAddress"
+                android:maxLength="100" />
+
+            <!-- ImageButton
+                android:id="@+id/btn_datoscuenta"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_below="@+id/tv_detalle1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="29dp"
+                android:background="@drawable/boton_naranja_circular"
+                android:padding="60dp"
+                android:src="@drawable/siguiente"
+                app:srcCompat="@drawable/siguiente" / -->
+
+            <ImageView
+                android:id="@+id/btn_siguiente"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_below="@+id/tv_avisoprivacidad"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="29dp"
+                android:background="@drawable/boton_naranja_circular"
+                android:padding="10dp"
+                android:src="@drawable/siguiente"
+                app:layout_heightPercent="25%"
+                app:layout_widthPercent="40%"
+                app:srcCompat="@drawable/siguiente" />
+
+            <TextView
+                android:id="@+id/tv_telefono"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/et_domicilio"
+                android:layout_below="@+id/et_domicilio"
+                android:layout_marginTop="15dp"
+                android:text="Teléfono Particular"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_telefono"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/et_domicilio"
+                android:layout_alignStart="@+id/tv_telefono"
+                android:layout_below="@+id/tv_telefono"
+                android:ems="10"
+                android:inputType="phone"
+                android:maxLength="10" />
+
+            <TextView
+                android:id="@+id/tv_celular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/et_telefono"
+                android:layout_below="@+id/et_telefono"
+                android:layout_marginTop="15dp"
+                android:text="* Celular"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_celular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/switch_notificaciones"
+                android:layout_alignStart="@+id/tv_celular"
+                android:layout_below="@+id/tv_celular"
+                android:ems="10"
+                android:inputType="phone"
+                android:maxLength="10" />
+
+            <Switch
+                android:id="@+id/switch_notificaciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_celular"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="13dp"
+                android:text="Deseo recibir notificaciones de Puebla Sigue  "
+                android:textSize="12sp" />
+
+            <Switch
+                android:id="@+id/switch_acepto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/switch_notificaciones"
+                android:layout_alignStart="@+id/switch_notificaciones"
+                android:layout_below="@+id/switch_notificaciones"
+                android:layout_marginTop="10dp"
+                android:gravity="right"
+                android:text="Acepto el aviso de privacidad y los términos y condiciones  "
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_avisoprivacidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/et_celular"
+                android:layout_below="@+id/switch_acepto"
+                android:layout_marginTop="22dp"
+                android:text="Ver Aviso de privacidad"
+                android:textColor="@color/naranjaToolbar"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_terminoscondiciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/tv_nombrecompleto"
+                android:layout_alignTop="@+id/tv_avisoprivacidad"
+                android:text="Ver Términos y condiciones"
+                android:textColor="@color/naranjaToolbar"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>
+
+
+<!-- ?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,41 +200,19 @@
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="130dp"
-        android:layout_height="129dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.519"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_registro"
-        app:srcCompat="@drawable/avatar" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="49dp"
-        android:layout_height="41dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="90dp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        app:srcCompat="@drawable/camara" />
-
     <TextView
-        android:id="@+id/tv_servicios"
+        android:id="@+id/tv_nombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:text="Nombre"
+        android:layout_marginTop="30dp"
+        android:text="* Nombre completo:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_registro" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/et_nombre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
@@ -55,10 +221,10 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_servicios" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_nombre" />
 
     <TextView
-        android:id="@+id/tv_sigueme"
+        android:id="@+id/tv_celular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
@@ -66,10 +232,10 @@
         android:text="Contraseña"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/et_nombre" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/et_celular"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
@@ -78,10 +244,10 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sigueme" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_celular" />
 
     <TextView
-        android:id="@+id/tv_chat"
+        android:id="@+id/tv_nuevopass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
@@ -89,10 +255,10 @@
         android:text="Confirmar contraseña"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/et_celular" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/et_nuevopass"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
@@ -101,10 +267,10 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_chat" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_nuevopass" />
 
     <TextView
-        android:id="@+id/tv_mensajes"
+        android:id="@+id/tv_nuevopass2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
@@ -112,10 +278,10 @@
         android:text="Email"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintTop_toBottomOf="@+id/et_nuevopass" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/et_nuevopass2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
@@ -124,7 +290,7 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_mensajes" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_nuevopass2" />
 
     <Button
         android:id="@+id/button"
@@ -140,6 +306,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText4" />
+        app:layout_constraintTop_toBottomOf="@+id/et_nuevopass2" />
 
-</android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout -->
+
