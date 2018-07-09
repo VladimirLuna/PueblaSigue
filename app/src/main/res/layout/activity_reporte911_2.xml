@@ -1,0 +1,384 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_anchor="@+id/appBarLayout"
+    app:layout_anchorGravity="left|top">
+
+    <include
+        android:id="@+id/toolbar_reporte911"
+        layout="@layout/appbar_reporte911"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <android.support.design.widget.CoordinatorLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.vlim.puebla.Reporte911Activity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme">
+
+        <!-- android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="?android:attr/actionBarSize/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" / -->
+        <android.support.design.widget.TabLayout
+            android:id="@+id/MyTabs"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@android:color/white"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@android:color/white" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/MyPage"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".MainActivity"
+        tools:showIn="@layout/activity_main" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</LinearLayout>
+
+
+
+    <!-- ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ScrollView01"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/activity_bienvenida"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
+                <!- include
+                    android:id="@+id/toolbar_reporte911"
+                    layout="@layout/appbar_reporte911"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" / -->
+
+                <!-- View
+                    android:id="@+id/separator"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:layout_below="@+id/toolbar_reporte911"
+                    android:layout_centerVertical="true"
+                    android:background="@color/separator"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_mensaje1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="71dp"
+                    android:text="Escriba los datos de la incidencia"
+                    android:textColor="@color/naranjaToolbar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar_reporte911" />
+
+                <TextView
+                    android:id="@+id/tv_nombre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignStart="@+id/btn_pdf"
+                    android:layout_marginTop="127dp"
+                    android:text="Título del reporte"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_mensaje1" />
+
+                <EditText
+                    android:id="@+id/et_nombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_nombre"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:ems="10"
+                    android:inputType="text|textCapSentences|textAutoCorrect|textPersonName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_nombre" />
+
+                <TextView
+                    android:id="@+id/tv_afiliado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignStart="@+id/tv_nombre"
+                    android:layout_marginTop="204dp"
+                    android:text="Descripción"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_nombre" />
+
+                <EditText
+                    android:id="@+id/et_afiliado"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_below="@+id/tv_afiliado"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:ems="10"
+                    android:inputType="text|textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textPersonName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_afiliado" />
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    style="@style/mySpinnerItemStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/et_afiliado"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="255dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/spinner_bg"
+                    android:elevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_afiliado" />
+
+                <ImageView
+                    android:id="@+id/btn_pdf"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignStart="@+id/et_nombre"
+                    android:layout_marginBottom="135dp"
+                    android:background="@drawable/boton_naranja_circular"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="25dp"
+                    android:paddingStart="25dp"
+                    android:paddingTop="10dp"
+                    android:src="@drawable/foto"
+                    app:layout_heightPercent="15%"
+                    app:layout_widthPercent="30%"
+                    app:srcCompat="@drawable/foto" />
+
+                <ImageView
+                    android:id="@+id/btn_contactos"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_alignTop="@+id/btn_pdf"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/boton_naranja_circular"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="25dp"
+                    android:paddingStart="25dp"
+                    android:paddingTop="10dp"
+                    android:src="@drawable/galeria"
+                    app:layout_heightPercent="15%"
+                    app:layout_widthPercent="30%"
+                    app:srcCompat="@drawable/galeria" />
+
+                <ImageView
+                    android:id="@+id/btn_audio"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_alignTop="@+id/btn_contactos"
+                    android:layout_marginBottom="61dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@+id/btn_contactos"
+                    android:background="@drawable/boton_naranja_circular"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="25dp"
+                    android:paddingStart="25dp"
+                    android:paddingTop="10dp"
+                    android:src="@drawable/video"
+                    app:layout_heightPercent="15%"
+                    app:layout_widthPercent="30%"
+                    app:srcCompat="@drawable/video" />
+
+                <Button
+                    android:id="@+id/btn_enviar"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/btn_contactos"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/cuadro_boton"
+                    android:text="Enviar"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.516"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+                <TextView
+                    android:id="@+id/tv_fotografia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/btn_pdf"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="-135dp"
+                    android:text="Fotografía"
+                    android:textColor="@color/naranjaToolbar" />
+
+                <TextView
+                    android:id="@+id/tv_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/tv_fotografia"
+                    android:layout_centerHorizontal="true"
+                    android:text="Video"
+                    android:textColor="@color/naranjaToolbar" />
+
+                <TextView
+                    android:id="@+id/tv_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/tv_audiocapturado"
+                    android:layout_alignTop="@+id/tv_fotografia"
+                    android:text="Micrófono"
+                    android:textColor="@color/naranjaToolbar" />
+
+                <ProgressBar
+                    android:id="@+id/progressBarAnonima"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="20dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="227dp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txtPercentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btn_pdf"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="-135dp"
+                    android:text=""
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/tv_audiocapturado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/tv_videocapturado"
+                    android:layout_marginEnd="32dp"
+                    android:elevation="10dp"
+                    android:gravity="center_horizontal"
+                    android:text="Audio Capturado"
+                    android:textColor="@color/naranjaToolbar"
+                    android:textSize="10sp" />
+
+                <ImageView
+                    android:id="@+id/Imageprev"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignStart="@+id/tv_nombre"
+                    android:layout_alignTop="@+id/btn_pdf"
+                    android:src="@drawable/boton_naranja_circular"
+                    android:visibility="invisible"
+                    app:civ_border_color="#FF000000"
+                    app:civ_border_width="0dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_heightPercent="15%"
+                    app:layout_widthPercent="30%" />
+
+                <ImageView
+                    android:id="@+id/imgvideoPrev"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignBottom="@+id/tv_fotografia"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="33dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/boton_naranja_circular" />
+
+                <VideoView
+                    android:id="@+id/videoPreview"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignEnd="@+id/et_nombre"
+                    android:layout_alignTop="@+id/btn_pdf"
+                    android:visibility="gone"
+                    app:layout_heightPercent="15%"
+                    app:layout_widthPercent="30%" />
+
+                <ImageView
+                    android:id="@+id/Galeriaprev"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignTop="@+id/btn_pdf"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/boton_naranja_circular"
+                    android:visibility="invisible"
+                    app:civ_border_color="#FF000000"
+                    app:civ_border_width="0dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_heightPercent="15%"
+                    app:layout_widthPercent="30%" />
+
+                <TextView
+                    android:id="@+id/tv_videocapturado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="176dp"
+                    android:elevation="10dp"
+                    android:gravity="center_horizontal"
+                    android:text="Video Capturado"
+                    android:textColor="@color/naranjaToolbar"
+                    android:textSize="10sp" />
+
+            </android.support.percent.PercentRelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView -->
+
+
+
+
