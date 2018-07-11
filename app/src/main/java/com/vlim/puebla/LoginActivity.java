@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // lee datos del usuario
         userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, 1);
+                new userSQLiteHelper(this, "DBUsuarios", null, 2);
         SQLiteDatabase db = usdbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT usr, password FROM Usuarios", null);
         String password = null;
@@ -240,7 +240,7 @@ public class LoginActivity extends AppCompatActivity {
             // Guarda en BD
             //Abrimos la base de datos 'DBUsuarios' en modo escritura
             userSQLiteHelper usdbh =
-                    new userSQLiteHelper(LoginActivity.this, "DBUsuarios", null, 1);
+                    new userSQLiteHelper(LoginActivity.this, "DBUsuarios", null, Config.VERSION_DB);
 
             SQLiteDatabase db = usdbh.getWritableDatabase();
 
@@ -272,7 +272,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void borraBD() {
         userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, 1);
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getWritableDatabase();
         db.delete("Usuarios", null, null);
         Log.i(TAG, "Elimina base Usuarios");

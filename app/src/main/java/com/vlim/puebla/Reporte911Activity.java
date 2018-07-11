@@ -1,12 +1,18 @@
 package com.vlim.puebla;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.app.Service;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Criteria;
@@ -14,13 +20,18 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -45,22 +56,29 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.iceteck.silicompressorr.SiliCompressor;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.vlim.puebla.AjustesChatActivity.requestPermission;
 
 public class Reporte911Activity extends AppCompatActivity implements LocationListener {
 
     String TAG = "PUEBLA";
     String id_usuario = "", tipo_emergencia = "";
     Spinner spinner_submotivos;
-    TextView tv_titulo_toolbar, tv_mensaje1, tv_titulo_reporte, tv_descripcion, tv_fotografia, tv_video, tv_audio, tv_videocapturado, tv_audiocapturado;
-    EditText et_titulo_reporte, et_descripcion;
+    TextView tv_titulo_toolbar, tv_mensaje1, tv_motivo, tv_descripcion;
+    EditText et_descripcion;
     Button btn_enviar;
     ImageView btn_back, btn_camara, btn_video, btn_audio, imageView, imgvideoPrev;
     String tipo_submotivo;
@@ -96,6 +114,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
     private ProgressBar progressBar;
     private TextView txtPercentage;
     ProgressDialog progressDialogLista, progressDialogEnvio, progressDialogVideo, progressDialogVideoGal;
+    ProgressDialog progressDialog;
 
     private final static int ALL_PERMISSIONS_RESULT = 101;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
@@ -126,12 +145,15 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.activity_reporte911_2);
 
+        tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
+
         //declare views
-        MyTabs = (TabLayout)findViewById(R.id.MyTabs);
-        MyPage = (ViewPager)findViewById(R.id.MyPage);
+        MyTabs = findViewById(R.id.MyTabs);
+        MyPage = findViewById(R.id.MyPage);
 
         MyTabs.setupWithViewPager(MyPage);
         SetUpViewPager(MyPage);
@@ -142,7 +164,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
 
         Log.d(TAG, "usr: " + id_usuario + ", emergencia: " + tipo_emergencia);
 
-        /*progressBar = findViewById(R.id.progressBarAnonima);
+        progressBar = findViewById(R.id.progressBar911);
         progressBar.setVisibility(View.INVISIBLE);
 
         // obtiene posicion
@@ -175,47 +197,30 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             spinner_submotivos = findViewById(R.id.spinner);
             tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
             tv_mensaje1 = findViewById(R.id.tv_mensaje1);
-            tv_titulo_reporte = findViewById(R.id.tv_nombre);
-            tv_descripcion = findViewById(R.id.tv_afiliado);
-            tv_fotografia = findViewById(R.id.tv_fotografia);
-            tv_video = findViewById(R.id.tv_video);
-            tv_audio = findViewById(R.id.tv_audio);
-            et_titulo_reporte = findViewById(R.id.et_nombre);
-            et_descripcion = findViewById(R.id.et_afiliado);
+            tv_motivo = findViewById(R.id.tv_motivo);
+            tv_descripcion = findViewById(R.id.tv_descripcion);
+            et_descripcion = findViewById(R.id.et_descripcion);
             btn_enviar = findViewById(R.id.btn_enviar);
             btn_back = findViewById(R.id.btn_back);
-            btn_camara = findViewById(R.id.btn_pdf);
-            btn_video = findViewById(R.id.btn_audio);
+            btn_camara = findViewById(R.id.btn_foto);
+            btn_video = findViewById(R.id.btn_video);
             btn_audio = findViewById(R.id.btn_audio);
-            txtPercentage = (TextView) findViewById(R.id.txtPercentage);
+            txtPercentage = findViewById(R.id.txtPercentage);
             txtPercentage.setTypeface(tf);
-            tv_videocapturado = (TextView) findViewById(R.id.tv_audiocapturado);
-            tv_videocapturado.setVisibility(View.INVISIBLE);
-            tv_videocapturado.setTypeface(tf);
 
             tv_titulo_toolbar.setTypeface(tf);
             tv_mensaje1.setTypeface(tf);
-            tv_titulo_reporte.setTypeface(tf);
+            tv_motivo.setTypeface(tf);
             tv_descripcion.setTypeface(tf);
-            tv_fotografia.setTypeface(tf);
-            tv_video.setTypeface(tf);
-            tv_audio.setTypeface(tf);
-            et_titulo_reporte.setTypeface(tf);
             et_descripcion.setTypeface(tf);
             btn_enviar.setTypeface(tf);
 
-            imageView = (ImageView) findViewById(R.id.Imageprev);
+            /*imageView = findViewById(R.id.Imageprev);
             imageView.setVisibility(View.INVISIBLE);
-            videoPrev = (VideoView) findViewById(R.id.videoPreview);
+            videoPrev = findViewById(R.id.videoPreview);
             videoPrev.setVisibility(View.INVISIBLE);
-            imgvideoPrev = (ImageView) findViewById(R.id.imgvideoPrev);
-            imgvideoPrev.setVisibility(View.INVISIBLE);
-            tv_videocapturado = (TextView) findViewById(R.id.tv_audiocapturado);
-            tv_videocapturado.setVisibility(View.INVISIBLE);
-            tv_videocapturado.setTypeface(tf);
-            tv_audiocapturado = (TextView) findViewById(R.id.tv_audiocapturado);
-            tv_audiocapturado.setVisibility(View.INVISIBLE);
-            tv_audiocapturado.setTypeface(tf);
+            imgvideoPrev = findViewById(R.id.imgvideoPrev);
+            imgvideoPrev.setVisibility(View.INVISIBLE);*/
 
             switch(tipo_emergencia){
                 case "medica":
@@ -242,22 +247,461 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             Log.i(TAG, "version: " + android.os.Build.VERSION.SDK_INT + ", M: " + Build.VERSION_CODES.M);
         }
 
-        tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
+        btn_camara.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirCamara();
+            }
+        });
+
+        btn_video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        btn_audio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });*/
+        });
+    }
+
+    private void abrirCamara() {
+        String fileName = System.currentTimeMillis()+".jpg";
+
+        if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.TITLE, fileName);
+            fileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+            startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+        }
+        else{
+            Log.i(TAG, "version oldie");
+
+            if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)) {
+                Log.i(TAG, "aquii....**");
+                startDialog();
+            }else{
+                requestPermission(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_ACESS_STORAGE);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "Galeria fotos: " + requestCode + ", " + resultCode);
+
+        userSQLiteHelper usdbh =
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
+        SQLiteDatabase db = usdbh.getWritableDatabase();
+
+       /* Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM Media WHERE idmedio == 1", null);
+        if (c.moveToFirst()) {
+            Log.i(TAG, "ya existen medios");
+        }
+        else{
+            Log.v(TAG, "NO hay cosas, crear id 1");
+            //Abrimos la base de datos 'DBUsuarios' en modo escritura
+            if (db != null) {
+                //Insertamos los datos en la tabla Usuarios
+                db.execSQL("INSERT INTO Media (idmedio) VALUES (1)");
+            } else {
+                Log.v(TAG, "No Hay base");
+            }
+        }*/
+
+        if(requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE_OLDIE){
+
+            if (resultCode == RESULT_OK) {
+                Log.i(TAG, "Imagen capturada oldie");
+                //Log.e(TAG, "PATH oldie: " + photoPath);
+
+                if (data.hasExtra("data")) {
+                    Log.e(TAG, "Hay extras: ");
+                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+
+                    fileUri = getImageUri(Reporte911Activity.this, bitmap);
+                    File finalFile = new File(getRealPathFromUri(fileUri));
+                    btn_camara.setVisibility(View.VISIBLE);  //imageView
+                    //btn_camara.setVisibility(View.INVISIBLE);
+                    //btn_camara.setImageBitmap(bitmap);
+                    //Glide.with(this).load(bitmap).into(btn_camara);
+                    Log.e(TAG, "finalFile: " + finalFile.getPath());
+
+                    photoPath = getPath(fileUri);
+                    System.out.println("Image Path : " + photoPath);
+
+                    // Guarda en BD
+                    //Si hemos abierto correctamente la base de datos
+                    if (db != null) {
+                        //Insertamos los datos en la tabla Usuarios
+                        /*db.execSQL("UPDATE Media SET photopath = '" + photoPath +"' WHERE idmedio == 1");
+                        Log.v(TAG, "UPDATE Media SET medio = '" + photoPath +" tipo = 'foto' WHERE idmedio == 1");*/
+
+                        db.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + photoPath + "', foto)");
+                        Log.v(TAG, "INSERT INTO Media (medio, tipo) VALUES ('" + photoPath +", foto ");
+                    } else {
+                        Log.v(TAG, "No Hay base");
+                    }
+
+                    ///////actualizaPrevios();
+
+                } else if (data.getExtras() == null) {
+                    Log.e(TAG, "nulos extras");
+                    Toast.makeText(getApplicationContext(),
+                            "No extras to retrieve!", Toast.LENGTH_SHORT)
+                            .show();
+
+                    /*BitmapDrawable thumbnail = new BitmapDrawable(
+                            getResources(), data.getData().getPath());
+                    imageView.setImageDrawable(thumbnail);*/
+
+                }
+                else{
+                    Log.e(TAG, "no extras");
+                }
+
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(getApplicationContext(), "Cámara cancelada",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if(requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE){
+            try {
+                photoPath = getPath(fileUri);
+                System.out.println("Image Path : " + photoPath);
+                fotoBitmap = decodeUri(fileUri);
+                //imageView.setVisibility(View.VISIBLE);
+                //galeriaPrev.setVisibility(View.VISIBLE);
+                //btn_camara.setVisibility(View.INVISIBLE);
+                //btn_camara.setImageBitmap(photo);
+                ////btn_camara.setImageBitmap(fotoBitmap);
+                //Picasso.with(getApplicationContext()).load(photoPath).into(btn_camara);
+                Log.d(TAG, "Foto capturada: " + photoPath);
+
+                // Guarda en BD
+                //Si hemos abierto correctamente la base de datos
+                if (db != null) {
+                    //Insertamos los datos en la tabla Usuarios
+                    //db.execSQL("UPDATE Media SET photopath = '" + photoPath +"' WHERE idmedio == 1");
+
+                    db.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + photoPath + "', 'foto')");
+                    Log.v(TAG, "INSERT INTO Media (medio, tipo) VALUES ('" + photoPath +"', 'foto' ");
+                } else {
+                    Log.v(TAG, "No Hay base");
+                }
+                //////actualizaPrevios();
+
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        else if (requestCode == CAMERA_CAPTURE_VIDEO_REQUEST_CODE && resultCode == RESULT_OK) {
+
+            Log.d(TAG, "Video capturado: " + videoPath);
+            //Log.d(TAG, "Hay foto: " + photoPath);
+            //btn_video.setEnabled(false);
+            //btn_video.setVisibility(View.INVISIBLE);
+            /*imgvideoPrev.setVisibility(View.VISIBLE);
+            tv_videocapturado.setVisibility(View.VISIBLE);*/
+
+            Uri videoCaptured = data.getData();
+            String[] videoPathColumn = { MediaStore.Images.Media.DATA };
+            //Log.d(TAG, "Video grabado: " + videoPathColumn);
+
+            Cursor cursorvid = getContentResolver().query(videoCaptured,
+                    videoPathColumn, null, null, null);
+            cursorvid.moveToFirst();
+
+            int columnIndex = cursorvid.getColumnIndex(videoPathColumn[0]);
+            videoPath = cursorvid.getString(columnIndex);
+            Log.d(TAG, "Video para cambiar nombre: " + videoPath);
+            cursorvid.close();
+
+            //Si hemos abierto correctamente la base de datos
+            if (db != null) {
+                //db.execSQL("UPDATE Media SET videopath = '" + videoPath +"' WHERE idmedio == 1");
+
+                db.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + videoPath + "', video)");
+                Log.v(TAG, "INSERT INTO Media (medio, tipo) VALUES ('" + videoPath +", video ");
+            } else {
+                Log.v(TAG, "No Hay base");
+            }
+
+            //////actualizaPrevios();
+
+
+            File f1 = new File(videoPath);
+            VideoCompressAsyncTask videoCompressAsyncTask = new VideoCompressAsyncTask(getApplicationContext());
+            videoCompressAsyncTask.execute(f1.getPath().toString(), f1.getPath().toString());
+            Log.i(TAG, "compressVideo: " + fileVideoCompressedPath);
+
+
+            if (resultCode == RESULT_OK) {
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // user cancelled recording
+                Toast.makeText(getApplicationContext(),
+                        "Grabación de video cancelada por el usuario.", Toast.LENGTH_SHORT)
+                        .show();
+            }
+            else {
+                // failed to record video
+                Toast.makeText(getApplicationContext(),
+                        "Error en la grabación del video.", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+        else if (requestCode == SELECT_FILE && null != data) {
+            Log.i(TAG, "Se selecciona archivo de galeria");
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            //Log.d(TAG, "Galeria selected: " + selectedImage + ", " + filePathColumn);
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            photoGaleryPath = cursor.getString(columnIndex);
+            Log.i(TAG, "De la galeria: " + photoGaleryPath);
+            cursor.close();
+            /*galeriaPrev.setVisibility(View.VISIBLE);*/
+
+            //tv_videocapturadogal.setVisibility(View.VISIBLE);
+
+            //Si hemos abierto correctamente la base de datos
+            if (db != null) {
+                /*db.execSQL("UPDATE Media SET galeriapath = '" + photoGaleryPath +"' WHERE idmedio == 1");
+                Log.i(TAG, "UPDATE Media SET galeriapath = '" + photoGaleryPath +"' WHERE idmedio == 1");*/
+
+                db.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + photoGaleryPath + "', galeria)");
+                Log.v(TAG, "INSERT INTO Media (medio, tipo) VALUES ('" + photoGaleryPath +", galeria ");
+            } else {
+                Log.v(TAG, "No Hay base");
+            }
+
+            //////actualizaPrevios();
+
+
+            if(photoGaleryPath != null){
+                if(photoGaleryPath.endsWith("mp4")){
+                    // galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(photoGaleryPath));
+                    // compress video
+
+                    //galeriaPrev.setVisibility(View.VISIBLE);
+                    /*tv_videocapturadogal.setVisibility(View.VISIBLE);*/
+                    Log.d(TAG, "Video seleccionado de galeria: " + photoGaleryPath);
+
+                    File f1 = new File(photoGaleryPath);
+                    Log.i(TAG, "Path gal: " + f1.getPath().toString());
+
+                    String[] paramsVideoGal = new String[]{photoGaleryPath, f1.getPath().toString(), f1.getPath().toString()};
+                    VideoCompressGalleryAsyncTask videoCompressGalleryAsyncTask = new VideoCompressGalleryAsyncTask(getApplicationContext());
+                    videoCompressGalleryAsyncTask.execute(paramsVideoGal);
+                    photoGaleryPath = fileVideoGalCompressedPath;
+                    Log.i(TAG, "compressVideo: " + photoGaleryPath);
+
+                }else{
+                    //btn_galeria.setImageBitmap(BitmapFactory.decodeFile(photoGaleryPath));
+                    /*Glide.with(this).load(photoGaleryPath).into(btn_galeria);
+                    tv_videocapturadogal.setVisibility(View.INVISIBLE);*/
+                    Log.d(TAG, "Foto seleccionada de galeria: " + photoGaleryPath);
+                }
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "Error en la captura de la imagen, por favor intente de nuevo.", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "Error en la captura de la imagen.");
+            }
+
+        }
+        else{
+            Log.e(TAG, "error en camara!");
+        }
+        db.close();
+    }
+
+    private String getRealPathFromUri(Uri tempUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = this.getContentResolver().query(tempUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    private void actualizaPrevios() {
+        userSQLiteHelper mediadbh =
+                new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
+        SQLiteDatabase db = mediadbh.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT medio, tipo FROM Media WHERE idmedio == 1", null);
+        if (c.moveToFirst()) {
+            Log.v(TAG, "hay medios");
+            String fotoDB = c.getString(0);
+            String videoDB = c.getString(1);
+            String galeriaDB = c.getString(2);
+
+            Log.i(TAG, "foto: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + photoGaleryPathDB );
+                /*imageView.setVisibility(View.VISIBLE);
+                imageView.setImageBitmap(BitmapFactory.decodeFile(photoPathDB));
+                galeriaPrev.setVisibility(View.VISIBLE);
+                galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(photoGaleryPathDB));
+                db.close();*/
+
+            Log.i(TAG, "Medios DB: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + photoGaleryPathDB );
+            if(fotoDB != null){
+                Log.i(TAG, "hay foto db");
+               /* imageCameraPreview.setVisibility(View.VISIBLE);*/
+                /*btn_camara.setVisibility(View.INVISIBLE);*/
+                ///btn_camara.setImageBitmap(BitmapFactory.decodeFile(fotoDB));
+                //imageCameraPreview.setImageBitmap(BitmapFactory.decodeFile(fotoDB));
+                /*Glide.with(this).load(fotoDB).into(imageCameraPreview);*/
+            }
+            else{
+                Log.i(TAG, "no hay foto db");
+                //btn_camara.setVisibility(View.INVISIBLE);
+                /*btn_camara.setVisibility(View.VISIBLE);*/
+            }
+
+            if(videoDB != null){
+                Log.i(TAG, "hay video db");
+                //btn_video.setVisibility(View.INVISIBLE);
+                /*imgvideoPrev.setVisibility(View.VISIBLE);*/
+                /*tv_videocapturado.setVisibility(View.VISIBLE);*/
+            }
+            else{
+                Log.i(TAG, "no hay video db");
+                btn_video.setVisibility(View.VISIBLE);
+                /*tv_videocapturado.setVisibility(View.INVISIBLE);*/
+                /*imgvideoPrev.setVisibility(View.INVISIBLE);*/
+            }
+
+            if(galeriaDB != null){
+                Log.i(TAG, "hay archivo galeria db");
+               /* galeriaPrev.setVisibility(View.VISIBLE);*/
+                if(galeriaDB.endsWith("mp4")){
+                   /* btn_galeria.setVisibility(View.INVISIBLE);
+                    galeriaPrev.setVisibility(View.VISIBLE);
+                    galeriaPrev.setImageDrawable(getResources().getDrawable(R.drawable.boton_gris_circular));
+                    tv_videocapturadogal.setVisibility(View.VISIBLE);*/
+                }
+                else{
+                    /*btn_galeria.setVisibility(View.VISIBLE);
+                    //galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(galeriaDB));
+                    Glide.with(this).load(galeriaDB).into(galeriaPrev);
+                    tv_videocapturadogal.setVisibility(View.INVISIBLE);*/
+                    //tv_videocapturadogal.setText("Imagen \n Seleccionada");
+                }
+            }
+            else{
+                Log.i(TAG, "no hay archivo galeria db");
+                /*galeriaPrev.setVisibility(View.INVISIBLE);
+                btn_galeria.setVisibility(View.VISIBLE);
+                tv_videocapturadogal.setVisibility(View.INVISIBLE);*/
+            }
+
+        }
+        else{
+            Log.v(TAG, "NO hay MEDIOS");
+        }
+    }
+
+    private Uri getImageUri(Reporte911Activity reportebotondelamujeractivity, Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        String path = MediaStore.Images.Media.insertImage(reportebotondelamujeractivity.getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
+    }
+
+    private String getPath(Uri selectedImaeUri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(selectedImaeUri, projection, null, null,
+                null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            return cursor.getString(columnIndex);
+        }
+        return selectedImaeUri.getPath();
+    }
+
+    private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(getContentResolver()
+                .openInputStream(selectedImage), null, o);
+
+        final int REQUIRED_SIZE = 72;
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true) {
+            if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
+                break;
+            }
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
+                .openInputStream(selectedImage), null, o2);
+        return bitmap;
+    }
+
+    private void startDialog() {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+            if(checkPermission(Manifest.permission.CAMERA,Reporte911Activity.this)){
+                Log.i(TAG, "hay permiso camara ok");
+                openCameraApplication();
+            }else{
+                requestPermission(Reporte911Activity.this,new String[]{Manifest.permission.CAMERA},REQUEST_ACESS_CAMERA);
+            }
+        }else{
+            Log.i(TAG, "abre directo camara ok");
+            openCameraApplication();
+        }
+    }
+
+    public static boolean checkPermission(String permission, Context context) {
+        int statusCode = ContextCompat.checkSelfPermission(context, permission);
+        return statusCode == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void openCameraApplication() {
+        Intent picIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (picIntent.resolveActivity(getPackageManager())!= null){
+            startActivityForResult(picIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE_OLDIE);
+        }
     }
 
     public void SetUpViewPager (ViewPager viewpage){
         MyViewPageAdapter Adapter = new MyViewPageAdapter(getSupportFragmentManager());
 
-        Adapter.AddFragmentPage(new Medios_1(), "Page 1");
-        Adapter.AddFragmentPage(new Medios_2(), "Page 2");
-        Adapter.AddFragmentPage(new Medios_3(), "Page 3");
+        Adapter.AddFragmentPage(new Medios_1(), "Imagen");
+        Adapter.AddFragmentPage(new Medios_2(), "Video");
+        Adapter.AddFragmentPage(new Medios_3(), "Audio");
 
         /*
         You can add more Fragment Adapter
@@ -322,7 +766,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
 
     private void borraMedios() {
         userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, 1);
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getWritableDatabase();
         db.delete("Media", null, null);
         db.close();
@@ -368,98 +812,6 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
 
             servicioObtieneSubMotivos(String.valueOf(post_dict));
         }
-
-
-        /*RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        final JSONObject jsonBody = new JSONObject();
-
-
-        try {
-            jsonBody.put("institucion", '1');
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        final String requestBody = jsonBody.toString();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.GET_SUBMOTIVOS_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    jsonArr = new JSONArray(response);
-                    JsonResponse = response;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                //Log.i("VOLLEYresponse", String.valueOf(jsonArr));
-                Log.i(TAG, "VOLLEYresponse: " + response);
-                // [{"id_motivo":16,"id_instituciones":0,"submotivo":"AMENAZA DE ABORTO","nombre_motivo_llamada":null,"prioridad":null,"activo":false}]
-
-
-                tipoIncidenciaList = new ArrayList();
-                idTipoIncidencia = new String[10];
-
-                for (int i = 0; i < jsonArr.length(); i++){
-                    JSONObject jsonObj = null;
-                    try {
-                        jsonObj = jsonArr.getJSONObject(i);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        String incidencia_desc = jsonObj.getString("incidencia_desc");
-                        String id_tipo_incidencia = jsonObj.getString("id_tipo_incidencia");
-                        System.out.println(id_tipo_incidencia + ", " + incidencia_desc);
-
-                        idTipoIncidencia[i] = id_tipo_incidencia;
-                        tipoIncidenciaList.add(incidencia_desc);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }// for
-
-                progressDialogLista.dismiss();
-
-                ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(Reporte911Activity.this, android.R.layout.simple_spinner_dropdown_item, tipoIncidenciaList){
-                    public View getView(int position, View convertView, android.view.ViewGroup parent) {
-                        TextView v = (TextView) super.getView(position, convertView, parent);
-                        v.setTypeface(tf);
-                        v.setTextColor(Color.WHITE);
-                        return v;
-                    }
-                    public View getDropDownView(int position, View convertView, android.view.ViewGroup parent) {
-                        TextView v = (TextView) super.getView(position, convertView, parent);
-                        v.setTypeface(tf);
-                        return v;
-                    }
-                };
-                adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner_tipo_incidencia.setAdapter(adapter1);
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("VOLLEY", error.toString());
-                progressDialogLista.dismiss();
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                    return null;
-                }
-            }
-        };
-        requestQueue.add(stringRequest);*/
     }
 
     private void servicioObtieneSubMotivos(String params) {
@@ -654,6 +1006,117 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         Log.i(TAG, "onProviderDisabled");
         if (locationManager != null) {
             locationManager.removeUpdates(this);
+        }
+    }
+
+    public class VideoCompressGalleryAsyncTask extends AsyncTask<String, String, String> {
+
+        Context mContext;
+
+        public VideoCompressGalleryAsyncTask(Context context){
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(Reporte911Activity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Comprimiendo video...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgress(0);
+            progressDialog.show();
+            //dialog compressing...
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            fileVideoGalCompressedPath = null;
+            String videoGalleryPath = params[0];
+            String destinationPath = params[1];
+
+            try {
+                String destinationDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "";
+                File tempFile = new File(photoGaleryPath);
+
+                Log.i(TAG, "destination: " + destinationDir + ", path: " + tempFile.getPath());
+                Log.i(TAG, "video a comprimir de galeria: " + videoGalleryPath + ", params2: " + destinationPath);
+                fileVideoGalCompressedPath = SiliCompressor.with(mContext).compressVideo(videoGalleryPath, destinationDir);
+
+                Log.d(TAG , "filePath : " + fileVideoGalCompressedPath);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            return  fileVideoCompressedPath;
+        }
+
+        @Override
+        protected void onPostExecute(String compressedFilePath) {
+            super.onPostExecute(compressedFilePath);
+            progressDialog.dismiss();
+            File imageFile = new File(compressedFilePath);
+            float length = imageFile.length() / 1024f; // Size in KB
+            String value;
+            if(length >= 1024)
+                value = length/1024f+" MB";
+            else
+                value = length+" KB";
+            Log.i(TAG, "Path: " + value);
+        }
+    }
+
+    public class VideoCompressAsyncTask extends AsyncTask<String, String, String> {
+
+        Context mContext;
+
+        public VideoCompressAsyncTask(Context context){
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(Reporte911Activity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Comprimiendo video...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgress(0);
+            progressDialog.show();
+            //dialog compressing...
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            fileVideoCompressedPath = null;
+            try {
+                //String destinationUriString = "/storage/emulated/0/videokit";
+
+                String destinationDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "";
+                File tempFile = new File(videoPath);
+
+                Log.i(TAG, "destination: " + destinationDir + ", path: " + tempFile.getPath());
+
+                fileVideoCompressedPath = SiliCompressor.with(mContext).compressVideo(videoPath, destinationDir);
+
+                Log.d(TAG , "filePath : " + fileVideoCompressedPath);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            return  fileVideoCompressedPath;
+        }
+
+        @Override
+        protected void onPostExecute(String compressedFilePath) {
+            super.onPostExecute(compressedFilePath);
+            progressDialog.dismiss();
+            File imageFile = new File(compressedFilePath);
+            float length = imageFile.length() / 1024f; // Size in KB
+            String value;
+            if(length >= 1024)
+                value = length/1024f+" MB";
+            else
+                value = length+" KB";
+            Log.i(TAG, "Path: " + value);
         }
     }
 

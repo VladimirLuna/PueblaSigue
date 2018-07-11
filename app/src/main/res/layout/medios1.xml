@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@color/naranjaToolbar"
+    android:background="@color/white"
     android:layout_height="match_parent">
 
-    <TextView
+
+    <ImageView
+        android:id="@+id/img_fotos"
         android:layout_width="wrap_content"
-        android:text="Page 1"
+        android:layout_height="100dp"
         android:layout_gravity="center"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:layout_height="wrap_content" />
+        app:srcCompat="@drawable/p911" />
 </FrameLayout>
+
+    <!-- RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.vlim.puebla.Medios_1">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/idRecyclerViewHorizontalList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+    </RelativeLayout -->

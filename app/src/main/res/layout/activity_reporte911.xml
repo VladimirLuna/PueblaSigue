@@ -46,7 +46,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/toolbar_reporte911" />
 
             <TextView
-                android:id="@+id/tv_nombre"
+                android:id="@+id/tv_motivo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -60,7 +60,7 @@
                 android:id="@+id/et_nombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_nombre"
+                android:layout_below="@+id/tv_motivo"
                 android:layout_centerHorizontal="true"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
@@ -68,24 +68,24 @@
                 android:inputType="text|textCapSentences|textAutoCorrect|textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_nombre" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_motivo" />
 
             <TextView
-                android:id="@+id/tv_afiliado"
+                android:id="@+id/tv_descripcion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/tv_nombre"
+                android:layout_alignStart="@+id/tv_motivo"
                 android:layout_marginTop="204dp"
                 android:text="Descripción"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_nombre" />
 
             <EditText
-                android:id="@+id/et_afiliado"
+                android:id="@+id/et_descripcion"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                android:layout_below="@+id/tv_afiliado"
+                android:layout_below="@+id/tv_descripcion"
                 android:layout_centerHorizontal="true"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
@@ -93,7 +93,7 @@
                 android:inputType="text|textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_afiliado" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_descripcion" />
 
             <Spinner
                 android:id="@+id/spinner"
@@ -101,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:layout_alignParentBottom="true"
-                android:layout_below="@+id/et_afiliado"
+                android:layout_below="@+id/et_descripcion"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="255dp"
                 android:layout_marginEnd="10dp"
@@ -111,7 +111,7 @@
                 android:elevation="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_afiliado" />
+                app:layout_constraintTop_toBottomOf="@+id/et_descripcion" />
 
             <ImageView
                 android:id="@+id/btn_pdf"
@@ -214,7 +214,7 @@
                 android:textColor="@color/naranjaToolbar" />
 
             <ProgressBar
-                android:id="@+id/progressBarAnonima"
+                android:id="@+id/progressBar911"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="20dp"
@@ -252,7 +252,7 @@
                 android:id="@+id/Imageprev"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_alignStart="@+id/tv_nombre"
+                android:layout_alignStart="@+id/tv_motivo"
                 android:layout_alignTop="@+id/btn_pdf"
                 android:src="@drawable/boton_naranja_circular"
                 android:visibility="invisible"

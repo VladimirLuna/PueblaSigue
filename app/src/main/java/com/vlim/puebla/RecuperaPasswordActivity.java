@@ -29,7 +29,7 @@ public class RecuperaPasswordActivity extends AppCompatActivity {
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
-        tv_nombre = findViewById(R.id.tv_nombre);
+        tv_nombre = findViewById(R.id.tv_motivo);
         tv_celular = findViewById(R.id.tv_celular);
         tv_nuevopass = findViewById(R.id.tv_nuevopass);
         tv_nuevopass2 = findViewById(R.id.tv_nuevopass2);

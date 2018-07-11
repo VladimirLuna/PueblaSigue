@@ -48,5 +48,12 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="MyCustomTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@assets/fonts/BoxedBook.otf</item>
+    </style>
+
+
+
 
 </resources>

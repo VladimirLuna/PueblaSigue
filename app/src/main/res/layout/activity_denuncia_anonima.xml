@@ -105,7 +105,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignStart="@+id/et_descripcion_reporte"
-                android:layout_below="@+id/progressBarAnonima"
+                android:layout_below="@+id/progressBar911"
                 android:background="@drawable/boton_naranja_circular"
                 android:padding="12dp"
                 android:src="@drawable/foto" />
@@ -115,7 +115,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignStart="@+id/imgvideoPrev"
-                android:layout_below="@+id/progressBarAnonima"
+                android:layout_below="@+id/progressBar911"
                 android:background="@drawable/boton_naranja_circular"
                 android:padding="15dp"
                 app:srcCompat="@drawable/video" />
@@ -157,7 +157,7 @@
                 android:visibility="gone" />
 
             <ProgressBar
-                android:id="@+id/progressBarAnonima"
+                android:id="@+id/progressBar911"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="20dp"
@@ -181,7 +181,7 @@
                 android:id="@+id/imgvideoPrev"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_below="@+id/progressBarAnonima"
+                android:layout_below="@+id/progressBar911"
                 android:layout_centerHorizontal="true"
                 app:srcCompat="@drawable/boton_naranja_circular" />
 
@@ -189,7 +189,7 @@
                 android:id="@+id/tv_audiocapturado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/progressBarAnonima"
+                android:layout_below="@+id/progressBar911"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="19dp"
                 android:gravity="center_horizontal"
@@ -202,7 +202,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignEnd="@+id/et_descripcion_reporte"
-                android:layout_below="@+id/progressBarAnonima"
+                android:layout_below="@+id/progressBar911"
                 android:background="@drawable/boton_naranja_circular"
                 android:padding="15dp"
                 app:srcCompat="@drawable/galeria" />

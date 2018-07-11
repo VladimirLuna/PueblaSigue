@@ -116,7 +116,7 @@
         android:textSize="8sp" />
 
     <TextView
-        android:id="@+id/tv_nombre"
+        android:id="@+id/tv_motivo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btn_nueveonce"

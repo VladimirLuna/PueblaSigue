@@ -122,7 +122,7 @@ public class ComentariosActivity extends AppCompatActivity implements SwipeRefre
     private String idUsr() {
         String idUsuario = null;
         userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, 1);
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT idusuario FROM Usuarios", null);
 

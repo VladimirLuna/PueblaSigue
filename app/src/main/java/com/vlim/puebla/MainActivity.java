@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         tv_botonmujer.setTypeface(tf);
         tv_botonpanico = findViewById(R.id.tv_botonpanico);
         tv_botonpanico.setTypeface(tf);
-        tv_servicios = findViewById(R.id.tv_nombre);
+        tv_servicios = findViewById(R.id.tv_motivo);
         tv_servicios.setTypeface(tf);
 
         // Get extras
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         String[] campos = new String[] {"idusuario", "nick", "nombre"};
 
         userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, 1);
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getReadableDatabase();
         //Cursor c = db.query("Usuarios", campos, "idusuario=?", args, null, null, null);
         Cursor c = db.rawQuery("SELECT idusuario, nick, nombre FROM Usuarios", null);
@@ -440,7 +440,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void borraBD() {
         userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, 1);
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getWritableDatabase();
         db.delete("Usuarios", null, null);
         Log.i(TAG, "Elimina base Usuarios");

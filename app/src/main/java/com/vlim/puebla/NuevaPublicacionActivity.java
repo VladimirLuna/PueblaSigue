@@ -184,7 +184,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                 else{
                     // lee datos del usuario
                     userSQLiteHelper mediadbh =
-                            new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, 1);
+                            new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
                     SQLiteDatabase db = mediadbh.getReadableDatabase();
                     Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM Media", null);
                     if (c.moveToFirst()) {
@@ -405,7 +405,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         Log.d(TAG, "Galeria fotos: " + requestCode + ", " + resultCode);
 
         userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, 1);
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getWritableDatabase();
 
         Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM Media WHERE idmedio == 1", null);
@@ -416,7 +416,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             Log.v(TAG, "NO hay cosas, crear id 1");
             //Abrimos la base de datos 'DBUsuarios' en modo escritura
             /*userSQLiteHelper mediadbh =
-                    new userSQLiteHelper(ReporteBotonDeLaMujerActivity.this, "DBUsuarios", null, 5);
+                    new userSQLiteHelper(ReporteBotonDeLaMujerActivity.this, "DBUsuarios", null, Config.VERSION_DB);
             SQLiteDatabase db = mediadbh.getWritableDatabase();*/
             if (db != null) {
                 //Insertamos los datos en la tabla Usuarios
@@ -427,7 +427,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         }
         //Abrimos la base de datos 'DBUsuarios' en modo escritura
         /*userSQLiteHelper mediadbh =
-                new userSQLiteHelper(NuevaPublicacionActivity.this, "DBUsuarios", null, 1);
+                new userSQLiteHelper(NuevaPublicacionActivity.this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getWritableDatabase();
         if (db != null) {
             //Insertamos los datos en la tabla Usuarios
@@ -591,7 +591,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
     private void actualizaPrevios() {
         userSQLiteHelper mediadbh =
-                new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, 1);
+                new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM Media WHERE idmedio == 1", null);
         if (c.moveToFirst()) {
@@ -1151,7 +1151,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
     private void borraMedios() {
         userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, 1);
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getWritableDatabase();
         db.delete("Media", null, null);
         db.close();

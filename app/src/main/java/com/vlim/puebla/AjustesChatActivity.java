@@ -136,7 +136,7 @@ public class AjustesChatActivity extends AppCompatActivity {
         et_nickname.setSelected(false);
 
         userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, 1);
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getReadableDatabase();
         //Cursor c = db.query("Usuarios", campos, "idusuario=?", args, null, null, null);
         Cursor c = db.rawQuery("SELECT idusuario, nick, img FROM Usuarios", null);
@@ -361,7 +361,7 @@ public class AjustesChatActivity extends AppCompatActivity {
                                 //////Toast.makeText(getApplicationContext(), "Nickname Actualizado.", Toast.LENGTH_LONG).show();
                                 // actualiza bd
                                 userSQLiteHelper usdbh =
-                                        new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, 5);
+                                        new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
                                 SQLiteDatabase db = usdbh.getReadableDatabase();
                                 if (db != null) {
                                     db.execSQL("UPDATE Usuarios SET nick = '" + newusrname +"' WHERE idusuario == '" + idusuario + "'");
@@ -706,7 +706,7 @@ public class AjustesChatActivity extends AppCompatActivity {
 
                     // actualiza bd
                     userSQLiteHelper usdbh =
-                            new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, 5);
+                            new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
                     SQLiteDatabase db = usdbh.getWritableDatabase();
                     if (db != null) {
                         db.execSQL("UPDATE Usuarios SET img = ' http://187.217.215.234:8080/Escudo_Yucatan/complementos/imagenesperfil/" + nombreFoto +"' WHERE idusuario == '" + idusuario + "' ");
