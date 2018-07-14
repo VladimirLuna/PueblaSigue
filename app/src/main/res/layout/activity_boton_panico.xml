@@ -6,4 +6,42 @@
     android:layout_height="match_parent"
     tools:context=".BotonPanicoActivity">
 
+    <include
+        android:id="@+id/toolbar_panico"
+        layout="@layout/appbar_panico"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <View android:id="@+id/separator"
+        android:background="@color/separator"
+        android:layout_width = "fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@+id/toolbar_panico"
+        android:layout_centerVertical ="true"/>
+
+    <ProgressBar
+        android:id="@+id/progressBarPanico"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:layout_marginBottom="35dp"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_panico"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/btne" />
+
 </android.support.constraint.ConstraintLayout>

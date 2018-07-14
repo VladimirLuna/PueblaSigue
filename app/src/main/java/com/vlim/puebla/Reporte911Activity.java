@@ -137,6 +137,8 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
     TabLayout MyTabs;
     ViewPager MyPage;
 
+    Cursor c = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -247,6 +249,8 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             Log.i(TAG, "version: " + android.os.Build.VERSION.SDK_INT + ", M: " + Build.VERSION_CODES.M);
         }
 
+        actualizaPrevios();
+
         btn_camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -271,6 +275,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                borraMedios();
                 finish();
             }
         });
@@ -555,12 +560,11 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         userSQLiteHelper mediadbh =
                 new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT medio, tipo FROM Media WHERE idmedio == 1", null);
-        if (c.moveToFirst()) {
+        c = db.rawQuery("SELECT medio, tipo FROM Media", null);
+        if (c != null && c.moveToFirst()) {
             Log.v(TAG, "hay medios");
-            String fotoDB = c.getString(0);
-            String videoDB = c.getString(1);
-            String galeriaDB = c.getString(2);
+            String medio = c.getString(0);
+            String tipo = c.getString(1);
 
             Log.i(TAG, "foto: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + photoGaleryPathDB );
                 /*imageView.setVisibility(View.VISIBLE);
@@ -570,7 +574,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 db.close();*/
 
             Log.i(TAG, "Medios DB: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + photoGaleryPathDB );
-            if(fotoDB != null){
+            if(tipo.equals("foto")){
                 Log.i(TAG, "hay foto db");
                /* imageCameraPreview.setVisibility(View.VISIBLE);*/
                 /*btn_camara.setVisibility(View.INVISIBLE);*/
@@ -584,7 +588,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 /*btn_camara.setVisibility(View.VISIBLE);*/
             }
 
-            if(videoDB != null){
+            if(tipo.equals("video")){
                 Log.i(TAG, "hay video db");
                 //btn_video.setVisibility(View.INVISIBLE);
                 /*imgvideoPrev.setVisibility(View.VISIBLE);*/
@@ -597,22 +601,22 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 /*imgvideoPrev.setVisibility(View.INVISIBLE);*/
             }
 
-            if(galeriaDB != null){
+            if(tipo.equals("audio")){
                 Log.i(TAG, "hay archivo galeria db");
                /* galeriaPrev.setVisibility(View.VISIBLE);*/
-                if(galeriaDB.endsWith("mp4")){
+                /*if(galeriaDB.endsWith("mp4")){
                    /* btn_galeria.setVisibility(View.INVISIBLE);
                     galeriaPrev.setVisibility(View.VISIBLE);
                     galeriaPrev.setImageDrawable(getResources().getDrawable(R.drawable.boton_gris_circular));
                     tv_videocapturadogal.setVisibility(View.VISIBLE);*/
-                }
+                /*}
                 else{
                     /*btn_galeria.setVisibility(View.VISIBLE);
                     //galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(galeriaDB));
                     Glide.with(this).load(galeriaDB).into(galeriaPrev);
                     tv_videocapturadogal.setVisibility(View.INVISIBLE);*/
                     //tv_videocapturadogal.setText("Imagen \n Seleccionada");
-                }
+               /* }*/
             }
             else{
                 Log.i(TAG, "no hay archivo galeria db");

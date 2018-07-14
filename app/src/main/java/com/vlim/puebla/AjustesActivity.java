@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public class AjustesActivity extends AppCompatActivity {
 
-    TextView tv_titulo_toolbar;
+    TextView tv_titulo_toolbar, tv_info, tv_chat, tv_mensaje1;
     ImageView btn_back, btn_ajustes_informacion, btn_ajustes_chat;
 
     @Override
@@ -25,6 +25,12 @@ public class AjustesActivity extends AppCompatActivity {
         btn_back = findViewById(R.id.btn_back);
         btn_ajustes_informacion = findViewById(R.id.btn_ajustes_informacion);
         btn_ajustes_chat = findViewById(R.id.btn_contactos);
+        tv_info = findViewById(R.id.tv_info);
+        tv_chat = findViewById(R.id.tv_chat);
+        tv_mensaje1 = findViewById(R.id.tv_mensaje1);
+        tv_info.setTypeface(tf);
+        tv_chat.setTypeface(tf);
+        tv_mensaje1.setTypeface(tf);
 
         btn_ajustes_informacion.setOnClickListener(new View.OnClickListener() {
             @Override

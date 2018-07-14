@@ -194,13 +194,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "Llamando...");
                 // dialog preguntar imagen o video
-                final CharSequence[] options = {"Lamar", "Cancelar"};
+                final CharSequence[] options = {"Lamar a 01 800 624 2330", "Cancelar"};
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Tel Mujer");
                 builder.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
-                        if (options[item].equals("01 800 624 2330")) {
+                        if (options[item].equals("Lamar a 01 800 624 2330")) {
                             Intent btnllamarTelMujer = new Intent(Intent.ACTION_CALL);
                             btnllamarTelMujer.setData(Uri.parse("tel:018006242330"));
                             if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                                     PackageManager.PERMISSION_GRANTED) {
                         Intent btnpanico = new Intent(MainActivity.this, BotonPanicoActivity.class);
                         btnpanico.putExtra("idusuario", idusuario);
-                        ///////startActivity(btnpanico);
+                        startActivity(btnpanico);
 
                     } else {
                         //Toast.makeText(getApplicationContext(), "Error en permiso mapa", Toast.LENGTH_LONG).show();
