@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/tv_contacto_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_columnWeight="1"
+        android:layout_marginLeft="10dp"
+        android:layout_row="0"
+        android:text="123444"
+        android:textColor="#aaaaaa"
+        android:textSize="30dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_contacto_nombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_columnWeight="1"
+        android:layout_marginLeft="20dp"
+        android:layout_row="1"
+        android:padding="15dp"
+        android:textColor="#aaaaaa"
+        android:textSize="18dp" />
+</GridLayout>

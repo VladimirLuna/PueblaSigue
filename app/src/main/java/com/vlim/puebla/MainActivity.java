@@ -264,7 +264,14 @@ public class MainActivity extends AppCompatActivity {
         btn_sigueme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                nt_check = new NetworkConnection(getApplicationContext());
+                if(nt_check.isOnline()){
+                    Intent siguemeIntent = new Intent(MainActivity.this, Sigueme2Activity.class);
+                    siguemeIntent.putExtra("idusuario", idusuario);
+                    startActivity(siguemeIntent);
+                }else{
+                    Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 

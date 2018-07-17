@@ -13,9 +13,29 @@
         android:text="Escriba la nueva contraseña:" />
 
     <EditText
-        android:id="@+id/edit1"
+        android:id="@+id/et_pass1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text|textPassword" />
+
+    <TextView
+        android:id="@+id/tv_pass2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Escriba otra vez la nueva contraseña:" />
+
+    <EditText
+        android:id="@+id/et_pass2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text|textPassword" />
+
+    <Button
+        android:id="@+id/btn_guarda_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/roundedbutton"
+        android:textColor="@color/white"
+        android:text="Guardar" />
 
 </LinearLayout>

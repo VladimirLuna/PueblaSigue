@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,9 +31,9 @@ public class AjustesInfoActivity extends AppCompatActivity {
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
         // Toolbar
-        tv_titulo_toolbar = (TextView) findViewById(R.id.tv_titulo_toolbar);
+        tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_titulo_toolbar.setTypeface(tf);
-        btn_back = (ImageView) findViewById(R.id.btn_back);
+        btn_back = findViewById(R.id.btn_back);
         btn_cambiar_pass = findViewById(R.id.btn_cambiar_pass);
         btn_contactos = findViewById(R.id.btn_contactos);
         btn_info_personal = findViewById(R.id.btn_ajustes_informacion);
@@ -47,7 +48,8 @@ public class AjustesInfoActivity extends AppCompatActivity {
         btn_info_personal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent info_personal = new Intent(getApplicationContext(), InfoPersonalActivity.class);
+                startActivity(info_personal);
             }
         });
 
@@ -68,13 +70,33 @@ public class AjustesInfoActivity extends AppCompatActivity {
                 final View dialogView = inflater.inflate(R.layout.custom_dialog_pass, null);
                 alertPass.setView(dialogView);
 
-                final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
+                final EditText et_pass1 = dialogView.findViewById(R.id.et_pass1);
+                final EditText et_pass2 = dialogView.findViewById(R.id.et_pass2);
+                final Button btn_guarda_pass = dialogView.findViewById(R.id.btn_guarda_pass);
 
-                alertPass.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        //Put actions for OK button here
+                btn_guarda_pass.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String pass1 = et_pass1.getText().toString().trim();
+                        String pass2 = et_pass2.getText().toString().trim();
+                        if(pass1.equals("")){
+                            et_pass1.setError("Debes escribir tu contraseña.");
+                        }
+                        if(pass2.equals("")){
+                            et_pass2.setError("Debes escribir otra vez tu contraseña.");
+                        }
+                        if(!pass1.equals(pass2)){
+                            et_pass2.setError("Las contraseñas no coinciden");
+                        }
                     }
                 });
+
+                /*alertPass.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //Put actions for OK button here
+
+                    }
+                });*/
                 alertPass.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //Put actions for CANCEL button here, or leave in blank

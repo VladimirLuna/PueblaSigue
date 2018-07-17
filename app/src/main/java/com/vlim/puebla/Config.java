@@ -41,4 +41,22 @@ public class Config {
     public static final String NUEVA_PUBLICACION_SINMEDIOS_URL = HOST + "Escudo_Puebla/servicios/nuevoPostSN";
     /////////////////
     public static final String IMAGE_DIRECTORY_NAME = "Puebla";
+    /////
+    public static final String GET_CAT_089 = HOST + "Escudo_Puebla/servicios/getCat089";   //{"idusr":"valor"} || [{"id_cat089":valor, "nombre":"valor"}]
+    public static final String GET_CAT_COLONIA = HOST + "Escudo_Puebla/servicios/getCatColonia";   //{"idusr":"valor"} || [{"id_cat_colonia":valor, "nombre":"valor"}]
+    // Sigueme y cuidame
+    public static final String NUEVA_RUTA_URL = HOST + "Escudo_Puebla/servicios/nuevaRuta";   //{"latusr":"valor","lonusr":"valor","latdest":"valor","londest":"valor","idusr":"valor","ruta":[{"lng":"valor","lat":"valor"},{"lng":"valor",º"lat":"valor"}]} || [{"respuesta":OK, "mensaje":num_ruta}] ó [{"respuesta":Error, "mensaje":Ocurrio un error, favor de comunicarse con el administrador}]
+    public static final String CANCELA_VIAJE_URL = HOST + "Escudo_Puebla/servicios/cancelaViaje";   //{"idviaje":"valor"} || [{"respuesta":OK, "mensaje":Se cancelo el viaje correctamente}] ó [{"respuesta":Error, "mensaje":No se pudo cancelar el viaje}]
+    public static final String BUFFER_RUTA_URL = HOST + "Escudo_Puebla/servicios/bufferRuta";   //{"idviaje":"valor", "lat":"valor","lng":"valor"} || [{"respuesta":OK, "mensaje":Sigue dentro de la ruta}] ó [{"respuesta":Error, "mensaje":Ha salido de la ruta, avisar a contactos}]
+    // Ajustes cambio de password
+    public static final String AJUSTES_CAMBIO_PASS_URL = HOST + "Escudo_Puebla/servicios/AjustescambioPass";   //{"idusr":"valor","newpass":"valor"} || [{"respuesta":OK, "mensaje":Se cambio el password}] ó [{"respuesta":Error, "mensaje":No se pudo cambiar el password}]
+    // Contactos de emergencia
+    public static final String GET_CONTACTOS_URL = HOST + "Escudo_Puebla/servicios/getContactos";   //{"idusr":"valor"} || [{"id_usuario_contacto":valor, "nombre_completo":"valor"}]
+    public static final String GET_INFO_CONTACTO_URL = HOST + "Escudo_Puebla/servicios/getInfoContacto";   //{"idusr":"valor"} || [{"nombre_completo":valor, "telefono":"valor", "celular":"valor", "correo_contacto":"valor"}]
+    public static final String INSERT_CONTACTO_URL = HOST + "Escudo_Puebla/servicios/insertContacto";   // {"idusr":"valor", "nombre":"valor", "tel":"valor", "cel":"valor", "correo":"valor"} || [{"respuesta":OK, "mensaje":Se agrego el contacto}] ó [{"respuesta":Error, "mensaje":Error al insertar contacto}]
+    public static final String UPDATE_CONTACTO_URL = HOST + "Escudo_Puebla/servicios/updateContacto";   // {"idcontacto":"valor", "nombre":"valor", "tel":"valor", "cel":"valor", "correo":"valor"} || [{"respuesta":OK, "mensaje":Se editó el contacto}] ó [{"respuesta":Error, "mensaje":Error al editar contacto}]
+    public static final String ELIMINA_CONTACTO_URL = HOST + "Escudo_Puebla/servicios/deleteContacto";   // {"deleteContacto":"valor"} || [{"respuesta":OK, "mensaje":Se borró el contacto}] ó [{"respuesta":Error, "mensaje":Error al borrar contacto}]
+    // Info del usuario
+    public static final String GET_INFO_USUARIO = HOST + "Escudo_Puebla/servicios/getInfoUsuario ";   //{"idusr":"valor"} ||  "direccion": "Calzada Melchor Ocampo", "telefono_casa": 55555555,  "celular": 5533357812, "id_identificacion": 4, "num_identificcion": "MH6PO3MN", "condicion_medica": "Pues escuche una rola muy feita y baile :("
+    public static final String UPDATE_INFO_USUARIO = HOST + "Escudo_Puebla/servicios/updateInfoUsuario  ";   //{"idusr":"valor"} || [{"id_cat089":valor, "nombre":"valor"}]
 }
