@@ -8,6 +8,7 @@ class userSQLiteHelper extends SQLiteOpenHelper {
     //Sentencia SQL para crear la tabla de Usuarios
     private String sqlCreate = "CREATE TABLE Usuarios (idusuario INTEGER, nick TEXT, nombre TEXT, usr TEXT, password TEXT, img TEXT)";
     private String sqlMediosCreate = "CREATE TABLE Media (idmedio INTEGER, medio TEXT, tipo TEXT)";   // tipo: foto, video, audio
+    private String sqlMediosChatCreate = "CREATE TABLE MediaChat (idmedio INTEGER, photopath TEXT, videopath TEXT, galeriapath TEXT)";
 
     public userSQLiteHelper(Context contexto, String nombre,
                             SQLiteDatabase.CursorFactory factory, int version) {
@@ -18,6 +19,7 @@ class userSQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         //Se ejecuta la sentencia SQL de creación de la tabla
         db.execSQL(sqlCreate);
+        db.execSQL(sqlMediosChatCreate);
         db.execSQL(sqlMediosCreate);
     }
 
@@ -30,10 +32,12 @@ class userSQLiteHelper extends SQLiteOpenHelper {
 
         //Se elimina la versión anterior de la tabla
         db.execSQL("DROP TABLE IF EXISTS Usuarios");
+        db.execSQL("DROP TABLE IF EXISTS MediaChat");
         db.execSQL("DROP TABLE IF EXISTS Media");
 
         //Se crea la nueva versión de la tabla
         db.execSQL(sqlCreate);
+        db.execSQL(sqlMediosChatCreate);
         db.execSQL(sqlMediosCreate);
     }
 }

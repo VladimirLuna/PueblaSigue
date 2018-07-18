@@ -186,7 +186,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                     userSQLiteHelper mediadbh =
                             new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
                     SQLiteDatabase db = mediadbh.getReadableDatabase();
-                    Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM Media", null);
+                    Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM MediaChat", null);
                     if (c.moveToFirst()) {
                         Log.v(TAG, "hay MEDIOS");
                         photoPathDB = c.getString(0);
@@ -216,6 +216,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                         UploadFileToServer2NoFiles uploadFTS2noFiles = new UploadFileToServer2NoFiles();
                         uploadFTS2noFiles.execute(params2noFiles);
                     }
+                    c.close();
                 }
             }
         });
@@ -408,7 +409,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getWritableDatabase();
 
-        Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM Media WHERE idmedio == 1", null);
+        Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM MediaChat WHERE idmedio == 1", null);
         if (c.moveToFirst()) {
             Log.i(TAG, "ya existen medios");
         }
@@ -420,18 +421,19 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             SQLiteDatabase db = mediadbh.getWritableDatabase();*/
             if (db != null) {
                 //Insertamos los datos en la tabla Usuarios
-                db.execSQL("INSERT INTO Media (idmedio) VALUES (1)");
+                db.execSQL("INSERT INTO MediaChat (idmedio) VALUES (1)");
             } else {
                 Log.v(TAG, "No Hay base");
             }
         }
+        c.close();
         //Abrimos la base de datos 'DBUsuarios' en modo escritura
         /*userSQLiteHelper mediadbh =
                 new userSQLiteHelper(NuevaPublicacionActivity.this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getWritableDatabase();
         if (db != null) {
             //Insertamos los datos en la tabla Usuarios
-            db.execSQL("INSERT INTO Media (idmedio) VALUES (1)");
+            db.execSQL("INSERT INTO MediaChat (idmedio) VALUES (1)");
         } else {
             Log.v(TAG, "No Hay base");
         }*/
@@ -456,7 +458,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                 //Si hemos abierto correctamente la base de datos
                 if (db != null) {
                     //Insertamos los datos en la tabla Usuarios
-                    db.execSQL("UPDATE Media SET photopath = '" + photoPath +"' WHERE idmedio == 1");
+                    db.execSQL("UPDATE MediaChat SET photopath = '" + photoPath +"' WHERE idmedio == 1");
                 } else {
                     Log.v(TAG, "No Hay base");
                 }
@@ -490,7 +492,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
             //Si hemos abierto correctamente la base de datos
             if (db != null) {
-                db.execSQL("UPDATE Media SET videopath = '" + videoPath +"' WHERE idmedio == 1");
+                db.execSQL("UPDATE MediaChat SET videopath = '" + videoPath +"' WHERE idmedio == 1");
             } else {
                 Log.v(TAG, "No Hay base");
             }
@@ -539,9 +541,9 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
             //Si hemos abierto correctamente la base de datos
             if (db != null) {
-                db.execSQL("UPDATE Media SET galeriapath = '" + photoGaleryPath +"' WHERE idmedio == 1");
+                db.execSQL("UPDATE MediaChat SET galeriapath = '" + photoGaleryPath +"' WHERE idmedio == 1");
 
-                Log.i(TAG, "UPDATE Media SET galeriapath = '" + photoGaleryPath +"' WHERE idmedio == 1");
+                Log.i(TAG, "UPDATE MediaChat SET galeriapath = '" + photoGaleryPath +"' WHERE idmedio == 1");
                 //db.close();
             } else {
                 Log.v(TAG, "No Hay base");
@@ -593,7 +595,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         userSQLiteHelper mediadbh =
                 new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM Media WHERE idmedio == 1", null);
+        Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM MediaChat WHERE idmedio == 1", null);
         if (c.moveToFirst()) {
             Log.v(TAG, "hay medios");
             String fotoDB = c.getString(0);
@@ -671,6 +673,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         else{
             Log.v(TAG, "NO hay MEDIOS");
         }
+        c.close();
     }
 
     private String getPath(Uri selectedImaeUri) {
@@ -682,6 +685,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             return cursor.getString(columnIndex);
         }
+        cursor.close();
         return selectedImaeUri.getPath();
     }
 
@@ -1153,9 +1157,9 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         userSQLiteHelper usdbh =
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getWritableDatabase();
-        db.delete("Media", null, null);
+        db.delete("MediaChat", null, null);
         db.close();
-        Log.i(TAG, "Borrando bd medios");
+        Log.i(TAG, "Borrando bd medios Chat");
     }
 
     public class VideoCompressAsyncTask extends AsyncTask<String, String, String> {
