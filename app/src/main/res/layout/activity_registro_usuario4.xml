@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_dependiente"
+        layout="@layout/appbar_dependiente"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".RegistroUsuarioActivity4"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
+
+
+            <TextView
+                android:id="@+id/tv_mensaje"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/tv_detalle1"
+                android:layout_marginTop="20dp"
+                android:text="AGREGAR LOS DATOS DEL MENOR"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_detalle1"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/tv_nombrecompleto"
+                android:layout_gravity="center_horizontal|center"
+                android:layout_marginTop="14dp"
+                android:text="Toda la información multimedia en este sitio, será utilizada para los fines que Escudo Yucatán disponga"
+                android:textColor="@color/naranjaToolbar"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_nombrecompleto"
+                android:layout_width="500dp"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/et_nombrecontacto"
+                android:layout_alignStart="@+id/et_nombrecontacto"
+                android:layout_below="@+id/tv_mensaje"
+                android:layout_marginTop="30dp"
+                android:text="* Nombre completo"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_tel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/et_nombrecontacto"
+                android:layout_below="@+id/et_nombrecontacto"
+                android:layout_marginTop="8dp"
+                android:text="Teléfono particular"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_nombrecontacto"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_nombrecompleto"
+                android:layout_centerHorizontal="true"
+                android:ems="10"
+                android:inputType="text|textCapWords|textPersonName" />
+
+            <EditText
+                android:id="@+id/et_telcontacto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/et_nombrecontacto"
+                android:layout_alignStart="@+id/tv_tel"
+                android:layout_below="@+id/tv_tel"
+                android:ems="10"
+                android:inputType="phone" />
+
+            <ImageButton
+                android:id="@+id/btn_enviardenuncia"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_below="@+id/et_passdependiente"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="17dp"
+                android:background="@drawable/boton_naranja_circular"
+                android:padding="14dp"
+                android:src="@drawable/btnnextc_naranja"
+                app:srcCompat="@drawable/btnnextc_naranja" />
+
+            <TextView
+                android:id="@+id/tv_cel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/et_telcontacto"
+                android:layout_below="@+id/et_telcontacto"
+                android:layout_marginTop="8dp"
+                android:text="* Celular"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_celdependiente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/et_telcontacto"
+                android:layout_alignStart="@+id/tv_cel"
+                android:layout_below="@+id/tv_cel"
+                android:ems="10"
+                android:inputType="phone" />
+
+            <TextView
+                android:id="@+id/tv_usuario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/et_celdependiente"
+                android:layout_below="@+id/et_celdependiente"
+                android:layout_marginTop="8dp"
+                android:text="* Usuario"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_celcontacto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/et_celdependiente"
+                android:layout_alignStart="@+id/tv_usuario"
+                android:layout_below="@+id/tv_usuario"
+                android:ems="10"
+                android:inputType="text" />
+
+            <TextView
+                android:id="@+id/tv_passs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/et_celcontacto"
+                android:layout_below="@+id/et_celcontacto"
+                android:layout_marginTop="8dp"
+                android:text="* Contraseña"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_passdependiente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/et_celdependiente"
+                android:layout_alignStart="@+id/tv_passs"
+                android:layout_below="@+id/tv_passs"
+                android:ems="10"
+                android:inputType="text" />
+
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

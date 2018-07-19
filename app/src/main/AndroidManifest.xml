@@ -109,7 +109,12 @@
         <activity android:name=".DetalleContactoActivity" />
         <activity android:name=".SiguemeyCuidameActivity" />
         <activity android:name=".Sigueme2Activity" />
-        <activity android:name=".InfoPersonalActivity"></activity>
+        <activity android:name=".InfoPersonalActivity" />
+        <activity android:name=".AvisoPrivacidadActivity" />
+        <activity android:name=".TerminosyCondicionesActivity" />
+        <activity android:name=".RegistroUsuarioActivity2" />
+        <activity android:name=".RegistroUsuarioActivity3" />
+        <activity android:name=".RegistroUsuarioActivity4"></activity>
     </application>
 
 </manifest>

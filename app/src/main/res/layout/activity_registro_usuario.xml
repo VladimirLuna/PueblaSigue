@@ -69,19 +69,19 @@
                 android:inputType="text|textCapSentences|textPostalAddress"
                 android:maxLength="100" />
 
-            <!-- ImageButton
+            <ImageButton
                 android:id="@+id/btn_datoscuenta"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_below="@+id/tv_detalle1"
+                android:layout_below="@+id/tv_avisoprivacidad"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="29dp"
                 android:background="@drawable/boton_naranja_circular"
-                android:padding="60dp"
-                android:src="@drawable/siguiente"
-                app:srcCompat="@drawable/siguiente" / -->
+                android:padding="14dp"
+                android:src="@drawable/btnnextc_naranja"
+                app:srcCompat="@drawable/btnnextc_naranja" />
 
-            <ImageView
+            <!-- ImageView
                 android:id="@+id/btn_siguiente"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
@@ -94,7 +94,7 @@
                 android:src="@drawable/siguiente"
                 app:layout_heightPercent="25%"
                 app:layout_widthPercent="40%"
-                app:srcCompat="@drawable/siguiente" />
+                app:srcCompat="@drawable/siguiente" / -->
 
             <TextView
                 android:id="@+id/tv_telefono"
