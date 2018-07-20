@@ -43,7 +43,7 @@
                 android:layout_alignStart="@+id/et_nombrecontacto"
                 android:layout_below="@+id/tv_mensaje"
                 android:layout_marginTop="30dp"
-                android:text="* Usuario"
+                android:text="* Correo"
                 android:textSize="16sp" />
 
             <TextView
@@ -81,8 +81,8 @@
                 android:id="@+id/tv_detalle1"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/et_celcontacto"
-                android:layout_below="@+id/et_celcontacto"
+                android:layout_alignStart="@+id/et_padecimientos"
+                android:layout_below="@+id/et_padecimientos"
                 android:layout_gravity="center_horizontal|center"
                 android:text="Toda la información multimedia en este sitio, será utilizada para los fines que Escudo Yucatán disponga"
                 android:textColor="@color/naranjaToolbar"
@@ -93,7 +93,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignEnd="@+id/tv_usuario"
-                android:layout_below="@+id/et_celcontacto"
+                android:layout_below="@+id/tv_detalle1"
                 android:layout_marginTop="39dp"
                 android:background="@drawable/boton_naranja_circular"
                 android:padding="14dp"
@@ -107,7 +107,7 @@
                 android:layout_alignStart="@+id/et_telcontacto"
                 android:layout_below="@+id/et_telcontacto"
                 android:layout_marginTop="15dp"
-                android:text="* Tipo de identificación"
+                android:text="* Identificación"
                 android:textSize="16sp" />
 
             <Spinner
@@ -139,6 +139,46 @@
                 android:ems="10"
                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
                 android:maxLength="30" />
+
+            <TextView
+                android:id="@+id/tv_colonia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/spinner_tipoid"
+                android:layout_below="@+id/et_celcontacto"
+                android:layout_marginTop="20dp"
+                android:text="* Colonia"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_colonia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/spinner_tipoid"
+                android:layout_alignStart="@+id/tv_usuario"
+                android:layout_below="@+id/tv_colonia"
+                android:ems="10"
+                android:inputType="text|textAutoComplete" />
+
+            <TextView
+                android:id="@+id/tv_padecimientos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/spinner_tipoid"
+                android:layout_below="@+id/et_colonia"
+                android:layout_marginTop="20dp"
+                android:text="Padecimientos clínicos"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_padecimientos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/spinner_tipoid"
+                android:layout_alignStart="@+id/tv_usuario"
+                android:layout_below="@+id/tv_padecimientos"
+                android:ems="10"
+                android:inputType="text|textAutoComplete|textMultiLine" />
 
         </RelativeLayout>
     </ScrollView>

@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +40,7 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
     TextView tv_titulo_toolbar, tv_mensaje, tv_nombrecompleto, tv_tel, tv_celular;
     ImageView btn_back;
     EditText et_nombrecomp, et_telefono, et_celular;
-    ImageButton btn_agregainfante, btn_guardaregistro;
+    ImageView btn_agregainfante, btn_guardaregistro;
     String nombrecompleto, domicilio, telefono, celular, usuario, pass, tipo_identificacion, numid, nombredependiente="0", teldependiente="0", celdependiente="0", usrdependiente="0", passdependiente="0",
             nombrecontacto, telcontacto, celcontacto;
     ProgressDialog progressDialog;
@@ -104,8 +103,8 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
         et_telefono.setTypeface(tf);
         et_celular = (EditText) findViewById(R.id.et_celcontacto);
         et_celular.setTypeface(tf);
-        btn_agregainfante = (ImageButton) findViewById(R.id.btn_enviardenuncia);
-        btn_guardaregistro = (ImageButton) findViewById(R.id.btn_guardaregistro);
+        btn_agregainfante = findViewById(R.id.btn_enviardenuncia);
+        btn_guardaregistro = findViewById(R.id.btn_guardaregistro);
 
         btn_agregainfante.setOnClickListener(new View.OnClickListener() {
             @Override

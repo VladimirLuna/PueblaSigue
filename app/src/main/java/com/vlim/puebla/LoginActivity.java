@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // lee datos del usuario
         userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, 2);
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT usr, password FROM Usuarios", null);
         String password = null;

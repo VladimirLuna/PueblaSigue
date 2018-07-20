@@ -64,7 +64,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:background="@drawable/round_layout"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/img_medica"
@@ -74,6 +74,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/medica"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_emergencia_a_reportar" />
@@ -85,21 +86,22 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:paddingBottom="5dp"
             android:text="Emergencia a reportar"
             android:textSize="12sp"
-            android:paddingBottom="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <View android:id="@+id/separator"
-            android:background="@color/separator"
-            android:layout_width = "fill_parent"
+        <View
+            android:id="@+id/separator"
+            android:layout_width="fill_parent"
             android:layout_height="1dip"
             android:layout_below="@+id/tv_emergencia_a_reportar"
+            android:background="@color/separator"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_emergencia_a_reportar"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_emergencia_a_reportar" />
 
         <ImageView
             android:id="@+id/img_policia"
@@ -121,6 +123,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:src="@drawable/bomberos"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_policia" />
@@ -131,23 +134,25 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:paddingBottom="5dp"
             android:text="Médica"
             android:textColor="@color/naranjaToolbar"
             android:textSize="12sp"
-            android:paddingBottom="5dp"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/img_medica" />
 
-        <View android:id="@+id/separator2"
-            android:background="@color/separator"
-            android:layout_width = "fill_parent"
+        <View
+            android:id="@+id/separator2"
+            android:layout_width="fill_parent"
             android:layout_height="1dip"
             android:layout_below="@+id/tv_medica"
+            android:background="@color/separator"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_medica"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_medica" />
 
         <TextView
             android:id="@+id/tv_policia"
@@ -155,22 +160,23 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:text="Policía"
             android:paddingBottom="5dp"
+            android:text="Policía"
             android:textColor="@color/naranjaToolbar"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/img_policia" />
 
-        <View android:id="@+id/separator3"
-            android:background="@color/separator"
-            android:layout_width = "fill_parent"
+        <View
+            android:id="@+id/separator3"
+            android:layout_width="fill_parent"
             android:layout_height="1dip"
             android:layout_below="@+id/tv_policia"
+            android:background="@color/separator"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_policia"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_policia" />
 
         <TextView
             android:id="@+id/tv_bomberos"
@@ -182,6 +188,7 @@
             android:text="Bomberos"
             android:textColor="@color/naranjaToolbar"
             android:textSize="12sp"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.506"
             app:layout_constraintStart_toStartOf="parent"

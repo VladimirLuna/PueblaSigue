@@ -10,6 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
+    <View
+        android:id="@+id/separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/separator"/>
+
     <RelativeLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -30,10 +36,11 @@
         <Button
             android:id="@+id/btn_chat_send"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/cuadro_naranja"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/roundedbutton"
             android:text="Enviar"
             android:textColor="@color/background_material_light" />
 

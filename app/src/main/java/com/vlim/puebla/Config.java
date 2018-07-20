@@ -6,7 +6,6 @@ public class Config {
     static int VERSION_DB = 2;
 
     // http://54.183.159.116:8182/Escudo_Puebla/servicios/estatus
-
     //private static final String HOST = "http://187.217.215.234:8080/";   /* Puebla */
     private static final String HOST = "http://54.183.159.116:8182/";   /* VLIM */
 
@@ -32,7 +31,7 @@ public class Config {
     public static final String UPDATE_IMAGEN_URL = HOST + "Escudo_Puebla/servicios/updateImagen"; //file, idusr
     public static final String UPDATE_TOKEN_URL = HOST + "Escudo_Puebla/servicios/updateToken"; //idusr, idusr
     public static final String UPDATE_NICKNAME_URL = HOST + "Escudo_Puebla/servicios/updateNickname";
-    public static final String CAMBIO_PASS_URL = HOST + "/Escudo_Puebla/servicios/cambioPass";     //username, cel, newpass
+    public static final String CAMBIO_PASS_URL = HOST + "/Escudo_Puebla/servicios/cambioPass";     // username, cel, newpass
     public static final String FOLIOS_URL = HOST + "Escudo_Puebla/servicios/getFolios";
     public static final String GET_MENSAJES_SECRETARIO_URL = HOST + "Escudo_Puebla/servicios/getMensajesSecretario";
     public static final String CERO89_ARCHIVOS_URL = HOST + "Escudo_Puebla/servicios/089Archivos";

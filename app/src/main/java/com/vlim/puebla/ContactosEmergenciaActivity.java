@@ -4,12 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -41,7 +44,9 @@ public class ContactosEmergenciaActivity extends AppCompatActivity implements On
     private List<Contactos> contactosList = new ArrayList<Contactos>();
     private ListView listView;
     private CustomContactosListAdapter customAdapter;
-
+    Typeface tf;
+    TextView tv_titulo_toolbar;
+    Button btn_agregar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,7 @@ public class ContactosEmergenciaActivity extends AppCompatActivity implements On
 
         // lee datos del usuario
         String[] campos = new String[] {"idusuario", "nick", "nombre"};
+        tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
         userSQLiteHelper usdbh =
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
@@ -76,6 +82,10 @@ public class ContactosEmergenciaActivity extends AppCompatActivity implements On
         preparaID(idusuario);
 
         btn_back = findViewById(R.id.btn_back);
+        btn_agregar = findViewById(R.id.btn_agregar);
+        tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
+        btn_agregar.setTypeface(tf);
+        tv_titulo_toolbar.setTypeface(tf);
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override

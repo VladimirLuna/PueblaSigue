@@ -33,7 +33,7 @@ public class DetalleContactoActivity extends AppCompatActivity {
     String JsonResponse = null;
     private ProgressDialog pDialog;
     String id_contacto;
-    TextView tv_detalle;
+    TextView tv_detalle, tv_titulo_toolbar, tv_nombre;
     ImageView btn_back;
 
     @Override
@@ -48,7 +48,12 @@ public class DetalleContactoActivity extends AppCompatActivity {
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
         tv_detalle = findViewById(R.id.tv_detalle);
+        tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
+        tv_nombre = findViewById(R.id.tv_nombre);
         btn_back = findViewById(R.id.btn_back);
+
+        tv_detalle.setTypeface(tf);
+        tv_titulo_toolbar.setTypeface(tf);
 
         obtieneDetalleContacto(id_contacto);
 
@@ -70,7 +75,7 @@ public class DetalleContactoActivity extends AppCompatActivity {
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             final JSONObject jsonBody = new JSONObject();
 
-            jsonBody.put("idcont", id_contacto);
+            jsonBody.put("idusr", id_contacto);
             final String requestBody = jsonBody.toString();
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.GET_INFO_CONTACTO_URL, new Response.Listener<String>() {
@@ -88,20 +93,17 @@ public class DetalleContactoActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            /* String isAdmin = jsonObj.getString("administrador");
-                             String idUsr = jsonObj.getString("id_usuario");
-                             String nombreUsr = jsonObj.getString("nombre");
-                             String emailUsr = jsonObj.getString("email");
+                             String nombre_completo = jsonObj.getString("nombre_completo");
+                             String telefono = jsonObj.getString("telefono");
+                             String celular = jsonObj.getString("celular");
+                             String correo_contacto = jsonObj.getString("correo_contacto");
 
-                             Log.i(TAG, "compara idrecupera: " + IDusuario + ", el actual: " + idUsr);
-                             if(IDusuario.equals(idUsr) && isAdmin.equals("si")){
-                                 esUnAdmin = "si";
-                             }*/
+                             Log.i(TAG, "info contacto nombre: " + nombre_completo + ", tel: " + telefono);
 
+                             tv_nombre.setText(nombre_completo);
+                             tv_detalle.setText("Teléfono: " + telefono + "\nCelular: " + celular + "\nCorreo electrónico: \n" + correo_contacto);
 
                         }
-
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();

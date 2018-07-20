@@ -13,6 +13,15 @@
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
+    <View
+        android:id="@+id/separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/separator"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_contactosemergencia" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

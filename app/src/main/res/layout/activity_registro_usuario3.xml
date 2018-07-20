@@ -32,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
+                android:gravity="center_horizontal|center"
                 android:text="AGREGA TUS CONTACTOS DE EMERGENCIA"
                 android:textSize="17sp" />
 
@@ -95,7 +96,7 @@
                 android:ems="10"
                 android:inputType="phone" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/btn_guardaregistro"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
@@ -107,7 +108,7 @@
                 android:src="@drawable/enviar"
                 app:srcCompat="@drawable/enviar" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/btn_enviardenuncia"
                 android:layout_width="70dp"
                 android:layout_height="70dp"

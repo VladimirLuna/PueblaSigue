@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/naranjaToolbar"
+    android:background="@color/white"
     android:elevation="10dp"
     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
@@ -18,7 +18,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/back" />
+            android:src="@drawable/next" />
 
     </LinearLayout>
 
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Ajustes"
-        android:textColor="#ffffff"
+        android:textColor="#aaaaaa"
         android:textSize="18sp"
         android:textStyle="bold" />
 

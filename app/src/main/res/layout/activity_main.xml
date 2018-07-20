@@ -129,7 +129,7 @@
     <Button
         android:id="@+id/btn_mensajesipm"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:background="@drawable/cuadro_naranja" />
@@ -137,7 +137,7 @@
     <Button
         android:id="@+id/btn_chat_vecinal"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_above="@+id/btn_mensajesipm"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="1dp"
@@ -146,7 +146,7 @@
     <Button
         android:id="@+id/btn_sigueme"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_above="@+id/btn_chat_vecinal"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="1dp"
@@ -182,12 +182,13 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/img_chat"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/tv_nuevopass"
+        android:layout_marginBottom="-9dp"
         android:elevation="10dp"
         android:paddingStart="85dp"
-        android:paddingTop="10dp"
         android:text="(Esta funcionalidad es con fines preventivos, no oficial)"
         android:textColor="@color/white"
-        android:textSize="10sp" />
+        android:textSize="8sp" />
 
     <TextView
         android:id="@+id/tv_nuevopass2"
@@ -203,35 +204,35 @@
 
     <ImageView
         android:id="@+id/img_sigueme"
-        android:layout_width="47dp"
-        android:layout_height="46dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="129dp"
-        android:layout_marginStart="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@+id/btn_sigueme"
+        android:layout_marginEnd="-68dp"
+        android:layout_toStartOf="@+id/btn_sigueme"
         android:elevation="10dp"
+        android:padding="5dp"
         app:srcCompat="@drawable/siguemee" />
 
     <ImageView
         android:id="@+id/img_chat"
-        android:layout_width="47dp"
-        android:layout_height="46dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="67dp"
-        android:layout_marginStart="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@+id/btn_chat_vecinal"
+        android:layout_toStartOf="@+id/btn_chat_vecinal"
         android:elevation="10dp"
+        android:padding="5dp"
+        android:layout_marginEnd="-68dp"
         app:srcCompat="@drawable/chate" />
 
     <ImageView
         android:id="@+id/img_mensajes"
-        android:layout_width="47dp"
-        android:layout_height="46dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="7dp"
-        android:layout_marginStart="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@+id/btn_mensajesipm"
+        android:layout_marginEnd="-68dp"
+        android:layout_toStartOf="@+id/btn_mensajesipm"
         android:elevation="10dp"
+        android:padding="5dp"
         app:srcCompat="@drawable/msme" />
 
 

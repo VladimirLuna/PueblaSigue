@@ -105,7 +105,7 @@ public class AjustesChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.activity_ajustes_chat);
-        getWindow().setBackgroundDrawableResource(R.drawable.background);
+        //getWindow().setBackgroundDrawableResource(R.drawable.background);
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
         // Toolbar

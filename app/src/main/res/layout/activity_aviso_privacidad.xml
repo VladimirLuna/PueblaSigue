@@ -10,9 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
+    <View
+        android:id="@+id/separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar_aviso_privacidad"
+        android:background="@color/separator"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfv"
-        android:layout_below="@+id/toolbar_aviso_privacidad"
+        android:layout_below="@+id/separator"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

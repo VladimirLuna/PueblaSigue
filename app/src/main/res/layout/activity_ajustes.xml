@@ -1,4 +1,94 @@
-<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BotonPanicoActivity">
+
+    <include
+        android:id="@+id/toolbar_ajustes"
+        layout="@layout/appbar_ajustes"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@+id/toolbar_ajustes"
+        android:layout_centerVertical="true"
+        android:background="@color/separator"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_ajustes"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <ImageView
+        android:id="@+id/btn_ajustes_informacion"
+        android:layout_width="148dp"
+        android:layout_height="148dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="120dp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_contactos"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_ajustes"
+        app:srcCompat="@drawable/info" />
+
+    <ImageView
+        android:id="@+id/btn_contactos"
+        android:layout_width="148dp"
+        android:layout_height="148dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_ajustes"
+        app:srcCompat="@drawable/infopersonal" />
+
+    <TextView
+        android:id="@+id/tv_mensaje1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Selecciona la opción que deseas editar"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_ajustes" />
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="Información"
+        android:textColor="@color/naranjaToolbar"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_ajustes_informacion" />
+
+
+    <TextView
+        android:id="@+id/tv_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Chat vecinal"
+        android:textColor="@color/naranjaToolbar"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.632"
+        app:layout_constraintStart_toEndOf="@+id/tv_info"
+        app:layout_constraintTop_toBottomOf="@+id/btn_contactos" />
+
+
+</android.support.constraint.ConstraintLayout>
+
+<!-- android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_bienvenida"
     android:layout_width="match_parent"
@@ -80,4 +170,4 @@
         android:textColor="@color/naranjaToolbar"
         android:textSize="20sp" />
 
-</android.support.percent.PercentRelativeLayout>
+</android.support.percent.PercentRelativeLayout -->
