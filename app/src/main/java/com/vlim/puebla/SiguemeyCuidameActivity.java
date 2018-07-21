@@ -8,11 +8,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -21,29 +21,28 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapReadyCallback, AdapterView.OnItemClickListener {
+public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener, AdapterView.OnItemClickListener, PlaceSelectionListener  {    ///OnMapReadyCallback, LocationListener, AdapterView.OnItemClickListener
     String TAG = "PUEBLA";
     private GoogleMap mMap;
-    PlaceAutocompleteFragment placeAutoComplete;
+    SupportPlaceAutocompleteFragment placeAutoComplete;
     LatLng myPosition;
-    FloatingActionButton imageButton;
     ConstraintLayout menu_map;
     boolean isUp;
     View myView;
@@ -57,13 +56,15 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
     ImageView btn_back, btn_buscar;
     String idusuario;
 
+
+    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
+            new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_siguemey_cuidame);
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -72,24 +73,44 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
             showGPSDisabledAlertToUser();
         }
 
-        placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        /*placeAutoComplete = (SupportPlaceAutocompleteFragment ) getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        placeAutoComplete.setOnPlaceSelectedListener((PlaceSelectionListener) SiguemeyCuidameActivity.this);*/
+        /*placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-
-                Log.d("Maps", "Place selected: " + place.getName());
+                Log.d(  TAG, "Place selected: " + place.getName());
             }
 
             @Override
             public void onError(Status status) {
                 Log.d("Maps", "An error occurred: " + status);
             }
-        });
+        });*/
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        /*PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });*/
+
+
+
 
         Intent i= getIntent();
         idusuario = i.getStringExtra("idusuario");
@@ -120,12 +141,80 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
             }
         });
 
-        AutoCompleteTextView places = (AutoCompleteTextView) findViewById(R.id.autocomplete);
+       /* AutoCompleteTextView places = findViewById(R.id.autocomplete);
         places.setAdapter(new PlacesAutoCompleteAdapter(this,android.R.layout.simple_dropdown_item_1line ));
-        //places.setOnItemClickListener(this);
+        places.setOnItemClickListener(this);*/
     }
 
-    /*@Override
+
+
+
+
+
+
+
+
+
+
+    private void showGPSDisabledAlertToUser(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("El GPS de tu dispositivo está apagado. ¿Desea habilitarlo?")
+                .setCancelable(false)
+                .setPositiveButton("Activar GPS",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                Intent callGPSSettingIntent = new Intent(
+                                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(callGPSSettingIntent);
+                                finish();
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("Cancelar",
+                new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        dialog.cancel();
+                        finish();
+                    }
+                });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+
+
+
+
+
+
+    // slide the view from below itself to the current position
+    public void slideUp(View view){
+        view.setVisibility(View.VISIBLE);
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                view.getHeight(),  // fromYDelta
+                -500);                // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+    }
+
+    // slide the view from its current position to below itself
+    public void slideDown(View view){
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                -500,                 // fromYDelta
+                view.getHeight()); // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+    }
+
+
+    @Override
+    public void onBackPressed() { }
+
+    @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged");
         updateUI(location);
@@ -143,20 +232,13 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
 
     @Override
     public void onProviderDisabled(String provider) {
-        if (locationManager != null) {
-            locationManager.removeUpdates(this);
-        }
-    }*/
 
-    /*@Override
-    public void onInfoWindowClick(Marker marker) {
-
-    }*/
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        /*mMap.setOnInfoWindowClickListener(this);*/
+        //mMap.setOnInfoWindowClickListener(this);
 
         setUpMap();
 
@@ -185,19 +267,6 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
             CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 19);
             mMap.animateCamera(yourLocation);
         }
-
-        /*mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                if (isUp) {
-                    slideDown(menu_map);
-                } else {
-                    slideUp(menu_map);
-                }
-                isUp = !isUp;
-
-            }
-        });*/
     }
 
     private void setUpMap() {
@@ -236,8 +305,8 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
             Log.d(TAG, "Location OK");
 
             LatLng coordinate = new LatLng(latitude, longitude);
-            /*CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 19);
-            mMap.animateCamera(yourLocation);*/
+            CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 19);
+            mMap.animateCamera(yourLocation);
         }
     }
 
@@ -255,62 +324,25 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
         mMap.addMarker(marker);
     }
 
-    private void showGPSDisabledAlertToUser(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("El GPS de tu dispositivo está apagado. ¿Desea habilitarlo?")
-                .setCancelable(false)
-                .setPositiveButton("Activar GPS",
-                        new DialogInterface.OnClickListener(){
-                            public void onClick(DialogInterface dialog, int id){
-                                Intent callGPSSettingIntent = new Intent(
-                                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivity(callGPSSettingIntent);
-                                finish();
-                            }
-                        });
-        alertDialogBuilder.setNegativeButton("Cancelar",
-                new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int id){
-                        dialog.cancel();
-                        finish();
-                    }
-                });
-        AlertDialog alert = alertDialogBuilder.create();
-        alert.show();
-    }
-
-    // slide the view from below itself to the current position
-    public void slideUp(View view){
-        view.setVisibility(View.VISIBLE);
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                view.getHeight(),  // fromYDelta
-                -500);                // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-    }
-
-    // slide the view from its current position to below itself
-    public void slideDown(View view){
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                -500,                 // fromYDelta
-                view.getHeight()); // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-    }
-
-
-    @Override
-    public void onBackPressed() { }
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         String str = (String) adapterView.getItemAtPosition(position);
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "OnItemClick: " + str);
     }
+
+    @Override
+    public void onPlaceSelected(Place place) {
+        Log.i(TAG, "Place Selected: " + place.getName());
+    }
+
+    @Override
+    public void onError(Status status) {
+        Log.e(TAG, "onError: Status = " + status.toString());
+
+        Toast.makeText(this, "Place selection failed: " + status.getStatusMessage(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+
 }

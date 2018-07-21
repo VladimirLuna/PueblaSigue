@@ -6,7 +6,7 @@ android {
     }
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.vlim.puebla"
+        applicationId 'com.vlim.puebla'
         minSdkVersion 17
         targetSdkVersion 27
         versionCode 1
@@ -29,6 +29,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
@@ -37,7 +39,7 @@ dependencies {
         support_library_version = '27.1.1'
         google_play_services_version = '11.6.0'
     }
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -62,6 +64,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
+    implementation 'com.google.maps.android:android-maps-utils:0.5+'
     implementation 'com.iceteck.silicompressorr:silicompressor:2.1'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
