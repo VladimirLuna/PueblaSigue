@@ -4,7 +4,7 @@
     package="com.vlim.puebla">
 
     <uses-permission
-        android:name="com.vlim.yctn.escudoyucatan2.permission.MAPS_RECEIVE"
+        android:name="com.vlim.puebla.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -39,18 +39,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/PueblaTheme">
-        <uses-library
-            android:name="com.google.android.maps"
-            android:required="true" />
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <!--
-             meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_map_api_key" /
-        -->
         <activity
             android:name=".SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -88,12 +77,22 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
+        <!-- meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" / -->
+
+        <uses-library
+            android:name="com.google.android.maps"
+            android:required="true" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/google_maps_key_puebla" />
 
         <activity
             android:name=".Maps911Activity"

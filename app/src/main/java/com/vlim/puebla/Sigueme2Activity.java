@@ -94,12 +94,17 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 String url = getDirectionsUrl();
 
                 Log.d(TAG, "URL: " + url);
-                dataTransfer = new Object[3];
+                dataTransfer = new Object[7];
                 url = getDirectionsUrl();
                 GetDirectionsData getDirectionsData = new GetDirectionsData();
                 dataTransfer[0] = mMap;
                 dataTransfer[1] = url;
                 dataTransfer[2] = new LatLng(end_latitude, end_longitude);
+                //dataTransfer[3] = new LatLng(latitude, longitude);
+                dataTransfer[3] = latitude;
+                dataTransfer[4] = longitude;
+                dataTransfer[5] = end_latitude;
+                dataTransfer[6] = end_longitude;
                 getDirectionsData.execute(dataTransfer);
             }
 
@@ -273,11 +278,10 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
         googleDirectionsUrl.append("origin=" + latitude + "," + longitude);
         googleDirectionsUrl.append("&destination=" + end_latitude + "," + end_longitude);
-        googleDirectionsUrl.append("&key="+"AIzaSyC-JUsHGane_VeD8ZVj99zVz20NHYsoIiU");
+        googleDirectionsUrl.append("&key=" + getApplicationContext().getString(R.string.google_maps_key_sigueme));
 
         return googleDirectionsUrl.toString();
     }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {

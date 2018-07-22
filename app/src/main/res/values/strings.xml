@@ -4,4 +4,6 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_ajustes_info">AjustesInfoActivity</string>
     <string name="title_activity_maps911">Map</string>
+    <string name="google_maps_key_puebla">AIzaSyC1bojC2LEjSLAxjzk-Uy-MSejjecpsVLg</string>
+    <string name="google_maps_key_sigueme">AIzaSyC2pfKT3be_Zhk87S0VmIJ3TW07F2GiPPM</string>
 </resources>

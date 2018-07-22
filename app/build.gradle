@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        signconfig {
+            keyAlias 'vlad23'
+            keyPassword 'vlad23'
+            storeFile file('D:/Dropbox/PROYECTOS VLIMIX/APP PUEBLA/APP/PueblaSigue/vlad.keystore')
+            storePassword 'vlad23'
+        }
+    }
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:2.0.1'
     }
@@ -12,6 +20,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        resValue "string", "google_maps_key",
+                (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
     }
     android {
         useLibrary 'org.apache.http.legacy'
@@ -27,6 +37,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+            signingConfig signingConfigs.signconfig
         }
     }
     productFlavors {
