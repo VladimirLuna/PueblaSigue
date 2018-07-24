@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
@@ -54,9 +56,10 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     ConstraintLayout menu_map, mensaje_map;
     Double latEnvia = 0.0, lngEnvia = 0.0;
     // Toolbar
-    TextView tv_titulo_toolbar, tv_emergencia_a_reportar, tv_medica, tv_bomberos, tv_policia, tv_mensaje_click_mapa;
-    ImageView btn_back;
+    TextView tv_titulo_toolbar, tv_emergencia_a_reportar, tv_medica, tv_bomberos, tv_policia, tv_mensaje_click_mapa, tv_pregunta, tv_cancelar, tv_comenzar, tv_apie, tv_encarro;
+    ImageView btn_back, img_apie, img_encarro;
     String idusuario;
+    String opcionRuta = "DRIVING";  // 1: WALKING,   2: DRIVING
 
     // Rutas
     Object dataTransfer[] = new Object[2];
@@ -73,6 +76,20 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_titulo_toolbar.setTypeface(tf);
         btn_back = findViewById(R.id.btn_back);
+        tv_pregunta = findViewById(R.id.tv_pregunta);
+        tv_cancelar = findViewById(R.id.tv_cancelar);
+        tv_comenzar = findViewById(R.id.tv_comenzar);
+        tv_apie = findViewById(R.id.tv_apie);
+        tv_encarro = findViewById(R.id.tv_encarro);
+        img_apie = findViewById(R.id.img_apie);
+        img_encarro = findViewById(R.id.img_encarro);
+        menu_map = findViewById(R.id.menu_map);
+
+        tv_pregunta.setTypeface(tf);
+        tv_cancelar.setTypeface(tf);
+        tv_comenzar.setTypeface(tf);
+        tv_apie.setTypeface(tf);
+        tv_encarro.setTypeface(tf);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
@@ -91,11 +108,10 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 end_longitude = place.getLatLng().longitude;
 
                 // Obtener ruta
-                String url = getDirectionsUrl();
-
+                String url = getDirectionsUrl(opcionRuta);
                 Log.d(TAG, "URL: " + url);
-                dataTransfer = new Object[7];
-                url = getDirectionsUrl();
+                dataTransfer = new Object[8];
+                url = getDirectionsUrl(opcionRuta);
                 GetDirectionsData getDirectionsData = new GetDirectionsData();
                 dataTransfer[0] = mMap;
                 dataTransfer[1] = url;
@@ -105,7 +121,52 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 dataTransfer[4] = longitude;
                 dataTransfer[5] = end_latitude;
                 dataTransfer[6] = end_longitude;
+                dataTransfer[7] = getApplicationContext();
+
                 getDirectionsData.execute(dataTransfer);
+                menu_map.setVisibility(View.VISIBLE);
+
+                // borra anteriores rutas, si es que aplica
+                //  ---------------- BD ------------------------------------------------------------------
+                /*userSQLiteHelper usdbh =
+                        new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
+                SQLiteDatabase db = usdbh.getReadableDatabase();
+
+                Cursor cRoute = db.rawQuery("SELECT * FROM RutaSigueme", null);
+                if (cRoute.moveToFirst()) {
+                    Log.d(TAG, "Borrando ruta previa. Genera nueva ruta");
+                    //getDirectionsData.execute(dataTransfer);
+
+                    while (!cRoute.isAfterLast()) {
+                        String lat1 = cRoute.getString(cRoute.getColumnIndex("lat1"));
+                        String lng1 = cRoute.getString(cRoute.getColumnIndex("lng1"));
+                        String lat2 = cRoute.getString(cRoute.getColumnIndex("lat2"));
+                        String lng2 = cRoute.getString(cRoute.getColumnIndex("lng2"));
+
+                        Log.d(TAG, "Cosas: " + lat1);
+                        cRoute.moveToNext();
+                    }
+
+                    // {"latusr":"valor","lonusr":"valor","latdest":"valor","londest":"valor","idusr":"valor","ruta":[{"lng":"valor","lat":"valor"},{"lng":"valor",º"lat":"valor"}]}
+                }
+                else{
+                    Log.d(TAG, "Genera nueva ruta");
+                    //getDirectionsData.execute(dataTransfer);
+                }*/
+
+                /*if (db != null) {
+                    //Insertamos los datos en la tabla Usuarios
+                    db.execSQL("INSERT INTO RutaSigueme (lat1, lng1, lat2, lng2) VALUES ('" + lat1 + "', '" + lng1 + "', '" + lat2 + "', '" + lng2 + "')");
+                    Log.d(TAG, "Hay Ruta previa");
+                    db.close();
+                }
+                else {
+                    Log.v(TAG, "No Hay base en donde guardar!");
+                }*/
+
+
+                // ----------------------------------------------------------------------------------------
+
             }
 
             @Override
@@ -120,6 +181,22 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        img_apie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                opcionRuta(1);
+                actualizaRuta(opcionRuta);
+            }
+        });
+
+        img_encarro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                opcionRuta(2);
+                actualizaRuta(opcionRuta);
+            }
+        });
+
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +204,73 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             }
         });
 
+        tv_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                borraRuta();
+                finish();
+            }
+        });
+
+        tv_comenzar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+    }
+
+    private void actualizaRuta(String opcionRuta) {
+        // borra ruta actual
+        borraRuta();
+        // Obtener ruta
+        String url = getDirectionsUrl(opcionRuta);
+        Log.d(TAG, "URL: " + url);
+        dataTransfer = new Object[8];
+        url = getDirectionsUrl(opcionRuta);
+        GetDirectionsData getDirectionsData = new GetDirectionsData();
+        dataTransfer[0] = mMap;
+        dataTransfer[1] = url;
+        dataTransfer[2] = new LatLng(end_latitude, end_longitude);
+        dataTransfer[3] = latitude;
+        dataTransfer[4] = longitude;
+        dataTransfer[5] = end_latitude;
+        dataTransfer[6] = end_longitude;
+        dataTransfer[7] = getApplicationContext();
+
+        getDirectionsData.execute(dataTransfer);
+    }
+
+    private void borraRuta() {
+        userSQLiteHelper usdbh =
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
+        SQLiteDatabase db = usdbh.getWritableDatabase();
+        db.delete("RutaSigueme", null, null);
+        db.close();
+        Log.i(TAG, "Borrando bd RutaSigueme");
+        mMap.clear();
+    }
+
+    private void opcionRuta(int opcion) {
+        switch (opcion){
+            case 1:
+                opcionRuta = "WALKING";
+                img_apie.setBackgroundResource(R.drawable.persona_caminando_azul);
+                img_encarro.setBackgroundResource(R.drawable.carro);
+                tv_apie.setTextColor(Color.parseColor("#0262e5"));
+                tv_encarro.setTextColor(getResources().getColor(R.color.textogris));
+                break;
+            case 2:
+                opcionRuta = "DRIVING";
+                img_apie.setBackgroundResource(R.drawable.persona_caminando);
+                img_encarro.setBackgroundResource(R.drawable.carro_azul);
+                tv_encarro.setTextColor(Color.parseColor("#0262e5"));
+                tv_apie.setTextColor(getResources().getColor(R.color.textogris));
+                break;
+                default:
+                    break;
+        }
     }
 
     @Override
@@ -273,13 +417,13 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     public void onBackPressed() { }
 
     // Rutas
-    private String getDirectionsUrl()
+    private String getDirectionsUrl(String opcionRuta)
     {
         StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
         googleDirectionsUrl.append("origin=" + latitude + "," + longitude);
         googleDirectionsUrl.append("&destination=" + end_latitude + "," + end_longitude);
+        googleDirectionsUrl.append("&travelMode=" + opcionRuta);   // WALKING / DRIVING
         googleDirectionsUrl.append("&key=" + getApplicationContext().getString(R.string.google_maps_key_sigueme));
-
         return googleDirectionsUrl.toString();
     }
 

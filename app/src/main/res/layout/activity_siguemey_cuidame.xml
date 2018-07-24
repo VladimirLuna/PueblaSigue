@@ -42,76 +42,116 @@
         android:visibility="invisible" />
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/mensaje_map"
-        android:layout_width="180dp"
-        android:layout_height="60dp"
+        android:id="@+id/menu_map"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/round_layout_msj_mapa"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/tv_mensaje_click_mapa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center_horizontal"
-            android:paddingBottom="5dp"
-            android:text="DA CLICK EN LA PANTALLA PARA REPORTAR UNA EMERGENCIA"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/menu_map"
-        android:layout_width="304dp"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="62dp"
+        android:layout_marginBottom="0dp"
         android:background="@drawable/round_layout"
         android:visibility="gone">
 
-        <AutoCompleteTextView
-            android:id="@+id/autocomplete"
+        <TextView
+            android:id="@+id/tv_pregunta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:ems="10"
-            android:inputType="textPersonName"
+            android:text="¿Desea empezar su viaje?"
+            android:textColor="@android:color/black"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <TextView
+            android:id="@+id/tv_cancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/autocomplete"
+            android:text="Cancelar viaje"
+            android:textColor="#ff0000"
+            app:layout_constraintEnd_toStartOf="@+id/tv_comenzar"
+            app:layout_constraintHorizontal_bias="0.557"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/galeria" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_pregunta" />
+
+        <TextView
+            android:id="@+id/tv_comenzar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="56dp"
+            android:layout_marginTop="8dp"
+            android:text="Comenzar  viaje"
+            android:textColor="@android:color/holo_blue_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_pregunta" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/toolbar_terminos"
+            android:layout_marginTop="64dp"
+            android:background="@color/separator"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/img_apie"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="92dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/persona_caminando_azul"
+            app:layout_constraintEnd_toStartOf="@+id/img_encarro"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/separator"
+            app:srcCompat="@drawable/persona_caminando_azul" />
+
+        <ImageView
+            android:id="@+id/img_encarro"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="112dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/carro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/separator"
+            app:srcCompat="@drawable/carro" />
+
+        <TextView
+            android:id="@+id/tv_apie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="92dp"
+            android:text="A pie"
+            android:textColor="#0262e5"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toStartOf="@+id/tv_encarro"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_apie" />
+
+        <TextView
+            android:id="@+id/tv_encarro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="104dp"
+            android:layout_marginTop="4dp"
+            android:text="En carro"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_encarro" />
+
+
     </android.support.constraint.ConstraintLayout>
 
-
 </RelativeLayout>
-
-    <!-- ?xml version="1.0" encoding="utf-8"?>
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".Maps911Activity" / -->

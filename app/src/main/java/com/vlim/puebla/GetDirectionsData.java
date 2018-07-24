@@ -1,5 +1,6 @@
 package com.vlim.puebla;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -22,6 +23,7 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
     LatLng latLng, latLng_Ini;
     double latitude_ini, lng_ini, latitude_dest, lng_dest;
     String TAG = "PUEBLA";
+    Context context;
 
     @Override
     protected String doInBackground(Object... objects) {
@@ -33,6 +35,7 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
         lng_ini = (Double)objects[4];
         latitude_dest = (Double)objects[5];
         lng_dest = (Double)objects[6];
+        context = (Context) objects[7];
 
         DownloadUrl downloadUrl = new DownloadUrl();
         try {
@@ -45,18 +48,19 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
     }
 
     @Override
-    protected void onPostExecute(String s) {
-
+    protected void onPostExecute(String paramsRoute) {
+        Log.d(TAG, "Ruta: " + paramsRoute);
         String[] directionsList;
         DataParser parser = new DataParser();
-        directionsList = parser.parseDirections(s);
+        directionsList = parser.parseDirections(paramsRoute, context);
+
         displayDirection(directionsList);
 
     }
 
     public void displayDirection(String[] directionsList)
     {
-
+        mMap.clear();
         int count = directionsList.length;
         for(int i = 0;i<count;i++)
         {
@@ -64,7 +68,7 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
             options.color(Color.parseColor("#ea7e01"));
             options.width(20);
             options.addAll(PolyUtil.decode(directionsList[i]));
-
+            //Log.d(TAG, "directionsList: " + PolyUtil.decode(directionsList[i]));
             mMap.addPolyline(options);
 
         }

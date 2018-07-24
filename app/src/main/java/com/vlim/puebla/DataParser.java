@@ -1,5 +1,7 @@
 package com.vlim.puebla;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -12,13 +14,13 @@ import java.util.List;
 
 class DataParser {
     String TAG = "PUEBLA";
+    Context context;
 
     private HashMap<String,String> getDuration(JSONArray googleDirectionsJson)
     {
         HashMap<String,String> googleDirectionsMap = new HashMap<>();
         String duration = "";
         String distance ="";
-
 
         try {
 
@@ -122,7 +124,7 @@ class DataParser {
         return getPlaces(jsonArray);
     }
 
-    public String[] parseDirections(String jsonData)
+    public String[] parseDirections(String jsonData, Context contextActivity)
     {
         JSONArray jsonArray = null;
         JSONObject jsonObject;
@@ -133,6 +135,53 @@ class DataParser {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        // Obtiene segmentos de ruta y almacena en bd
+        Log.d(TAG, "Segmentos: " + jsonArray.length());
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObjectLegs = jsonArray.getJSONObject(i);
+                //Log.d(TAG,"jsonObjectLegs: " + jsonObjectLegs.getString("end_location"));   // [0]
+                //String end_location = jsonObjectLegs.getString("lat");
+
+                JSONObject start_location = jsonObjectLegs.getJSONObject("start_location");
+                JSONObject end_location = jsonObjectLegs.getJSONObject("end_location");
+
+                String lat1 = String.valueOf(start_location.get("lat"));
+                String lng1 = String.valueOf(start_location.get("lng"));
+                String lat2 = String.valueOf(end_location.get("lat"));
+                String lng2 = String.valueOf(end_location.get("lng"));
+
+                //Log.d(TAG, "Segmentos: " + lat1 + ", " + lng1 + " } " + lat2 + ", " + lng2);
+
+                //  ---------------- BD ------------------------------------------------------------------
+                userSQLiteHelper usdbh =
+                        new userSQLiteHelper(contextActivity, "DBUsuarios", null, Config.VERSION_DB);
+                SQLiteDatabase db = usdbh.getWritableDatabase();
+
+                if (db != null) {
+                    //Insertamos los datos en la tabla Usuarios
+                    db.execSQL("INSERT INTO RutaSigueme (lat1, lng1, lat2, lng2) VALUES ('" + lat1 + "', '" + lng1 + "', '" + lat2 + "', '" + lng2 + "')");
+                    //Log.d(TAG, "Ruta guardada OK");
+                    db.close();
+                }
+                else {
+                    Log.v(TAG, "No Hay base en donde guardar!");
+                }
+
+
+                // ----------------------------------------------------------------------------------------
+
+                //String value = jsonArray.getString(i);
+                //String end_location = jsonObjectLegs.end_location[0];
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+        ///
         return getPaths(jsonArray);
     }
 

@@ -9,6 +9,7 @@ class userSQLiteHelper extends SQLiteOpenHelper {
     private String sqlCreate = "CREATE TABLE Usuarios (idusuario INTEGER, nick TEXT, nombre TEXT, usr TEXT, password TEXT, img TEXT)";
     private String sqlMediosCreate = "CREATE TABLE Media (idmedio INTEGER, medio TEXT, tipo TEXT)";   // tipo: foto, video, audio
     private String sqlMediosChatCreate = "CREATE TABLE MediaChat (idmedio INTEGER, photopath TEXT, videopath TEXT, galeriapath TEXT)";
+    private String sqlRutaSiguemeCreate = "CREATE TABLE RutaSigueme (idsegmento INTEGER, lat1 TEXT, lng1 TEXT, lat2 TEXT, lng2 TEXT)";
 
     public userSQLiteHelper(Context contexto, String nombre,
                             SQLiteDatabase.CursorFactory factory, int version) {
@@ -21,6 +22,7 @@ class userSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(sqlCreate);
         db.execSQL(sqlMediosChatCreate);
         db.execSQL(sqlMediosCreate);
+        db.execSQL(sqlRutaSiguemeCreate);
     }
 
     @Override
@@ -34,10 +36,12 @@ class userSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS Usuarios");
         db.execSQL("DROP TABLE IF EXISTS MediaChat");
         db.execSQL("DROP TABLE IF EXISTS Media");
+        db.execSQL("DROP TABLE IF EXISTS RutaSigueme");
 
         //Se crea la nueva versión de la tabla
         db.execSQL(sqlCreate);
         db.execSQL(sqlMediosChatCreate);
         db.execSQL(sqlMediosCreate);
+        db.execSQL(sqlRutaSiguemeCreate);
     }
 }
