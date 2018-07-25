@@ -39,7 +39,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/PueblaTheme">
-
         <activity
             android:name=".SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -77,16 +76,19 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <!-- meta-data
+        <!--
+        meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" / -->
+            android:value="@string/google_maps_key" /
+        -->
 
         <uses-library
             android:name="com.google.android.maps"
             android:required="true" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -113,7 +115,8 @@
         <activity android:name=".TerminosyCondicionesActivity" />
         <activity android:name=".RegistroUsuarioActivity2" />
         <activity android:name=".RegistroUsuarioActivity3" />
-        <activity android:name=".RegistroUsuarioActivity4"></activity>
+        <activity android:name=".RegistroUsuarioActivity4" />
+        <activity android:name=".AgregaContactoEmergenciaActivity"></activity>
     </application>
 
 </manifest>

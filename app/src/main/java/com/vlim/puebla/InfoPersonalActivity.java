@@ -1,6 +1,7 @@
 package com.vlim.puebla;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -40,9 +41,9 @@ public class InfoPersonalActivity extends AppCompatActivity {
 
     String TAG = "PUEBLA";
     String idusuario = null;
-    TextView tv_titulo_toolbar, tv_nombre, tv_nombre1, tv_telefono, tv_celular, tv_identificacion, tv_numero_identificacion, tv_cond_med;
+    TextView tv_titulo_toolbar, tv_direccion, tv_nombre, tv_telefono, tv_celular, tv_identificacion, tv_numero_identificacion, tv_cond_med;
     Button btn_guardar;
-    EditText et_telefono, et_celular, et_num_identificacion, et_cond_med;
+    EditText et_direccion, et_telefono, et_celular, et_num_identificacion, et_cond_med;
     Spinner spinner_identificacion;
     ProgressDialog progressDialog;
     JSONArray jsonArr;
@@ -83,14 +84,14 @@ public class InfoPersonalActivity extends AppCompatActivity {
         Log.d(TAG, "Usr: " + idusuario);
 
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
-        tv_nombre = findViewById(R.id.tv_nombre);
-        tv_nombre1 = findViewById(R.id.tv_nombre1);
+        tv_direccion = findViewById(R.id.tv_direccion);
         tv_telefono = findViewById(R.id.tv_telefono);
-        tv_celular = findViewById(R.id.tv_celular);
+        tv_celular = findViewById(R.id.tv_sigueme);
         tv_identificacion = findViewById(R.id.tv_identificacion);
         tv_numero_identificacion = findViewById(R.id.tv_num_identificacion);
         tv_cond_med = findViewById(R.id.tv_cond_med);
         btn_guardar = findViewById(R.id.btn_guardar);
+        et_direccion = findViewById(R.id.et_direccion);
         et_telefono = findViewById(R.id.et_telefono);
         et_celular = findViewById(R.id.et_celular);
         et_num_identificacion = findViewById(R.id.et_num_identificacion);
@@ -99,14 +100,14 @@ public class InfoPersonalActivity extends AppCompatActivity {
         btn_back = findViewById(R.id.btn_back);
 
         tv_titulo_toolbar.setTypeface(tf);
-        tv_nombre.setTypeface(tf);
-        tv_nombre1.setTypeface(tf);
+        tv_direccion.setTypeface(tf);
         tv_telefono.setTypeface(tf);
         tv_celular.setTypeface(tf);
         tv_identificacion.setTypeface(tf);
         tv_numero_identificacion.setTypeface(tf);
         tv_cond_med.setTypeface(tf);
         btn_guardar.setTypeface(tf);
+        et_direccion.setTypeface(tf);
         et_telefono.setTypeface(tf);
         et_celular.setTypeface(tf);
         et_num_identificacion.setTypeface(tf);
@@ -137,6 +138,130 @@ public class InfoPersonalActivity extends AppCompatActivity {
 
             }
         });
+
+        btn_guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String direccion = et_direccion.getText().toString();
+                String telefono_casa = et_telefono.getText().toString();
+                String celular = et_celular.getText().toString();
+                String num_identificacion = et_num_identificacion.getText().toString();
+                String condicion_med = et_cond_med.getText().toString();
+
+                if(direccion.length() < 1){
+                    et_direccion.setError("Debes escribir tu domicilio.");
+                }
+
+                else if(telefono_casa.length() < 1){
+                    et_telefono.setError("Debes escribir tu número de teléfono.");
+                }
+                else if(celular.length() < 1){
+                    et_celular.setError("Debes escribir tu número de celular.");
+                }
+                else if(num_identificacion.length() < 1){
+                    et_num_identificacion.setError("Debes escribir tu número de identificación.");
+                }
+                else{
+                    preparaInfo(idusuario, direccion, telefono_casa, celular, id_identificacion, num_identificacion, condicion_med);
+                }
+            }
+        });
+    }
+
+    private void preparaInfo(String idusr, String direccion, String telefono_casa, String celular, String id_identificacion, String num_identificacion, String condicion_medica) {
+        JSONObject post_dict = new JSONObject();
+
+        try {
+            post_dict.put("idusr" , idusr);
+            post_dict.put("direccion" , direccion);
+            post_dict.put("tel", telefono_casa);
+            post_dict.put("cel", celular);
+            post_dict.put("id_identificacion", id_identificacion);
+            post_dict.put("num_identificcion", num_identificacion);
+            post_dict.put("condicion_medica", condicion_medica);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (post_dict.length() > 0) {
+            Log.v(TAG, "postdic len: " + String.valueOf(post_dict));
+
+            progressDialog = new ProgressDialog(InfoPersonalActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Actualizando información...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgress(0);
+            progressDialog.show();
+            actualizaInfo(String.valueOf(post_dict));
+        }
+    }
+
+    private void actualizaInfo(String params) {
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            final JSONObject jsonBody = new JSONObject();
+
+            JSONObject jsonObject = new JSONObject(params);
+            String idusr = jsonObject.getString("idusr");
+            String direccion = jsonObject.getString("direccion");
+            String tel = jsonObject.getString("tel");
+            String cel = jsonObject.getString("cel");
+            String id_identificacion = jsonObject.getString("id_identificacion");
+            String num_identificacion = jsonObject.getString("num_identificcion");
+            String condicion_medica = jsonObject.getString("condicion_medica");
+
+            jsonBody.put("idusr", idusr);
+            jsonBody.put("direccion", direccion);
+            jsonBody.put("tel", tel);
+            jsonBody.put("cel", cel);
+            jsonBody.put("id_identificacion", id_identificacion);
+            jsonBody.put("num_identificcion", num_identificacion);
+            jsonBody.put("condicion_medica", condicion_medica);
+
+            final String requestBody = jsonBody.toString();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.UPDATE_INFO_USUARIO, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        jsonArr = new JSONArray(response);
+                        JsonResponse = response;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, "VOLLEY response update info: " + response);
+                    progressDialog.dismiss();
+                    showAlert("Tu información  personal ha sido actualizada.");
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "VOLLEY: " + error.toString());
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Error en la conexión.", Toast.LENGTH_LONG).show();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void obtieneIdentificaciones() {
@@ -296,7 +421,7 @@ public class InfoPersonalActivity extends AppCompatActivity {
                         }
                     }
 
-                    tv_nombre.setText(direccion);
+                    et_direccion.setText(direccion);
                     et_telefono.setText(telefono);
                     et_celular.setText(celular);
                     et_num_identificacion.setText(num_identificacion);
@@ -351,4 +476,19 @@ public class InfoPersonalActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() { }
+
+    private void showAlert(String message) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setMessage(message).setTitle("Información personal")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // ok
+                        finish();
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+
+    }
 }

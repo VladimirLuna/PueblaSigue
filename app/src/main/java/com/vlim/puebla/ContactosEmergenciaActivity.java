@@ -87,6 +87,15 @@ public class ContactosEmergenciaActivity extends AppCompatActivity implements On
         btn_agregar.setTypeface(tf);
         tv_titulo_toolbar.setTypeface(tf);
 
+        btn_agregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent agregaContacto = new Intent(getApplicationContext(), AgregaContactoEmergenciaActivity.class);
+                agregaContacto.putExtra("idusuario", idusuario);
+                startActivityForResult(agregaContacto, 22);
+            }
+        });
+
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,4 +218,11 @@ public class ContactosEmergenciaActivity extends AppCompatActivity implements On
         startActivity(detalleContactoIntent);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 22){
+            finish();
+            startActivity(getIntent());
+        }
+    }
 }

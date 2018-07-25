@@ -6,7 +6,7 @@ public class Config {
     static int VERSION_DB = 3;
 
     //private static final String HOST = "http://187.217.215.234:8080/";   /* Puebla */
-    private static final String HOST = "http://54.183.159.116:8182/";   /* VLIM */
+    public static final String HOST = "http://54.183.159.116:8182/";   /* VLIM */
 
     // Servicios
     public static final String LOGIN_URL = HOST + "Escudo_Puebla/servicios/validaUsuario";
@@ -17,6 +17,7 @@ public class Config {
     public static final String GET_COMENTARIOS_URL = HOST + "Escudo_Puebla/servicios/getComentarios";
     public static final String AGREGA_COMENTARIOS_URL = HOST + "Escudo_Puebla/servicios/agregarComentario";
     public static final String BOTON_PANICO_URL = HOST + "Escudo_Puebla/servicios/botonPanico";
+    public static final String IMAGEN_CHAT_URL = HOST + "Escudo_Puebla/complementos/imagenesperfil/";
     // 911
     public static final String GET_SUBMOTIVOS_URL = HOST + "Escudo_Puebla/servicios/getSubmotivos";
     public static final String NUEVEONCE_URL = HOST + "Escudo_Puebla/servicios/911";

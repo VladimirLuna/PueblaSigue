@@ -109,20 +109,20 @@ public class AjustesChatActivity extends AppCompatActivity {
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
         // Toolbar
-        tv_titulo_toolbar = (TextView) findViewById(R.id.tv_titulo_toolbar);
+        tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_titulo_toolbar.setTypeface(tf);
-        btn_back = (ImageView) findViewById(R.id.btn_back);
+        btn_back = findViewById(R.id.btn_back);
 
-        et_nickname = (EditText) findViewById(R.id.et_nickname);
+        et_nickname = findViewById(R.id.et_nickname);
         et_nickname.setTypeface(tf);
-        img_usuario = (CircleImageView) findViewById(R.id.img_usuario);
-        btn_cambiarnickname = (TextView) findViewById(R.id.btn_cambiarnickname);
+        img_usuario = findViewById(R.id.img_usuario);
+        btn_cambiarnickname = findViewById(R.id.btn_cambiarnickname);
         btn_cambiarnickname.setTypeface(tf);
-        tv_nicknamemsg = (TextView) findViewById(R.id.tv_nicknamemsg);
+        tv_nicknamemsg = findViewById(R.id.tv_nicknamemsg);
         tv_nicknamemsg.setTypeface(tf);
-        txtPercentage = (TextView) findViewById(R.id.txtPercentage);
+        txtPercentage = findViewById(R.id.txtPercentage);
         txtPercentage.setTypeface(tf);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar911);
+        progressBar = findViewById(R.id.progressBar911);
 
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
@@ -194,12 +194,10 @@ public class AjustesChatActivity extends AppCompatActivity {
                     Log.d(TAG, "prepara: idusr: " + idusuario + ", newusrname: " + newusrname);
                     et_nickname.setText("");
                     preparaUpdate(idusuario, newusrname);
-                    //actualizaImgUsuario();
                 }
                 else{
                     et_nickname.setError("Escribe tu nickname.");
                 }
-
             }
         });
 
@@ -328,6 +326,13 @@ public class AjustesChatActivity extends AppCompatActivity {
     }
 
     private void updateNickname(String params) {
+        progressDialog = new ProgressDialog(AjustesChatActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Actualizando información. Por favor espere.");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             final JSONObject jsonBody = new JSONObject();
@@ -342,6 +347,7 @@ public class AjustesChatActivity extends AppCompatActivity {
             StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.UPDATE_NICKNAME_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    progressDialog.dismiss();
                     try {
                         jsonArr = new JSONArray(response);
                         JsonResponse = response;
@@ -387,6 +393,7 @@ public class AjustesChatActivity extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    progressDialog.dismiss();
                     Log.e(TAG, "VOLLEY: " + error.toString());
                 }
             }) {
@@ -709,7 +716,7 @@ public class AjustesChatActivity extends AppCompatActivity {
                             new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
                     SQLiteDatabase db = usdbh.getWritableDatabase();
                     if (db != null) {
-                        db.execSQL("UPDATE Usuarios SET img = ' http://187.217.215.234:8080/Escudo_Yucatan/complementos/imagenesperfil/" + nombreFoto +"' WHERE idusuario == '" + idusuario + "' ");
+                        db.execSQL("UPDATE Usuarios SET img = '" + Config.IMAGEN_CHAT_URL + nombreFoto +"' WHERE idusuario == '" + idusuario + "' ");
                     } else {
                         Log.v(TAG, "No Hay base");
                     }

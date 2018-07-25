@@ -22,14 +22,13 @@
         android:id="@+id/btn_nueveonce"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/separator"
+        android:layout_below="@+id/tv_mensaje1"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="30dp"
-        android:padding="5dp"
         android:paddingBottom="20dp"
         android:paddingEnd="20dp"
         android:paddingStart="20dp"
+        android:paddingTop="10dp"
         android:src="@drawable/p911"
         app:layout_heightPercent="25%"
         app:layout_widthPercent="50%"
@@ -39,10 +38,9 @@
         android:id="@+id/btn_denunciaanonima"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/separator"
+        android:layout_below="@+id/tv_mensaje1"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="30dp"
         android:layout_toEndOf="@+id/btn_telmujer"
         android:paddingBottom="12dp"
         android:paddingTop="20dp"
@@ -99,7 +97,7 @@
         android:layout_alignParentEnd="true"
         android:text="BOTÓN DE PÁNICO"
         android:textAlignment="center"
-        android:textColor="@color/grayIconTint"
+        android:textColor="@android:color/holo_red_dark"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -107,7 +105,7 @@
         android:id="@+id/tv_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tv_nuevopass2"
+        android:layout_alignBottom="@+id/tv_mensajesipm"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="25dp"
         android:text="Versión"
@@ -116,15 +114,15 @@
         android:textSize="8sp" />
 
     <TextView
-        android:id="@+id/tv_motivo"
+        android:id="@+id/tv_mensaje1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_nueveonce"
+        android:layout_below="@+id/separator"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-30dp"
+        android:layout_marginTop="20dp"
         android:text="Servicios de emergencias"
         android:textColor="@color/naranjaToolbar"
-        android:textSize="16sp" />
+        android:textSize="19sp" />
 
     <Button
         android:id="@+id/btn_mensajesipm"
@@ -153,7 +151,7 @@
         android:background="@drawable/cuadro_naranja" />
 
     <TextView
-        android:id="@+id/tv_celular"
+        android:id="@+id/tv_sigueme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_sigueme"
@@ -165,7 +163,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/tv_nuevopass"
+        android:id="@+id/tv_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_chat_vecinal"
@@ -182,7 +180,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/img_chat"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_nuevopass"
+        android:layout_below="@+id/tv_chat"
         android:layout_marginBottom="-9dp"
         android:elevation="10dp"
         android:paddingStart="85dp"
@@ -191,7 +189,7 @@
         android:textSize="8sp" />
 
     <TextView
-        android:id="@+id/tv_nuevopass2"
+        android:id="@+id/tv_mensajesipm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_mensajesipm"
@@ -234,6 +232,16 @@
         android:elevation="10dp"
         android:padding="5dp"
         app:srcCompat="@drawable/msme" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/tv_version"
+        android:layout_below="@+id/btn_telmujer"
+        android:text="(Mantener presionado 3 segundos)"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="8sp" />
 
 
 </android.support.percent.PercentRelativeLayout>

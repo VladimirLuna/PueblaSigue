@@ -29,10 +29,10 @@ public class RecuperaPasswordActivity extends AppCompatActivity {
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
-        tv_nombre = findViewById(R.id.tv_motivo);
-        tv_celular = findViewById(R.id.tv_celular);
-        tv_nuevopass = findViewById(R.id.tv_nuevopass);
-        tv_nuevopass2 = findViewById(R.id.tv_nuevopass2);
+        tv_nombre = findViewById(R.id.tv_mensaje1);
+        tv_celular = findViewById(R.id.tv_sigueme);
+        tv_nuevopass = findViewById(R.id.tv_chat);
+        tv_nuevopass2 = findViewById(R.id.tv_mensajesipm);
         btn_back = findViewById(R.id.btn_back);
         btn_enviar = findViewById(R.id.btn_enviar);
         et_nombre = findViewById(R.id.et_nombre);

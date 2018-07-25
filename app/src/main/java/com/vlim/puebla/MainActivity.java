@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
+        Typeface tf_bold = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedRegularBold.otf");
 
         final long[] startClickTime = new long[1];
         final boolean[] longClickActive = {false};
@@ -90,20 +91,20 @@ public class MainActivity extends AppCompatActivity {
         tv_version.setTypeface(tf);
         tv_version.setText("v" + BuildConfig.VERSION_NAME);
         tv_version.bringToFront();
-        tv_sigueme = findViewById(R.id.tv_celular);
-        tv_sigueme.setTypeface(tf);
-        tv_chat = findViewById(R.id.tv_nuevopass);
+        tv_sigueme = findViewById(R.id.tv_sigueme);
+        tv_sigueme.setTypeface(tf_bold);
+        tv_chat = findViewById(R.id.tv_chat);
         tv_chat.setTypeface(tf);
         tv_chat2 = findViewById(R.id.tv_chat2);
         tv_chat2.setTypeface(tf);
-        tv_mensajes = findViewById(R.id.tv_nuevopass2);
-        tv_mensajes.setTypeface(tf);
+        tv_mensajes = findViewById(R.id.tv_mensajesipm);
+        tv_mensajes.setTypeface(tf_bold);
         tv_botonmujer = findViewById(R.id.tv_botonmujer);
         tv_botonmujer.setTypeface(tf);
         tv_botonpanico = findViewById(R.id.tv_botonpanico);
-        tv_botonpanico.setTypeface(tf);
-        tv_servicios = findViewById(R.id.tv_motivo);
-        tv_servicios.setTypeface(tf);
+        tv_botonpanico.setTypeface(tf_bold);
+        tv_servicios = findViewById(R.id.tv_mensaje1);
+        tv_servicios.setTypeface(tf_bold);
 
         // Get extras
         puedeRegistrar = getIntent().getExtras().getInt("isReg");

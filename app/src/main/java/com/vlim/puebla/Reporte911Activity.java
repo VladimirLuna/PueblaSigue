@@ -199,7 +199,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             spinner_submotivos = findViewById(R.id.spinner);
             tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
             tv_mensaje1 = findViewById(R.id.tv_mensaje1);
-            tv_motivo = findViewById(R.id.tv_motivo);
+            tv_motivo = findViewById(R.id.tv_mensaje1);
             tv_descripcion = findViewById(R.id.tv_descripcion);
             et_descripcion = findViewById(R.id.et_descripcion);
             btn_enviar = findViewById(R.id.btn_enviar);

@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setBackgroundDrawableResource(R.drawable.background);
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
-        tv_usuario = findViewById(R.id.tv_celular);
+        tv_usuario = findViewById(R.id.tv_sigueme);
         tv_pass = findViewById(R.id.tv_pass);
         tv_olvidepass = findViewById(R.id.tv_olvidepass);
         et_usuario = findViewById(R.id.et_usuario);
