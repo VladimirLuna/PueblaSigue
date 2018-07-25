@@ -1,10 +1,12 @@
 package com.vlim.puebla;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -27,6 +29,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
@@ -41,6 +51,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 
 public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCallback, LocationListener, AdapterView.OnItemClickListener,
         GoogleApiClient.ConnectionCallbacks{
@@ -65,6 +81,9 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     Object dataTransfer[] = new Object[2];
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
+    ProgressDialog progressDialog;
+    JSONArray jsonArr;
+    String JsonResponse = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,48 +144,6 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
 
                 getDirectionsData.execute(dataTransfer);
                 menu_map.setVisibility(View.VISIBLE);
-
-                // borra anteriores rutas, si es que aplica
-                //  ---------------- BD ------------------------------------------------------------------
-                /*userSQLiteHelper usdbh =
-                        new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
-                SQLiteDatabase db = usdbh.getReadableDatabase();
-
-                Cursor cRoute = db.rawQuery("SELECT * FROM RutaSigueme", null);
-                if (cRoute.moveToFirst()) {
-                    Log.d(TAG, "Borrando ruta previa. Genera nueva ruta");
-                    //getDirectionsData.execute(dataTransfer);
-
-                    while (!cRoute.isAfterLast()) {
-                        String lat1 = cRoute.getString(cRoute.getColumnIndex("lat1"));
-                        String lng1 = cRoute.getString(cRoute.getColumnIndex("lng1"));
-                        String lat2 = cRoute.getString(cRoute.getColumnIndex("lat2"));
-                        String lng2 = cRoute.getString(cRoute.getColumnIndex("lng2"));
-
-                        Log.d(TAG, "Cosas: " + lat1);
-                        cRoute.moveToNext();
-                    }
-
-                    // {"latusr":"valor","lonusr":"valor","latdest":"valor","londest":"valor","idusr":"valor","ruta":[{"lng":"valor","lat":"valor"},{"lng":"valor",º"lat":"valor"}]}
-                }
-                else{
-                    Log.d(TAG, "Genera nueva ruta");
-                    //getDirectionsData.execute(dataTransfer);
-                }*/
-
-                /*if (db != null) {
-                    //Insertamos los datos en la tabla Usuarios
-                    db.execSQL("INSERT INTO RutaSigueme (lat1, lng1, lat2, lng2) VALUES ('" + lat1 + "', '" + lng1 + "', '" + lat2 + "', '" + lng2 + "')");
-                    Log.d(TAG, "Hay Ruta previa");
-                    db.close();
-                }
-                else {
-                    Log.v(TAG, "No Hay base en donde guardar!");
-                }*/
-
-
-                // ----------------------------------------------------------------------------------------
-
             }
 
             @Override
@@ -180,6 +157,26 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // lee datos del usuario
+        userSQLiteHelper usdbh =
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
+        SQLiteDatabase db = usdbh.getReadableDatabase();
+        //Cursor c = db.query("Usuarios", campos, "idusuario=?", args, null, null, null);
+        Cursor c = db.rawQuery("SELECT idusuario FROM Usuarios", null);
+
+        if (c.moveToFirst()) {
+            Log.v("SQL23", "hay cosas");
+            //Recorremos el cursor hasta que no haya más registros
+            do {
+                idusuario = c.getString(0);
+            } while(c.moveToNext());
+        }
+        else{
+            Log.v(TAG, "NO hay cosas");
+        }
+        db.close();
+        //////
 
         img_apie.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,11 +212,190 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         tv_comenzar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Inicia viaje
+                JSONObject segmentos = new JSONObject();
+                JSONArray segmentoArray = new JSONArray();
 
+                // Consulta tabla RutaSigueme
+                //  ---------------- BD ------------------------------------------------------------------
+                userSQLiteHelper usdbh =
+                        new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
+                SQLiteDatabase db = usdbh.getReadableDatabase();
+
+                Cursor cRoute = db.rawQuery("SELECT * FROM RutaSigueme", null);
+                if (cRoute.moveToFirst()) {
+                    Log.d(TAG, "Borrando ruta previa. Genera nueva ruta");
+                    //getDirectionsData.execute(dataTransfer);
+
+                    while (!cRoute.isAfterLast()) {
+                        String lat1 = cRoute.getString(cRoute.getColumnIndex("lat1"));
+                        String lng1 = cRoute.getString(cRoute.getColumnIndex("lng1"));
+                        String lat2 = cRoute.getString(cRoute.getColumnIndex("lat2"));
+                        String lng2 = cRoute.getString(cRoute.getColumnIndex("lng2"));
+
+                        //Log.d(TAG, "Cosas: " + lat1 + ", " + lng1 + ", " + lat2 + ", " + lng2);
+                        try {
+                            segmentos.put("lat", lat1);
+                            segmentos.put("lng", lng1);
+                            segmentos.put("lat", lat2);
+                            segmentos.put("lng", lng2);
+                            segmentoArray.put(segmentos);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        cRoute.moveToNext();
+                    }
+
+
+                    JSONObject ruta = new JSONObject();
+                    try {
+                        ruta.put("ruta", segmentoArray);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    JSONObject cosas = new JSONObject();
+                    try {
+                        cosas.put("latusr", String.valueOf(latitude));
+                        cosas.put("lonusr", String.valueOf(longitude));
+                        cosas.put("latdest", String.valueOf(end_latitude));
+                        cosas.put("londest", String.valueOf(end_longitude));
+                        cosas.put("idusr", String.valueOf(idusuario));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    JSONArray siguemeJSON = new JSONArray();
+                    siguemeJSON.put(cosas);
+                    siguemeJSON.put(ruta);   // enviar este arreglo al servicio de ruta    // {"latusr":"valor","lonusr":"valor","latdest":"valor","londest":"valor","idusr":"valor","ruta":[{"lng":"valor","lat":"valor"},{"lng":"valor",º"lat":"valor"}]}
+                    Log.d(TAG, "ruta: " + siguemeJSON.toString());
+
+                    nuevaRuta(cosas, ruta);
+                }
+                else{
+                    Log.d(TAG, "Genera nueva ruta");
+                    //getDirectionsData.execute(dataTransfer);
+                }
+
+                // ----------------------------------------------------------------------------------------
             }
         });
 
     }
+
+    private void nuevaRuta(JSONObject cosasObject, JSONObject rutaObject) {
+        progressDialog = new ProgressDialog(Sigueme2Activity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Generando nueva ruta...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            final JSONObject jsonBody = new JSONObject();
+
+            String idusr = cosasObject.getString("idusr");
+            String latusr = cosasObject.getString("latusr");
+            String lonusr = cosasObject.getString("lonusr");
+            String latdest = cosasObject.getString("latdest");
+            String londest = cosasObject.getString("londest");
+            String ruta = rutaObject.getString("ruta");
+
+            jsonBody.put("idusr", idusr);
+            jsonBody.put("latusr", latusr);
+            jsonBody.put("lonusr", lonusr);
+            jsonBody.put("latdest", latdest);
+            jsonBody.put("londest", londest);
+            jsonBody.put("ruta", ruta);
+
+            String preRequestBody = jsonBody.toString();
+            preRequestBody = preRequestBody.replace("\\", "");
+            preRequestBody = preRequestBody.replace("\"ruta\":\"", "\"ruta\":");
+            preRequestBody = preRequestBody.substring(0, preRequestBody.length() -2) + "}";
+
+            final String requestBody = preRequestBody;
+
+            Log.d(TAG, "envio: " + requestBody);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.NUEVA_RUTA_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    progressDialog.dismiss();
+                    try {
+                        jsonArr = new JSONArray(response);
+                        JsonResponse = response;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //Log.i("VOLLEYresponse", String.valueOf(jsonArr));
+                    Log.i(TAG, "VOLLEY response nueva ruta: " + response);
+
+                    String respuesta = null, mensaje = null;
+                    try {
+                        respuesta = jsonArr.getJSONObject(0).getString("respuesta");
+                        mensaje = jsonArr.getJSONObject(0).getString("mensaje");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    Log.i(TAG, "respuesta: " + respuesta);
+                    if(respuesta.equals("OK")){
+                        showAlert("Ruta #: " + mensaje);
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "Error! Tu ruta no ha sido generada correctamente, por favor intenta de nuevo.", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "VOLLEY: " + error.toString());
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Error en la conexión.", Toast.LENGTH_LONG).show();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlert(String message) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setMessage(message).setTitle("Sígueme y cuídame")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // ok
+                        finish();
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
 
     private void actualizaRuta(String opcionRuta) {
         // borra ruta actual

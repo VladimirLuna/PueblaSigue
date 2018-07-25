@@ -136,6 +136,14 @@ class DataParser {
             e.printStackTrace();
         }
 
+        // elimina rutas previas
+        userSQLiteHelper usdbh =
+                new userSQLiteHelper(contextActivity, "DBUsuarios", null, Config.VERSION_DB);
+        SQLiteDatabase db = usdbh.getWritableDatabase();
+        db.delete("RutaSigueme", null, null);
+        db.close();
+        Log.i(TAG, "Borrando bd RutaSigueme");
+
         // Obtiene segmentos de ruta y almacena en bd
         Log.d(TAG, "Segmentos: " + jsonArray.length());
         try {
@@ -155,15 +163,15 @@ class DataParser {
                 //Log.d(TAG, "Segmentos: " + lat1 + ", " + lng1 + " } " + lat2 + ", " + lng2);
 
                 //  ---------------- BD ------------------------------------------------------------------
-                userSQLiteHelper usdbh =
+                userSQLiteHelper usdbhInsert =
                         new userSQLiteHelper(contextActivity, "DBUsuarios", null, Config.VERSION_DB);
-                SQLiteDatabase db = usdbh.getWritableDatabase();
+                SQLiteDatabase dbInsert = usdbhInsert.getWritableDatabase();
 
-                if (db != null) {
+                if (dbInsert != null) {
                     //Insertamos los datos en la tabla Usuarios
-                    db.execSQL("INSERT INTO RutaSigueme (lat1, lng1, lat2, lng2) VALUES ('" + lat1 + "', '" + lng1 + "', '" + lat2 + "', '" + lng2 + "')");
+                    dbInsert.execSQL("INSERT INTO RutaSigueme (lat1, lng1, lat2, lng2) VALUES ('" + lat1 + "', '" + lng1 + "', '" + lat2 + "', '" + lng2 + "')");
                     //Log.d(TAG, "Ruta guardada OK");
-                    db.close();
+                    dbInsert.close();
                 }
                 else {
                     Log.v(TAG, "No Hay base en donde guardar!");

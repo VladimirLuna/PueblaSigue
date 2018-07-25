@@ -56,7 +56,6 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
     ImageView btn_back, btn_buscar;
     String idusuario;
 
-
     private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
             new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
 
@@ -77,40 +76,6 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        /*placeAutoComplete = (SupportPlaceAutocompleteFragment ) getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        placeAutoComplete.setOnPlaceSelectedListener((PlaceSelectionListener) SiguemeyCuidameActivity.this);*/
-        /*placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                Log.d(  TAG, "Place selected: " + place.getName());
-            }
-
-            @Override
-            public void onError(Status status) {
-                Log.d("Maps", "An error occurred: " + status);
-            }
-        });*/
-
-        /*PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName());
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
-            }
-        });*/
-
-
-
 
         Intent i= getIntent();
         idusuario = i.getStringExtra("idusuario");
@@ -140,21 +105,7 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
                 isUp = !isUp;
             }
         });
-
-       /* AutoCompleteTextView places = findViewById(R.id.autocomplete);
-        places.setAdapter(new PlacesAutoCompleteAdapter(this,android.R.layout.simple_dropdown_item_1line ));
-        places.setOnItemClickListener(this);*/
     }
-
-
-
-
-
-
-
-
-
-
 
     private void showGPSDisabledAlertToUser(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -180,11 +131,6 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
         alert.show();
     }
 
-
-
-
-
-
     // slide the view from below itself to the current position
     public void slideUp(View view){
         view.setVisibility(View.VISIBLE);
@@ -209,7 +155,6 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
         animate.setFillAfter(true);
         view.startAnimation(animate);
     }
-
 
     @Override
     public void onBackPressed() { }

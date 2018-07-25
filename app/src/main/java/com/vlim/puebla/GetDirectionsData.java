@@ -30,7 +30,6 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
         mMap = (GoogleMap)objects[0];
         url = (String)objects[1];
         latLng = (LatLng)objects[2];
-        //latLng_Ini = (LatLng)objects[3];
         latitude_ini = (Double)objects[3];
         lng_ini = (Double)objects[4];
         latitude_dest = (Double)objects[5];
@@ -43,7 +42,6 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return googleDirectionsData;
     }
 
@@ -53,9 +51,7 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
         String[] directionsList;
         DataParser parser = new DataParser();
         directionsList = parser.parseDirections(paramsRoute, context);
-
         displayDirection(directionsList);
-
     }
 
     public void displayDirection(String[] directionsList)
@@ -70,7 +66,6 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
             options.addAll(PolyUtil.decode(directionsList[i]));
             //Log.d(TAG, "directionsList: " + PolyUtil.decode(directionsList[i]));
             mMap.addPolyline(options);
-
         }
 
         Log.d(TAG, "pinta ruta!");
