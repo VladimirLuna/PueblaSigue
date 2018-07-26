@@ -42,7 +42,7 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
     EditText et_nombrecomp, et_telefono, et_celular;
     ImageView btn_agregainfante, btn_guardaregistro;
     String nombrecompleto, domicilio, telefono, celular, usuario, pass, tipo_identificacion, numid, nombredependiente="0", teldependiente="0", celdependiente="0", usrdependiente="0", passdependiente="0",
-            nombrecontacto, telcontacto, celcontacto;
+            nombrecontacto, telcontacto, celcontacto, colonia;
     ProgressDialog progressDialog;
     JSONArray jsonArr;
     String JsonResponse = null;
@@ -84,24 +84,25 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
         pass = i.getStringExtra("pass");
         tipo_identificacion = i.getStringExtra("tipo_identificacion");
         numid = i.getStringExtra("numid");
+        colonia = i.getStringExtra("colonia");
 
         // Toolbar
-        tv_titulo_toolbar = (TextView) findViewById(R.id.tv_titulo_toolbar);
+        tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_titulo_toolbar.setTypeface(tf);
-        tv_mensaje = (TextView) findViewById(R.id.tv_mensaje);
+        tv_mensaje = findViewById(R.id.tv_mensaje);
         tv_mensaje.setTypeface(tf);
-        tv_nombrecompleto = (TextView) findViewById(R.id.tv_nombrecompleto);
+        tv_nombrecompleto = findViewById(R.id.tv_correo);
         tv_nombrecompleto.setTypeface(tf);
-        tv_tel = (TextView) findViewById(R.id.tv_tel);
+        tv_tel = findViewById(R.id.tv_pass);
         tv_tel.setTypeface(tf);
-        tv_celular = (TextView) findViewById(R.id.tv_usuario);
+        tv_celular = findViewById(R.id.tv_numidentificacion);
         tv_celular.setTypeface(tf);
-        btn_back = (ImageView) findViewById(R.id.btn_back);
-        et_nombrecomp = (EditText) findViewById(R.id.et_nombrecontacto);
+        btn_back = findViewById(R.id.btn_back);
+        et_nombrecomp = findViewById(R.id.et_correo);
         et_nombrecomp.setTypeface(tf);
-        et_telefono = (EditText) findViewById(R.id.et_telcontacto);
+        et_telefono = findViewById(R.id.et_password);
         et_telefono.setTypeface(tf);
-        et_celular = (EditText) findViewById(R.id.et_celcontacto);
+        et_celular = findViewById(R.id.et_numidentificacion);
         et_celular.setTypeface(tf);
         btn_agregainfante = findViewById(R.id.btn_enviardenuncia);
         btn_guardaregistro = findViewById(R.id.btn_guardaregistro);

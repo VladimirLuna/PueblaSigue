@@ -61,7 +61,7 @@ public class RegistroUsuarioActivity extends AppCompatActivity {
         tv_avisoprivacidad = findViewById(R.id.tv_avisoprivacidad);
         tv_terminoscondiciones = findViewById(R.id.tv_terminoscondiciones);
 
-        tv_nombre = findViewById(R.id.tv_nombrecompleto);
+        tv_nombre = findViewById(R.id.tv_correo);
         tv_nombre.setTypeface(tf);
         tv_domicilio = findViewById(R.id.tv_domicilio);
         tv_domicilio.setTypeface(tf);

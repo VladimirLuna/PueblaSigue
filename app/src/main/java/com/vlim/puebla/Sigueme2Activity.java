@@ -63,7 +63,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
 
     private GoogleMap mMap;
     PlaceAutocompleteFragment placeAutoComplete;
-    String TAG = "PUEBLA";
+    static String TAG = "PUEBLA";
     Integer MY_LOCATION_REQUEST_CODE = 23;
     LocationManager locationManager;
     LatLng myPosition;
@@ -84,6 +84,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     ProgressDialog progressDialog;
     JSONArray jsonArr;
     String JsonResponse = null;
+    String colorRuta = "naranja";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +130,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 // Obtener ruta
                 String url = getDirectionsUrl(opcionRuta);
                 Log.d(TAG, "URL: " + url);
-                dataTransfer = new Object[8];
+                dataTransfer = new Object[9];
                 url = getDirectionsUrl(opcionRuta);
                 GetDirectionsData getDirectionsData = new GetDirectionsData();
                 dataTransfer[0] = mMap;
@@ -141,6 +142,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 dataTransfer[5] = end_latitude;
                 dataTransfer[6] = end_longitude;
                 dataTransfer[7] = getApplicationContext();
+                dataTransfer[8] = colorRuta;
 
                 getDirectionsData.execute(dataTransfer);
                 menu_map.setVisibility(View.VISIBLE);
@@ -182,7 +184,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onClick(View v) {
                 opcionRuta(1);
-                actualizaRuta(opcionRuta);
+                actualizaRuta(opcionRuta, "naranja");
             }
         });
 
@@ -190,7 +192,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onClick(View v) {
                 opcionRuta(2);
-                actualizaRuta(opcionRuta);
+                actualizaRuta(opcionRuta, "azul");
             }
         });
 
@@ -205,6 +207,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onClick(View v) {
                 borraRuta();
+                stopService(new Intent(getApplicationContext(), TrackingService.class));
                 finish();
             }
         });
@@ -342,7 +345,24 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
 
                     Log.i(TAG, "respuesta: " + respuesta);
                     if(respuesta.equals("OK")){
-                        showAlert("Ruta #: " + mensaje);
+
+                        // inicia servicio, checa cada 5 minutos la posicion actual
+                        Log.d(TAG, "Iniciando Servicio");
+                        startService(new Intent(getApplicationContext(), TrackingService.class));
+                        // actualiza numero de ruta en tabla sigueme
+
+                        // Abrimos la bd
+                        userSQLiteHelper rutaConn =
+                                new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
+                        SQLiteDatabase dbRuta = rutaConn.getReadableDatabase();
+                        //Si hemos abierto correctamente la base de datos
+                        if (dbRuta != null) {
+                            dbRuta.execSQL("UPDATE RutaSigueme SET idviaje = '" + mensaje +"'");
+                            dbRuta.close();
+                        } else {
+                            Log.v(TAG, "No Hay base");
+                        }
+                        showAlert("Se ha comenzado la ruta.");   // mensaje es el numero de ruta
                     }
                     else{
                         Toast.makeText(getApplicationContext(), "Error! Tu ruta no ha sido generada correctamente, por favor intenta de nuevo.", Toast.LENGTH_LONG).show();
@@ -397,13 +417,13 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     }
 
 
-    private void actualizaRuta(String opcionRuta) {
+    private void actualizaRuta(String opcionRuta, String colorRuta) {
         // borra ruta actual
         borraRuta();
         // Obtener ruta
         String url = getDirectionsUrl(opcionRuta);
         Log.d(TAG, "URL: " + url);
-        dataTransfer = new Object[8];
+        dataTransfer = new Object[9];
         url = getDirectionsUrl(opcionRuta);
         GetDirectionsData getDirectionsData = new GetDirectionsData();
         dataTransfer[0] = mMap;
@@ -414,11 +434,12 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         dataTransfer[5] = end_latitude;
         dataTransfer[6] = end_longitude;
         dataTransfer[7] = getApplicationContext();
+        dataTransfer[8] = colorRuta;
 
         getDirectionsData.execute(dataTransfer);
     }
 
-    private void borraRuta() {
+    public void borraRuta() {
         userSQLiteHelper usdbh =
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getWritableDatabase();

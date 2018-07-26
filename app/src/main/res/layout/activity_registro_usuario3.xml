@@ -13,6 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
+    <View
+        android:id="@+id/separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/separator" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -21,7 +27,7 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             tools:context=".RegistroUsuarioActivity3"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
@@ -37,62 +43,62 @@
                 android:textSize="17sp" />
 
             <TextView
-                android:id="@+id/tv_nombrecompleto"
+                android:id="@+id/tv_correo"
                 android:layout_width="500dp"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/et_nombrecontacto"
-                android:layout_alignStart="@+id/et_nombrecontacto"
+                android:layout_alignEnd="@+id/et_correo"
+                android:layout_alignStart="@+id/et_correo"
                 android:layout_below="@+id/tv_mensaje"
                 android:layout_marginTop="30dp"
                 android:text="* Nombre completo"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_tel"
+                android:id="@+id/tv_pass"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/et_nombrecontacto"
-                android:layout_below="@+id/et_nombrecontacto"
+                android:layout_alignStart="@+id/et_correo"
+                android:layout_below="@+id/et_correo"
                 android:layout_marginTop="15dp"
                 android:text="Teléfono particular"
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/et_nombrecontacto"
+                android:id="@+id/et_correo"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_nombrecompleto"
+                android:layout_below="@+id/tv_correo"
                 android:layout_centerHorizontal="true"
                 android:ems="10"
                 android:inputType="text|textCapWords|textPersonName" />
 
             <EditText
-                android:id="@+id/et_telcontacto"
+                android:id="@+id/et_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/et_nombrecontacto"
-                android:layout_alignStart="@+id/tv_tel"
-                android:layout_below="@+id/tv_tel"
+                android:layout_alignEnd="@+id/et_correo"
+                android:layout_alignStart="@+id/tv_pass"
+                android:layout_below="@+id/tv_pass"
                 android:ems="10"
                 android:inputType="phone" />
 
             <TextView
-                android:id="@+id/tv_usuario"
+                android:id="@+id/tv_numidentificacion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/et_telcontacto"
-                android:layout_below="@+id/et_telcontacto"
+                android:layout_alignStart="@+id/et_password"
+                android:layout_below="@+id/et_password"
                 android:layout_marginTop="20dp"
                 android:text="* Celular"
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/et_celcontacto"
+                android:id="@+id/et_numidentificacion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/et_telcontacto"
-                android:layout_alignStart="@+id/tv_usuario"
-                android:layout_below="@+id/tv_usuario"
+                android:layout_alignEnd="@+id/et_password"
+                android:layout_alignStart="@+id/tv_numidentificacion"
+                android:layout_below="@+id/tv_numidentificacion"
                 android:ems="10"
                 android:inputType="phone" />
 
@@ -100,8 +106,8 @@
                 android:id="@+id/btn_guardaregistro"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_alignStart="@+id/tv_usuario"
-                android:layout_below="@+id/et_celcontacto"
+                android:layout_alignStart="@+id/tv_numidentificacion"
+                android:layout_below="@+id/et_numidentificacion"
                 android:background="@drawable/boton_naranja_circular"
                 android:padding="5dp"
                 android:layout_marginTop="10dp"
@@ -112,7 +118,7 @@
                 android:id="@+id/btn_enviardenuncia"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_alignEnd="@+id/et_celcontacto"
+                android:layout_alignEnd="@+id/et_numidentificacion"
                 android:layout_alignTop="@+id/btn_guardaregistro"
                 android:layout_margin="5dp"
                 android:background="@drawable/boton_naranja_circular"

@@ -19,7 +19,7 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
     GoogleMap mMap;
     String url;
     String googleDirectionsData;
-    String duration, distance;
+    String duration, distance, colorRuta;
     LatLng latLng, latLng_Ini;
     double latitude_ini, lng_ini, latitude_dest, lng_dest;
     String TAG = "PUEBLA";
@@ -35,6 +35,7 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
         latitude_dest = (Double)objects[5];
         lng_dest = (Double)objects[6];
         context = (Context) objects[7];
+        colorRuta = (String) objects[8];
 
         DownloadUrl downloadUrl = new DownloadUrl();
         try {
@@ -61,7 +62,12 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
         for(int i = 0;i<count;i++)
         {
             PolylineOptions options = new PolylineOptions();
-            options.color(Color.parseColor("#ea7e01"));
+            if(colorRuta.equals("naranja")){
+                options.color(Color.parseColor("#ea7e01"));
+            }
+            else if(colorRuta.equals("azul")){
+                options.color(Color.parseColor("#0262e5"));
+            }
             options.width(20);
             options.addAll(PolyUtil.decode(directionsList[i]));
             //Log.d(TAG, "directionsList: " + PolyUtil.decode(directionsList[i]));

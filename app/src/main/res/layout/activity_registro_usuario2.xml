@@ -13,6 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
+    <View
+        android:id="@+id/separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/separator" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -21,7 +27,7 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             tools:context=".RegistroUsuarioActivity2"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
@@ -36,43 +42,43 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/tv_nombrecompleto"
+                android:id="@+id/tv_correo"
                 android:layout_width="500dp"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/et_nombrecontacto"
-                android:layout_alignStart="@+id/et_nombrecontacto"
+                android:layout_alignEnd="@+id/et_correo"
+                android:layout_alignStart="@+id/et_correo"
                 android:layout_below="@+id/tv_mensaje"
                 android:layout_marginTop="30dp"
                 android:text="* Correo"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_tel"
+                android:id="@+id/tv_pass"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/et_nombrecontacto"
-                android:layout_below="@+id/et_nombrecontacto"
+                android:layout_alignStart="@+id/et_correo"
+                android:layout_below="@+id/et_correo"
                 android:layout_marginTop="15dp"
                 android:text="* Contraseña"
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/et_nombrecontacto"
+                android:id="@+id/et_correo"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_nombrecompleto"
+                android:layout_below="@+id/tv_correo"
                 android:layout_centerHorizontal="true"
                 android:ems="10"
-                android:inputType="text"
+                android:inputType="text|textEmailAddress"
                 android:maxLength="20" />
 
             <EditText
-                android:id="@+id/et_telcontacto"
+                android:id="@+id/et_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/et_nombrecontacto"
-                android:layout_alignStart="@+id/tv_tel"
-                android:layout_below="@+id/tv_tel"
+                android:layout_alignEnd="@+id/et_correo"
+                android:layout_alignStart="@+id/tv_pass"
+                android:layout_below="@+id/tv_pass"
                 android:ems="10"
                 android:inputType="text|textPassword"
                 android:maxLength="10" />
@@ -84,15 +90,15 @@
                 android:layout_alignStart="@+id/et_padecimientos"
                 android:layout_below="@+id/et_padecimientos"
                 android:layout_gravity="center_horizontal|center"
-                android:text="Toda la información multimedia en este sitio, será utilizada para los fines que Escudo Yucatán disponga"
+                android:text="Toda la información multimedia en este sitio, será utilizada para los fines que Puebla Sigue disponga"
                 android:textColor="@color/naranjaToolbar"
                 android:textSize="12sp" />
 
             <ImageButton
-                android:id="@+id/btn_enviardenuncia"
+                android:id="@+id/btn_siguiente"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_alignEnd="@+id/tv_usuario"
+                android:layout_alignEnd="@+id/tv_numidentificacion"
                 android:layout_below="@+id/tv_detalle1"
                 android:layout_marginTop="39dp"
                 android:background="@drawable/boton_naranja_circular"
@@ -101,11 +107,11 @@
                 app:srcCompat="@drawable/btnnextc_naranja" />
 
             <TextView
-                android:id="@+id/tv_cel"
+                android:id="@+id/tv_identificacion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/et_telcontacto"
-                android:layout_below="@+id/et_telcontacto"
+                android:layout_alignStart="@+id/et_password"
+                android:layout_below="@+id/et_password"
                 android:layout_marginTop="15dp"
                 android:text="* Identificación"
                 android:textSize="16sp" />
@@ -114,13 +120,13 @@
                 android:id="@+id/spinner_tipoid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/et_telcontacto"
-                android:layout_alignStart="@+id/tv_cel"
-                android:layout_below="@+id/tv_cel"
+                android:layout_alignEnd="@+id/et_password"
+                android:layout_alignStart="@+id/tv_identificacion"
+                android:layout_below="@+id/tv_identificacion"
                 android:layout_marginTop="3dp" />
 
             <TextView
-                android:id="@+id/tv_usuario"
+                android:id="@+id/tv_numidentificacion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/spinner_tipoid"
@@ -130,12 +136,12 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/et_celcontacto"
+                android:id="@+id/et_numidentificacion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/spinner_tipoid"
-                android:layout_alignStart="@+id/tv_usuario"
-                android:layout_below="@+id/tv_usuario"
+                android:layout_alignStart="@+id/tv_numidentificacion"
+                android:layout_below="@+id/tv_numidentificacion"
                 android:ems="10"
                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
                 android:maxLength="30" />
@@ -145,12 +151,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/spinner_tipoid"
-                android:layout_below="@+id/et_celcontacto"
+                android:layout_below="@+id/et_numidentificacion"
                 android:layout_marginTop="20dp"
                 android:text="* Colonia"
                 android:textSize="16sp" />
 
-            <EditText
+            <!-- EditText
                 android:id="@+id/et_colonia"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -158,14 +164,23 @@
                 android:layout_alignStart="@+id/tv_usuario"
                 android:layout_below="@+id/tv_colonia"
                 android:ems="10"
-                android:inputType="text|textAutoComplete" />
+                android:inputType="text|textAutoComplete" / -->
+            <Spinner
+                android:id="@+id/spinner_colonia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/spinner_tipoid"
+                android:layout_alignStart="@+id/tv_numidentificacion"
+                android:layout_below="@+id/tv_colonia"
+                android:ems="10"
+                android:layout_marginTop="3dp" />
 
             <TextView
                 android:id="@+id/tv_padecimientos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/spinner_tipoid"
-                android:layout_below="@+id/et_colonia"
+                android:layout_below="@+id/spinner_colonia"
                 android:layout_marginTop="20dp"
                 android:text="Padecimientos clínicos"
                 android:textSize="16sp" />
@@ -175,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/spinner_tipoid"
-                android:layout_alignStart="@+id/tv_usuario"
+                android:layout_alignStart="@+id/tv_numidentificacion"
                 android:layout_below="@+id/tv_padecimientos"
                 android:ems="10"
                 android:inputType="text|textAutoComplete|textMultiLine" />

@@ -13,6 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
+    <View
+        android:id="@+id/separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/separator" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -21,14 +27,14 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             tools:context="com.vlim.yctn.escudoyucatan2.RegistroUsuarioActivity"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
 
 
             <TextView
-                android:id="@+id/tv_nombrecompleto"
+                android:id="@+id/tv_correo"
                 android:layout_width="500dp"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/switch_acepto"
@@ -52,8 +58,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/switch_notificaciones"
-                android:layout_alignStart="@+id/tv_nombrecompleto"
-                android:layout_below="@+id/tv_nombrecompleto"
+                android:layout_alignStart="@+id/tv_correo"
+                android:layout_below="@+id/tv_correo"
                 android:ems="10"
                 android:inputType="text|textCapWords|textAutoComplete|textPersonName"
                 android:maxLength="50" />
@@ -175,7 +181,7 @@
                 android:id="@+id/tv_terminoscondiciones"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/tv_nombrecompleto"
+                android:layout_alignEnd="@+id/tv_correo"
                 android:layout_alignTop="@+id/tv_avisoprivacidad"
                 android:text="Ver Términos y condiciones"
                 android:textColor="@color/naranjaToolbar"

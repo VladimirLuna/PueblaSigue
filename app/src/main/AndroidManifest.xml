@@ -17,6 +17,10 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- android:maxSdkVersion="18" -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <uses-permission
         android:name="android.permission.MEDIA_CONTENT_CONTROL"
         tools:ignore="ProtectedPermissions" />
@@ -116,7 +120,8 @@
         <activity android:name=".RegistroUsuarioActivity2" />
         <activity android:name=".RegistroUsuarioActivity3" />
         <activity android:name=".RegistroUsuarioActivity4" />
-        <activity android:name=".AgregaContactoEmergenciaActivity"></activity>
+        <activity android:name=".AgregaContactoEmergenciaActivity"/>
+        <service android:name=".TrackingService" />
     </application>
 
 </manifest>

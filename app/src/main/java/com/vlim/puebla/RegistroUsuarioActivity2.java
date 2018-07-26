@@ -2,6 +2,8 @@ package com.vlim.puebla;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,18 +38,18 @@ import java.util.ArrayList;
 public class RegistroUsuarioActivity2 extends AppCompatActivity {
 
     // Toolbar
-    TextView tv_titulo_toolbar, tv_mensaje, tv_usuario, tv_pass, tv_tipoid, tv_numid;
+    TextView tv_titulo_toolbar, tv_mensaje, tv_correo, tv_pass, tv_tipoid, tv_numid, tv_colonia, tv_padecimientos;
     ImageView btn_back;
-    EditText et_usuario, et_pass, et_numidentificacion;
-    Spinner spinner_tipodocumento;
+    EditText et_correo, et_pass, et_numidentificacion, et_padecimientos;
+    Spinner spinner_tipodocumento, spinner_colonia;
     String TAG = "PUEBLA";
     Typeface tf;
-    String tipo_identificacion = "";
-    String idSubmotivos[];
+    String tipo_identificacion = "", colonia = "", idusuario = "";
+    String idSubmotivos[], idColonia[];
     JSONArray jsonArr;
     String JsonResponse = null;
-    ArrayList identificacionlist;
-    ImageButton btn_contactoemergencia;
+    ArrayList identificacionlist, colonialist;
+    ImageButton btn_siguiente;
     String nombrecompleto, domicilio, telefono, celular;
     NetworkConnection nt_check;
 
@@ -67,28 +69,36 @@ public class RegistroUsuarioActivity2 extends AppCompatActivity {
         celular = i.getStringExtra("celular");
 
         // Toolbar
-        tv_titulo_toolbar = (TextView) findViewById(R.id.tv_titulo_toolbar);
+        tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_titulo_toolbar.setTypeface(tf);
-        btn_back = (ImageView) findViewById(R.id.btn_back);
+        btn_back = findViewById(R.id.btn_back);
 
-        tv_mensaje = (TextView) findViewById(R.id.tv_mensaje);
+        tv_mensaje = findViewById(R.id.tv_mensaje);
         tv_mensaje.setTypeface(tf);
-        tv_usuario = (TextView) findViewById(R.id.tv_nombrecompleto);
-        tv_usuario.setTypeface(tf);
-        tv_pass = (TextView) findViewById(R.id.tv_tel);
+        tv_correo = findViewById(R.id.tv_correo);
+        tv_correo.setTypeface(tf);
+        tv_pass = findViewById(R.id.tv_pass);
         tv_pass.setTypeface(tf);
-        tv_tipoid = (TextView) findViewById(R.id.tv_cel);
+        tv_tipoid = findViewById(R.id.tv_identificacion);
         tv_tipoid.setTypeface(tf);
-        tv_numid = (TextView) findViewById(R.id.tv_usuario);
+        tv_numid = findViewById(R.id.tv_numidentificacion);
         tv_numid.setTypeface(tf);
-        et_usuario = (EditText) findViewById(R.id.et_nombrecontacto);
-        et_usuario.setTypeface(tf);
-        et_pass = (EditText) findViewById(R.id.et_telcontacto);
+        tv_colonia = findViewById(R.id.tv_colonia);
+        tv_colonia.setTypeface(tf);
+        tv_padecimientos = findViewById(R.id.tv_padecimientos);
+        tv_padecimientos.setTypeface(tf);
+
+        et_correo = findViewById(R.id.et_correo);
+        et_correo.setTypeface(tf);
+        et_pass = findViewById(R.id.et_password);
         et_pass.setTypeface(tf);
-        et_numidentificacion = (EditText) findViewById(R.id.et_celcontacto);
+        et_numidentificacion = findViewById(R.id.et_numidentificacion);
         et_numidentificacion.setTypeface(tf);
-        spinner_tipodocumento = (Spinner) findViewById(R.id.spinner_tipoid);
-        btn_contactoemergencia = (ImageButton) findViewById(R.id.btn_enviardenuncia);
+        et_padecimientos = findViewById(R.id.et_padecimientos);
+        et_padecimientos.setTypeface(tf);
+        spinner_tipodocumento = findViewById(R.id.spinner_tipoid);
+        spinner_colonia = findViewById(R.id.spinner_colonia);
+        btn_siguiente = findViewById(R.id.btn_siguiente);
 
         spinner_tipodocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -103,20 +113,34 @@ public class RegistroUsuarioActivity2 extends AppCompatActivity {
             }
         });
 
-        obtieneTipoDocumento();
+        spinner_colonia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                colonia = idColonia[position];
+                Log.d(TAG, "Select colonia: " + colonia + ", col: " + spinner_colonia.getSelectedItem().toString());
+            }
 
-        btn_contactoemergencia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        obtieneTipoDocumento();
+        obtieneColonias();
+
+        btn_siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int flag = 0;
                 nt_check = new NetworkConnection(getApplicationContext());
                 if(nt_check.isOnline()){
-                    String usuario = et_usuario.getText().toString().trim();
+                    String correo = et_correo.getText().toString().trim();
                     String pass = et_pass.getText().toString().trim();
                     String numid = et_numidentificacion.getText().toString().trim();
 
-                    if(usuario.length() < 1){
-                        et_usuario.setError("Ingresa el usuario.");
+                    if(correo.length() < 1){
+                        et_correo.setError("Ingresa el correo electrónico.");
                     }
                     else if(pass.length() < 1){
                         et_pass.setError("Ingresa la contraseña.");
@@ -153,10 +177,11 @@ public class RegistroUsuarioActivity2 extends AppCompatActivity {
                             datosCuentaIntent.putExtra("telefono", telefono);
                             datosCuentaIntent.putExtra("celular", celular);
                             // 2
-                            datosCuentaIntent.putExtra("usuario", usuario);
+                            datosCuentaIntent.putExtra("correo", correo);
                             datosCuentaIntent.putExtra("pass", pass);
                             datosCuentaIntent.putExtra("tipo_identificacion", tipo_identificacion);
                             datosCuentaIntent.putExtra("numid", numid);
+                            datosCuentaIntent.putExtra("colonia", colonia);
 
                             Log.i(TAG, "Reg2 tipoid: " + tipo_identificacion + ", numeroid: " + numid);
                             startActivity(datosCuentaIntent);
@@ -164,13 +189,10 @@ public class RegistroUsuarioActivity2 extends AppCompatActivity {
                         else{
                             Toast.makeText(getApplicationContext(), "Por favor revise los datos ingresados.", Toast.LENGTH_LONG).show();
                         }
-
                     }
                 }else{
                     Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
                 }
-
-
             }
         });
 
@@ -185,11 +207,6 @@ public class RegistroUsuarioActivity2 extends AppCompatActivity {
     private void obtieneTipoDocumento() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final JSONObject jsonBody = new JSONObject();
-
-            /*JSONObject jsonObject = new JSONObject(params);
-            String institucion = jsonObject.getString("institucion");
-            jsonBody.put("institucion", institucion);*/
-
         final String requestBody = jsonBody.toString();
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, Config.GET_TIPO_DOCUMENTO_URL, new Response.Listener<String>() {
@@ -207,7 +224,7 @@ public class RegistroUsuarioActivity2 extends AppCompatActivity {
 
 
                 identificacionlist = new ArrayList();
-                idSubmotivos = new String[10];
+                idSubmotivos = new String[jsonArr.length()];
 
                 /* Muestra JSON array */
                 for (int i = 0; i < jsonArr.length(); i++){
@@ -244,6 +261,115 @@ public class RegistroUsuarioActivity2 extends AppCompatActivity {
                 };
                 adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner_tipodocumento.setAdapter(adapter1);
+
+            }
+
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    private void obtieneColonias() {
+
+        userSQLiteHelper usdbh =
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
+        SQLiteDatabase db = usdbh.getReadableDatabase();
+        //Cursor c = db.query("Usuarios", campos, "idusuario=?", args, null, null, null);
+        Cursor c = db.rawQuery("SELECT idusuario, nick, img FROM Usuarios", null);
+        Log.i(TAG, "cols: " + c.getCount());
+
+        if (c.moveToFirst()) {
+
+            Log.v(TAG, "hay cosas settings");
+            idusuario = c.getString(0);
+        }
+        else{
+            Log.v(TAG, "NO hay cosas settings");
+        }
+
+        db.close();
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        final JSONObject jsonBody = new JSONObject();
+
+        try {
+            jsonBody.put("idusr", idusuario);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final String requestBody = jsonBody.toString();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.GET_CAT_COLONIA, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    jsonArr = new JSONArray(response);
+                    JsonResponse = response;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.i(TAG, "VOLLEYresponse colonias: " + response);
+
+                colonialist = new ArrayList();
+                idColonia = new String[jsonArr.length()];
+
+                /* Muestra JSON array */
+                for (int i = 0; i < jsonArr.length(); i++){
+                    JSONObject jsonObj = null;
+                    try {
+                        jsonObj = jsonArr.getJSONObject(i);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        String nombre = jsonObj.getString("nombre");
+                        String id_cat_colonia = jsonObj.getString("id_cat_colonia");
+                        System.out.println(id_cat_colonia + ", " + nombre);
+
+                        idColonia[i] = id_cat_colonia;
+                        colonialist.add(nombre);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }// for
+                //spinner_submotivos.setAdapter(new ArrayAdapter<String>(DetalleEmergenciaActivity.this, android.R.layout.simple_spinner_dropdown_item, motivoslist));
+                ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(RegistroUsuarioActivity2.this, android.R.layout.simple_spinner_dropdown_item, colonialist){
+                    public View getView(int position, View convertView, android.view.ViewGroup parent) {
+                        TextView v = (TextView) super.getView(position, convertView, parent);
+                        v.setTypeface(tf);
+                        return v;
+                    }
+                    public View getDropDownView(int position, View convertView, android.view.ViewGroup parent) {
+                        TextView v = (TextView) super.getView(position, convertView, parent);
+                        v.setTypeface(tf);
+                        return v;
+                    }
+                };
+                adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner_colonia.setAdapter(adapter1);
 
             }
 

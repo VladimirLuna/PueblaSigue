@@ -9,7 +9,7 @@ class userSQLiteHelper extends SQLiteOpenHelper {
     private String sqlCreate = "CREATE TABLE Usuarios (idusuario INTEGER, nick TEXT, nombre TEXT, usr TEXT, password TEXT, img TEXT)";
     private String sqlMediosCreate = "CREATE TABLE Media (idmedio INTEGER, medio TEXT, tipo TEXT)";   // tipo: foto, video, audio
     private String sqlMediosChatCreate = "CREATE TABLE MediaChat (idmedio INTEGER, photopath TEXT, videopath TEXT, galeriapath TEXT)";
-    private String sqlRutaSiguemeCreate = "CREATE TABLE RutaSigueme (idsegmento INTEGER, lat1 TEXT, lng1 TEXT, lat2 TEXT, lng2 TEXT)";
+    private String sqlRutaSiguemeCreate = "CREATE TABLE RutaSigueme (idsegmento INTEGER, lat1 TEXT, lng1 TEXT, lat2 TEXT, lng2 TEXT, idviaje TEXT)";
 
     public userSQLiteHelper(Context contexto, String nombre,
                             SQLiteDatabase.CursorFactory factory, int version) {
