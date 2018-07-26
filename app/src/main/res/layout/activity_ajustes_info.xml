@@ -30,7 +30,7 @@
         android:layout_marginTop="64dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_ajustes"
-        app:srcCompat="@drawable/info" />
+        app:srcCompat="@drawable/infopersonal" />
 
     <ImageView
         android:id="@+id/btn_contactos"

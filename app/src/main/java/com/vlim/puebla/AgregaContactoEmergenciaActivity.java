@@ -35,7 +35,7 @@ import java.io.UnsupportedEncodingException;
 public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
 
     String TAG = "PUEBLA";
-    TextView tv_titulo_toolbar, tv_nombre, tv_telefono, tv_celular, tv_correo;
+    TextView tv_titulo_toolbar, tv_nombre, tv_telefono, tv_celular, tv_correo, tv_mensaje;
     EditText et_nombre, et_telefono, et_celular, et_correo;
     ImageView btn_back;
     Button btn_guardar;
@@ -66,6 +66,7 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
         et_celular = findViewById(R.id.et_celular);
         et_correo = findViewById(R.id.et_mail);
         btn_guardar = findViewById(R.id.btn_guardar);
+        tv_mensaje = findViewById(R.id.tv_mensaje);
 
         tv_titulo_toolbar.setTypeface(tf);
         tv_nombre.setTypeface(tf);
@@ -77,6 +78,7 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
         et_celular.setTypeface(tf);
         et_correo.setTypeface(tf);
         btn_guardar.setTypeface(tf);
+        tv_mensaje.setTypeface(tf);
 
         userSQLiteHelper usdbh =
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
