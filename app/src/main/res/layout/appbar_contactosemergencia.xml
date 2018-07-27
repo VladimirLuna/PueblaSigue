@@ -38,6 +38,5 @@
         android:layout_gravity="right"
         android:layout_marginEnd="10dp">
 
-
     </LinearLayout>
 </android.support.v7.widget.Toolbar>

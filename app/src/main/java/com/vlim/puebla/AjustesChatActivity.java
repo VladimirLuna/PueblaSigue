@@ -176,7 +176,7 @@ public class AjustesChatActivity extends AppCompatActivity {
         else{
             Log.v(TAG, "NO hay cosas settings");
         }
-
+        c.close();
         db.close();
 
         btn_back.setOnClickListener(new View.OnClickListener() {

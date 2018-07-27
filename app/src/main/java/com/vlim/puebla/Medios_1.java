@@ -35,12 +35,6 @@ public class Medios_1 extends Fragment {
         View PageOne = inflater.inflate(R.layout.medios1, container, false);
 
         //Every you want add some VIEW you need add findViewId with the Inflater
-
-        //Example
-        /*
-        TextView ExTV = (TextView)PageOne.findViewById(R.id.Something ID)
-         */
-
         userSQLiteHelper mediadbh =
                 new userSQLiteHelper(getContext(), "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getReadableDatabase();
@@ -50,14 +44,13 @@ public class Medios_1 extends Fragment {
             medioURL = c.getString(0);
             String tipo = c.getString(1);
             Log.i(TAG, "medio: " + medioURL + ", tipo: " + tipo );
-        }
 
-        ImageView img_fotos = PageOne.findViewById(R.id.img_fotos);
-        Glide.with(getContext()).load(medioURL).into(img_fotos);
-        img_fotos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(getContext(), "Fotos!!", Toast.LENGTH_LONG).show();
+            ImageView img_fotos = PageOne.findViewById(R.id.img_fotos);
+            Glide.with(getContext()).load(medioURL).into(img_fotos);
+            img_fotos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(getContext(), "Fotos!!", Toast.LENGTH_LONG).show();
 
                     AlertDialog.Builder alertPass = new AlertDialog.Builder(getContext());
                     alertPass.setTitle("Medios");
@@ -90,8 +83,13 @@ public class Medios_1 extends Fragment {
                 else{
                     Log.v(TAG, "NO hay MEDIOS");
                 }*/
-            }
-        });
+                }
+            });
+            c.close();
+        }
+        else{
+            Log.d(TAG, "No hay medios");
+        }
 
         return PageOne;
     }
@@ -112,6 +110,7 @@ public class Medios_1 extends Fragment {
                 FotosBDModel medioURLitem = new FotosBDModel(medio, tipo);
                 fotosList.add(medioURLitem);
             }
+            c.close();
         }
         else{
             Toast.makeText(getContext(), "NO foto!", Toast.LENGTH_LONG).show();

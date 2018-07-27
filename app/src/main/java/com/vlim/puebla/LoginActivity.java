@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setBackgroundDrawableResource(R.drawable.background);
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
-        tv_usuario = findViewById(R.id.tv_sigueme);
+        tv_usuario = findViewById(R.id.tv_celular);
         tv_pass = findViewById(R.id.tv_pass);
         tv_olvidepass = findViewById(R.id.tv_olvidepass);
         et_usuario = findViewById(R.id.et_usuario);
@@ -67,9 +67,9 @@ public class LoginActivity extends AppCompatActivity {
         tv_registro.setTypeface(tf);
 
         // lee datos del usuario
-        userSQLiteHelper usdbh =
+        userSQLiteHelper dbLogin =
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
-        SQLiteDatabase db = usdbh.getReadableDatabase();
+        SQLiteDatabase db = dbLogin.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT usr, password FROM Usuarios", null);
         String password = null;
         if (c.moveToFirst()) {
@@ -78,8 +78,10 @@ public class LoginActivity extends AppCompatActivity {
             password = c.getString(1);
 
             et_usuario.setText(usr_recover.toString());
-            preparaLogin(usr_recover, password);
+            c.close();
             db.close();
+            preparaLogin(usr_recover, password);
+
 
             Log.v(TAG, usr_recover);
         }
@@ -280,3 +282,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
 }
+
+/*
+* String submotivo = request.getParameter("idsubmotivo").toString();
+        String idusr = request.getParameter("idusr").toString();
+        String lat = request.getParameter("lat").toString();
+        String lon = request.getParameter("long").toString();
+        String descripcion = request.getParameter("descripcion").toString();
+
+
+        png/mp4/mp3
+* */

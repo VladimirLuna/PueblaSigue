@@ -88,7 +88,7 @@
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_mensaje1"
+                    android:id="@+id/tv_motivo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
@@ -117,7 +117,7 @@
                     style="@style/mySpinnerItemStyle"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:layout_below="@+id/tv_mensaje1"
+                    android:layout_below="@+id/tv_motivo"
                     android:layout_centerHorizontal="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
@@ -126,14 +126,14 @@
                     android:elevation="2dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_mensaje1" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_motivo" />
 
                 <TextView
                     android:id="@+id/tv_descripcion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_alignStart="@+id/tv_mensaje1"
+                    android:layout_alignStart="@+id/tv_motivo"
                     android:layout_marginTop="204dp"
                     android:text="* Descripción"
                     app:layout_constraintStart_toStartOf="parent"
@@ -157,8 +157,9 @@
                     android:id="@+id/btn_video"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="72dp"
                     android:layout_marginTop="17dp"
                     app:srcCompat="@drawable/video" />
 
@@ -166,8 +167,9 @@
                     android:id="@+id/btn_foto"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:layout_alignParentStart="true"
                     android:layout_alignTop="@+id/btn_video"
-                    android:layout_toStartOf="@+id/tv_mensaje1"
+                    android:layout_marginStart="73dp"
                     app:srcCompat="@drawable/foto" />
 
                 <ImageView
@@ -175,7 +177,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignTop="@+id/btn_video"
-                    android:layout_toEndOf="@+id/tv_mensaje1"
+                    android:layout_centerHorizontal="true"
                     app:srcCompat="@drawable/audio" />
 
                 <Button
@@ -213,7 +215,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignEnd="@+id/btn_audio"
-                    android:layout_alignTop="@+id/tv_mensaje1"
+                    android:layout_alignTop="@+id/tv_motivo"
                     android:textColor="@color/colorAccent"
                     android:textSize="18dp" />
             </android.support.percent.PercentRelativeLayout>

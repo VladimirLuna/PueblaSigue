@@ -79,6 +79,7 @@ public class InfoPersonalActivity extends AppCompatActivity {
         else{
             Log.v(TAG, "NO hay cosas");
         }
+        c.close();
         db.close();
         //////
         Log.d(TAG, "Usr: " + idusuario);
@@ -86,7 +87,7 @@ public class InfoPersonalActivity extends AppCompatActivity {
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_direccion = findViewById(R.id.tv_direccion);
         tv_telefono = findViewById(R.id.tv_telefono);
-        tv_celular = findViewById(R.id.tv_sigueme);
+        tv_celular = findViewById(R.id.tv_celular);
         tv_identificacion = findViewById(R.id.tv_identificacion);
         tv_numero_identificacion = findViewById(R.id.tv_num_identificacion);
         tv_cond_med = findViewById(R.id.tv_cond_med);

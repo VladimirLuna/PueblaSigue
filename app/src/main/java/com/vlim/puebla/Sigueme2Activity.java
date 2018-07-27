@@ -168,11 +168,12 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         Cursor c = db.rawQuery("SELECT idusuario FROM Usuarios", null);
 
         if (c.moveToFirst()) {
-            Log.v("SQL23", "hay cosas");
+            Log.v(TAG, "hay cosas");
             //Recorremos el cursor hasta que no haya más registros
             do {
                 idusuario = c.getString(0);
             } while(c.moveToNext());
+            c.close();
         }
         else{
             Log.v(TAG, "NO hay cosas");
@@ -248,6 +249,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                         }
                         cRoute.moveToNext();
                     }
+                    cRoute.close();
 
 
                     JSONObject ruta = new JSONObject();

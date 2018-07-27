@@ -8,8 +8,8 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/toolbar_info_personal"
-        layout="@layout/appbar_info_personal"
+        android:id="@+id/toolbar_agrega_contacto"
+        layout="@layout/appbar_agrega_contacto"
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
@@ -19,7 +19,8 @@
         android:layout_height="1dip"
         android:background="@color/separator"
         app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_agrega_contacto" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -29,29 +30,49 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".InfoPersonalActivity">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            tools:context=".AgregaContactoEmergenciaActivity">
 
 
             <TextView
-                android:id="@+id/tv_direccion"
+                android:id="@+id/tv_motivo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="15dp"
-                android:text="* Dirección: "
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:text="* Nombre completo:"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.111"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_mensaje" />
+
+            <EditText
+                android:id="@+id/et_nombre"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:ems="10"
+                android:inputType="textCapWords|textPersonName"
+                android:maxLength="30"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_motivo" />
 
             <TextView
                 android:id="@+id/tv_telefono"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
                 android:text="* Teléfono:"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.114"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_direccion" />
+                app:layout_constraintTop_toBottomOf="@+id/et_nombre" />
 
             <EditText
                 android:id="@+id/et_telefono"
@@ -61,6 +82,7 @@
                 android:layout_marginStart="8dp"
                 android:ems="10"
                 android:inputType="phone"
+                android:maxLength="13"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_telefono" />
@@ -69,9 +91,12 @@
                 android:id="@+id/tv_celular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
                 android:text="* Celular:"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.109"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_telefono" />
 
@@ -83,102 +108,68 @@
                 android:layout_marginStart="8dp"
                 android:ems="10"
                 android:inputType="phone"
+                android:maxLength="13"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_celular" />
 
             <TextView
-                android:id="@+id/tv_identificacion"
+                android:id="@+id/tv_mail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="Identificación:"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                android:text="* Correo electrónico:"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.142"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_celular" />
 
-            <Spinner
-                android:id="@+id/spinner_id"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_identificacion" />
-
-            <TextView
-                android:id="@+id/tv_num_identificacion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="* Número de identificacióin:"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_id" />
-
             <EditText
-                android:id="@+id/et_num_identificacion"
+                android:id="@+id/et_mail"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="textEmailAddress"
+                android:maxLength="50"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_num_identificacion" />
-
-            <TextView
-                android:id="@+id/tv_cond_med"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="* Condición médica:"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_num_identificacion" />
-
-            <EditText
-                android:id="@+id/et_cond_med"
-                android:layout_width="300dp"
-                android:layout_height="70dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:ems="10"
-                android:inputType="textAutoComplete|textMultiLine|textPersonName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_cond_med" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_mail" />
 
             <Button
-                android:id="@+id/btn_guardar"
+                android:id="@+id/btn_actualizar"
                 android:layout_width="300dp"
                 android:layout_height="35dp"
-                android:layout_marginBottom="20dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/cuadro_boton"
-                android:text="Guardar"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="56dp"
+                android:background="@drawable/roundedbutton"
+                android:text="Actualizar"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_cond_med" />
+                app:layout_constraintTop_toBottomOf="@+id/et_mail" />
 
-            <EditText
-                android:id="@+id/et_direccion"
-                android:layout_width="300dp"
+            <TextView
+                android:id="@+id/tv_mensaje"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:ems="10"
-                android:inputType="textPersonName"
+                android:layout_marginTop="16dp"
+                android:text="AGREGA TUS CONTACTOS DE EMERGENCIA"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.505"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_direccion" />
+                app:layout_constraintTop_toTopOf="parent" />
+
 
         </android.support.constraint.ConstraintLayout>
+
     </ScrollView>
 </LinearLayout>

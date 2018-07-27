@@ -135,6 +135,7 @@ public class ComentariosActivity extends AppCompatActivity implements SwipeRefre
         else{
             Log.v("sqlidusr", "NO hay cosas");
         }
+        c.close();
         db.close();
         return idUsuario;
     }

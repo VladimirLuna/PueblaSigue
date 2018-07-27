@@ -64,7 +64,7 @@ public class AjustesInfoActivity extends AppCompatActivity {
         Cursor c = db.rawQuery("SELECT idusuario, nick, nombre FROM Usuarios", null);
 
         if (c.moveToFirst()) {
-            Log.v("SQL23", "hay cosas");
+            Log.v(TAG, "hay cosas");
             //Recorremos el cursor hasta que no haya más registros
             do {
                 idusuario = c.getString(0);
@@ -73,6 +73,7 @@ public class AjustesInfoActivity extends AppCompatActivity {
         else{
             Log.v(TAG, "NO hay cosas");
         }
+        c.close();
         db.close();
         //////
 

@@ -33,7 +33,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/tv_mensaje1"
+                android:id="@+id/tv_motivo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -46,7 +46,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/toolbar_reporte911" />
 
             <TextView
-                android:id="@+id/tv_mensaje1"
+                android:id="@+id/tv_motivo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -54,13 +54,13 @@
                 android:layout_marginTop="127dp"
                 android:text="Título del reporte"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_mensaje1" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_motivo" />
 
             <EditText
                 android:id="@+id/et_nombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_mensaje1"
+                android:layout_below="@+id/tv_motivo"
                 android:layout_centerHorizontal="true"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
@@ -68,14 +68,14 @@
                 android:inputType="text|textCapSentences|textAutoCorrect|textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_mensaje1" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_motivo" />
 
             <TextView
                 android:id="@+id/tv_descripcion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/tv_mensaje1"
+                android:layout_alignStart="@+id/tv_motivo"
                 android:layout_marginTop="204dp"
                 android:text="Descripción"
                 app:layout_constraintStart_toStartOf="parent"
@@ -252,7 +252,7 @@
                 android:id="@+id/Imageprev"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_alignStart="@+id/tv_mensaje1"
+                android:layout_alignStart="@+id/tv_motivo"
                 android:layout_alignTop="@+id/btn_pdf"
                 android:src="@drawable/boton_naranja_circular"
                 android:visibility="invisible"

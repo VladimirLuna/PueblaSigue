@@ -72,6 +72,7 @@ public class ContactosEmergenciaActivity extends AppCompatActivity implements On
         else{
             Log.v(TAG, "NO hay cosas");
         }
+        c.close();
         db.close();
         //////
 
@@ -215,12 +216,17 @@ public class ContactosEmergenciaActivity extends AppCompatActivity implements On
         detalleContactoIntent.putExtra("id_grupo", idContacto);
         detalleContactoIntent.putExtra("nombre_grupo", nombreContacto);
         ///finish();
-        startActivity(detalleContactoIntent);
+       // startActivity(detalleContactoIntent);
+        startActivityForResult(detalleContactoIntent, 44);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 22){
+        if(requestCode == 22){   // agregar usuario
+            finish();
+            startActivity(getIntent());
+        }
+        else if(requestCode == 44){   // detalle usuario
             finish();
             startActivity(getIntent());
         }

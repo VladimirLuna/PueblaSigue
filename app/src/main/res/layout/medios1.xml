@@ -5,7 +5,6 @@
     android:background="@color/white"
     android:layout_height="match_parent">
 
-
     <ImageView
         android:id="@+id/img_fotos"
         android:layout_width="wrap_content"

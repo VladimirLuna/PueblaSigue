@@ -124,7 +124,7 @@
                 android:maxLength="10" />
 
             <TextView
-                android:id="@+id/tv_sigueme"
+                android:id="@+id/tv_celular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/et_telefono"
@@ -138,8 +138,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/switch_notificaciones"
-                android:layout_alignStart="@+id/tv_sigueme"
-                android:layout_below="@+id/tv_sigueme"
+                android:layout_alignStart="@+id/tv_celular"
+                android:layout_below="@+id/tv_celular"
                 android:ems="10"
                 android:inputType="phone"
                 android:maxLength="10" />

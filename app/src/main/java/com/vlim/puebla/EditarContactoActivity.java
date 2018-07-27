@@ -2,9 +2,8 @@ package com.vlim.puebla;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,22 +31,23 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
-public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
+public class EditarContactoActivity extends AppCompatActivity {
 
     String TAG = "PUEBLA";
     TextView tv_titulo_toolbar, tv_nombre, tv_telefono, tv_celular, tv_correo, tv_mensaje;
     EditText et_nombre, et_telefono, et_celular, et_correo;
     ImageView btn_back;
-    Button btn_guardar;
-    String idusuario;
+    Button btn_actualizar;
+    String id_contacto;
     ProgressDialog progressDialog;
     JSONArray jsonArr;
     String JsonResponse = null;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_agrega_contacto_emergencia);
+        setContentView(R.layout.activity_editar_contacto);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -65,7 +65,7 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
         et_telefono = findViewById(R.id.et_telefono);
         et_celular = findViewById(R.id.et_celular);
         et_correo = findViewById(R.id.et_mail);
-        btn_guardar = findViewById(R.id.btn_guardar);
+        btn_actualizar = findViewById(R.id.btn_actualizar);
         tv_mensaje = findViewById(R.id.tv_mensaje);
 
         tv_titulo_toolbar.setTypeface(tf);
@@ -77,29 +77,15 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
         et_telefono.setTypeface(tf);
         et_celular.setTypeface(tf);
         et_correo.setTypeface(tf);
-        btn_guardar.setTypeface(tf);
+        btn_actualizar.setTypeface(tf);
         tv_mensaje.setTypeface(tf);
 
-        userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
-        SQLiteDatabase db = usdbh.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT idusuario, nick, nombre FROM Usuarios", null);
+        Intent i = getIntent();
+        id_contacto = i.getStringExtra("id_contacto");
 
-        if (c.moveToFirst()) {
-            Log.v(TAG, "hay cosas");
-            //Recorremos el cursor hasta que no haya más registros
-            do {
-                idusuario = c.getString(0);
-            } while(c.moveToNext());
-        }
-        else{
-            Log.v(TAG, "NO hay cosas");
-        }
-        c.close();
-        db.close();
-        //////
+        obtieneDetalleContacto(id_contacto);
 
-        btn_guardar.setOnClickListener(new View.OnClickListener() {
+        btn_actualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String nombre = et_nombre.getText().toString();
@@ -121,24 +107,19 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
                 }
                 else{
                     // Envia parámetros
-                    preparaContacto(idusuario, nombre, telefono, celular, correo);
+                    preparaContacto(id_contacto, nombre, telefono, celular, correo);
                 }
             }
         });
 
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
     }
 
-    private void preparaContacto(String idusr, String nombre, String tel, String cel, String correo) {
+    private void preparaContacto(String idcontacto, String nombre, String tel, String cel, String correo) {
         JSONObject post_dict = new JSONObject();
 
         try {
-            post_dict.put("idusr" , idusr);
+            post_dict.put("idcontacto" , idcontacto);
             post_dict.put("nombre", nombre);
             post_dict.put("tel", tel);
             post_dict.put("cel", cel);
@@ -150,29 +131,29 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
         if (post_dict.length() > 0) {
             Log.v(TAG, "postdic len: " + String.valueOf(post_dict));
 
-            progressDialog = new ProgressDialog(AgregaContactoEmergenciaActivity.this);
+            progressDialog = new ProgressDialog(EditarContactoActivity.this);
             progressDialog.setCancelable(false);
-            progressDialog.setMessage("Registrando contacto...");
+            progressDialog.setMessage("Actualizando contacto...");
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setProgress(0);
             progressDialog.show();
-            registraContacto(String.valueOf(post_dict));
+            actualizaContacto(String.valueOf(post_dict));
         }
     }
 
-    private void registraContacto(String params) {
+    private void actualizaContacto(String params) {
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             final JSONObject jsonBody = new JSONObject();
 
             JSONObject jsonObject = new JSONObject(params);
-            String idusr = jsonObject.getString("idusr");
+            String idcontacto = jsonObject.getString("idcontacto");
             String nombre = jsonObject.getString("nombre");
             String tel = jsonObject.getString("tel");
             String cel = jsonObject.getString("cel");
             String correo = jsonObject.getString("correo");
 
-            jsonBody.put("idusr", idusr);
+            jsonBody.put("idcontacto", idcontacto);
             jsonBody.put("nombre", nombre);
             jsonBody.put("tel", tel);
             jsonBody.put("cel", cel);
@@ -180,7 +161,7 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
 
             final String requestBody = jsonBody.toString();
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.INSERT_CONTACTO_URL, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.UPDATE_CONTACTO_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -204,6 +185,8 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
 
                         if(respuesta.equals("OK")){
                             showAlert(mensaje);
+                        }else{
+                            showAlert(respuesta + ": " + mensaje);
                         }
 
                     }catch (Exception e){
@@ -255,5 +238,84 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
         android.app.AlertDialog alert = builder.create();
         alert.show();
 
+    }
+
+    private void obtieneDetalleContacto(String id_contacto) {
+        pDialog = new ProgressDialog(this);
+        // Showing progress dialog before making http request
+        pDialog.setMessage("Leyendo información...");
+        pDialog.show();
+
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            final JSONObject jsonBody = new JSONObject();
+
+            jsonBody.put("idusr", id_contacto);
+            final String requestBody = jsonBody.toString();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.GET_INFO_CONTACTO_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        jsonArr = new JSONArray(response);
+                        JsonResponse = response;
+                        Log.i(TAG, "response: " + jsonArr);
+
+                        for (int i = 0; i < jsonArr.length(); i++) {
+                            JSONObject jsonObj = null;
+                            try {
+                                jsonObj = jsonArr.getJSONObject(i);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            String nombre_completo = jsonObj.getString("nombre_completo");
+                            String telefono = jsonObj.getString("telefono");
+                            String celular = jsonObj.getString("celular");
+                            String correo_contacto = jsonObj.getString("correo_contacto");
+
+                            Log.i(TAG, "info contacto nombre: " + nombre_completo + ", tel: " + telefono);
+
+                            et_nombre.setText(nombre_completo);
+                            et_telefono.setText(telefono);
+                            et_celular.setText(celular);
+                            et_correo.setText(correo_contacto);
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    pDialog.dismiss();
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "VOLLEY: " + error.toString());
+                    ////showProgress(false);
+                    pDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Error en la comunicación.", Toast.LENGTH_LONG).show();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

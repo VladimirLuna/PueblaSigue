@@ -22,7 +22,7 @@
         android:id="@+id/btn_nueveonce"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/tv_mensaje1"
+        android:layout_below="@+id/tv_motivo"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:paddingBottom="20dp"
@@ -38,7 +38,7 @@
         android:id="@+id/btn_denunciaanonima"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/tv_mensaje1"
+        android:layout_below="@+id/tv_motivo"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_toEndOf="@+id/btn_telmujer"
@@ -105,7 +105,7 @@
         android:id="@+id/tv_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tv_mensajesipm"
+        android:layout_alignBottom="@+id/tv_password2"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="25dp"
         android:text="Versión"
@@ -114,7 +114,7 @@
         android:textSize="8sp" />
 
     <TextView
-        android:id="@+id/tv_mensaje1"
+        android:id="@+id/tv_motivo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/separator"
@@ -151,7 +151,7 @@
         android:background="@drawable/cuadro_naranja" />
 
     <TextView
-        android:id="@+id/tv_sigueme"
+        android:id="@+id/tv_celular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_sigueme"
@@ -163,7 +163,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/tv_chat"
+        android:id="@+id/tv_password1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_chat_vecinal"
@@ -180,7 +180,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/img_chat"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_chat"
+        android:layout_below="@+id/tv_password1"
         android:layout_marginBottom="-9dp"
         android:elevation="10dp"
         android:paddingStart="85dp"
@@ -189,7 +189,7 @@
         android:textSize="8sp" />
 
     <TextView
-        android:id="@+id/tv_mensajesipm"
+        android:id="@+id/tv_password2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_mensajesipm"

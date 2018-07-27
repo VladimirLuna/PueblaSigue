@@ -36,7 +36,7 @@
 
 
     <TextView
-        android:id="@+id/tv_nombre"
+        android:id="@+id/tv_motivo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -59,7 +59,7 @@
         android:maxLength="30"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_nombre" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_motivo" />
 
     <TextView
         android:id="@+id/tv_telefono"
@@ -88,7 +88,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_telefono" />
 
     <TextView
-        android:id="@+id/tv_sigueme"
+        android:id="@+id/tv_celular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -111,7 +111,7 @@
         android:maxLength="13"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sigueme" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_celular" />
 
     <TextView
         android:id="@+id/tv_mail"

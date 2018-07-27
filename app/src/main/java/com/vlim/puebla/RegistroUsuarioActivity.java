@@ -57,7 +57,7 @@ public class RegistroUsuarioActivity extends AppCompatActivity {
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_domicilio = findViewById(R.id.tv_domicilio);
         tv_telefono = findViewById(R.id.tv_telefono);
-        tv_celular = findViewById(R.id.tv_sigueme);
+        tv_celular = findViewById(R.id.tv_celular);
         tv_avisoprivacidad = findViewById(R.id.tv_avisoprivacidad);
         tv_terminoscondiciones = findViewById(R.id.tv_terminoscondiciones);
 
@@ -67,7 +67,7 @@ public class RegistroUsuarioActivity extends AppCompatActivity {
         tv_domicilio.setTypeface(tf);
         tv_telefono = findViewById(R.id.tv_telefono);
         tv_telefono.setTypeface(tf);
-        tv_celular = findViewById(R.id.tv_sigueme);
+        tv_celular = findViewById(R.id.tv_celular);
         tv_celular.setTypeface(tf);
         et_nombre = findViewById(R.id.et_nombreusuario);
         et_nombre.setTypeface(tf);

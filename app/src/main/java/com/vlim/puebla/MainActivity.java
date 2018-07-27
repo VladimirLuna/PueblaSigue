@@ -91,19 +91,19 @@ public class MainActivity extends AppCompatActivity {
         tv_version.setTypeface(tf);
         tv_version.setText("v" + BuildConfig.VERSION_NAME);
         tv_version.bringToFront();
-        tv_sigueme = findViewById(R.id.tv_sigueme);
+        tv_sigueme = findViewById(R.id.tv_celular);
         tv_sigueme.setTypeface(tf_bold);
-        tv_chat = findViewById(R.id.tv_chat);
+        tv_chat = findViewById(R.id.tv_password1);
         tv_chat.setTypeface(tf);
         tv_chat2 = findViewById(R.id.tv_chat2);
         tv_chat2.setTypeface(tf);
-        tv_mensajes = findViewById(R.id.tv_mensajesipm);
+        tv_mensajes = findViewById(R.id.tv_password2);
         tv_mensajes.setTypeface(tf_bold);
         tv_botonmujer = findViewById(R.id.tv_botonmujer);
         tv_botonmujer.setTypeface(tf);
         tv_botonpanico = findViewById(R.id.tv_botonpanico);
         tv_botonpanico.setTypeface(tf_bold);
-        tv_servicios = findViewById(R.id.tv_mensaje1);
+        tv_servicios = findViewById(R.id.tv_motivo);
         tv_servicios.setTypeface(tf_bold);
 
         // Get extras
@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         else{
             Log.v(TAG, "NO hay cosas");
         }
+        c.close();
         db.close();
         //////
 

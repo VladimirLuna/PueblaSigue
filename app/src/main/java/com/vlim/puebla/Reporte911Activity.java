@@ -38,6 +38,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,6 +59,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.iceteck.silicompressorr.SiliCompressor;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,8 +74,10 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,13 +86,13 @@ import static com.vlim.puebla.AjustesChatActivity.requestPermission;
 public class Reporte911Activity extends AppCompatActivity implements LocationListener {
 
     String TAG = "PUEBLA";
-    String id_usuario = "", tipo_emergencia = "";
+    String idusuario = "", tipo_emergencia = "";
     Spinner spinner_submotivos;
     TextView tv_titulo_toolbar, tv_mensaje1, tv_motivo, tv_descripcion;
     EditText et_descripcion;
     Button btn_enviar;
     ImageView btn_back, btn_camara, btn_video, btn_audio, imageView, imgvideoPrev;
-    String tipo_submotivo;
+    String tipo_submotivo, descrp_denuncia;
     Typeface tf;
     JSONArray jsonArr;
     String JsonResponse = null;
@@ -105,7 +116,6 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
     String photoPath = "", videoPath = "",  photoGaleryPath = "";
     Bitmap fotoBitmap, videoBitmap, photo, galeriaBitmap;
     VideoView videoPrev;
-    String idusuario;
     String titulo_submotivo, descrp_submotivo;
     long totalSize = 0;
     String responseStringIncidencia = null;
@@ -115,6 +125,8 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
     private TextView txtPercentage;
     ProgressDialog progressDialogLista, progressDialogEnvio, progressDialogVideo, progressDialogVideoGal;
     ProgressDialog progressDialog;
+    String responseString911 = null;
+    String responseString911Archivos = null;
 
     private final static int ALL_PERMISSIONS_RESULT = 101;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
@@ -131,7 +143,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
     ArrayList<String> permissionsRejected = new ArrayList<>();
 
     Uri tempUriCameraDeviceNotSuported;
-    String photoPathDB = "", videoPathDB = "", photoGaleryPathDB = "";
+    String photoPathDB = "", videoPathDB = "", vozPathDB = "";
     String fileVideoCompressedPath = "", fileVideoGalCompressedPath = "";
 
     TabLayout MyTabs;
@@ -161,10 +173,10 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         SetUpViewPager(MyPage);
 
         Intent i= getIntent();
-        id_usuario = i.getStringExtra("idusuario");
+        idusuario = i.getStringExtra("idusuario");
         tipo_emergencia = i.getStringExtra("emergencia");
 
-        Log.d(TAG, "usr: " + id_usuario + ", emergencia: " + tipo_emergencia);
+        Log.d(TAG, "usr: " + idusuario + ", emergencia: " + tipo_emergencia);
 
         progressBar = findViewById(R.id.progressBar911);
         progressBar.setVisibility(View.INVISIBLE);
@@ -199,7 +211,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             spinner_submotivos = findViewById(R.id.spinner);
             tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
             tv_mensaje1 = findViewById(R.id.tv_mensaje1);
-            tv_motivo = findViewById(R.id.tv_mensaje1);
+            tv_motivo = findViewById(R.id.tv_motivo);
             tv_descripcion = findViewById(R.id.tv_descripcion);
             et_descripcion = findViewById(R.id.et_descripcion);
             btn_enviar = findViewById(R.id.btn_enviar);
@@ -251,6 +263,19 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
 
         actualizaPrevios();
 
+        spinner_submotivos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                tipo_submotivo = idTipoIncidencia[position];
+                Log.d(TAG, "Select idsubm: " + tipo_submotivo + ", motivo: " + spinner_submotivos.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         btn_camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,6 +297,44 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             }
         });
 
+        btn_enviar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                descrp_denuncia = et_descripcion.getText().toString().trim();
+                if(descrp_denuncia.equals("")){
+                    et_descripcion.setError("Ingrese la descripcion de la denuncia");
+                }else{
+                    // lee datos del usuario
+                    userSQLiteHelper mediadbh =
+                            new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, 5);
+                    SQLiteDatabase db = mediadbh.getReadableDatabase();
+                    Cursor c = db.rawQuery("SELECT * FROM Media", null);
+                    if (c.moveToFirst()) {
+                        Log.v(TAG, "hay MEDIOS");
+                        photoPathDB = c.getString(1);
+                        videoPathDB = c.getString(2);
+                        vozPathDB = c.getString(2);
+
+                        Log.i(TAG, "foto: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + vozPathDB );
+                        //db.close();
+
+                        if((photoPathDB != null) || (videoPathDB != null) || (vozPathDB != null)){
+                            Log.d(TAG, "Envia Denuncia Anonima Archivos");
+                            borraMedios();
+                            //enviaDenuncia911Archivos(photoPathDB, videoPathDB, vozPathDB);
+                        }
+                        c.close();
+                    }
+                    else{
+                        Log.v(TAG, "NO hay MEDIOS");
+                        // Envio sin medios
+                        Log.d(TAG, "Envia Denuncia Anonima");
+                        enviaDenuncia911();
+                    }
+                }
+            }
+        });
+
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -279,6 +342,23 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 finish();
             }
         });
+    }
+
+    private void enviaDenuncia911() {
+        progressDialog = new ProgressDialog(Reporte911Activity.this);
+        progressDialog.setCancelable(false);
+        //progressDialog.setMessage("Enviando Denuncia. Por favor espere. \n No olvides notar tu folio para futuras aclaraciones.");
+        progressDialog.setMessage("Enviando Reporte. Por favor espere.");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
+        String titulo = "hola";
+        // Envia denuncia anonima sin archivos
+        String[] paramsSinArch = new String[]{idusuario, descrp_denuncia, latitud, longitud, tipo_submotivo};
+        Log.d(TAG, "Denuncia 911 s/arch: " + idusuario + ", " + descrp_denuncia + ", " + latitud + ", " + longitud + ", " + tipo_submotivo);
+        SendDenuncia911 nueveOnceSend = new SendDenuncia911();
+        nueveOnceSend.execute(paramsSinArch);
     }
 
     private void abrirCamara() {
@@ -363,7 +443,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                         Log.v(TAG, "No Hay base");
                     }
 
-                    ///////actualizaPrevios();
+                    actualizaPrevios();
 
                 } else if (data.getExtras() == null) {
                     Log.e(TAG, "nulos extras");
@@ -473,68 +553,6 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                         .show();
             }
         }
-        else if (requestCode == SELECT_FILE && null != data) {
-            Log.i(TAG, "Se selecciona archivo de galeria");
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            //Log.d(TAG, "Galeria selected: " + selectedImage + ", " + filePathColumn);
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            photoGaleryPath = cursor.getString(columnIndex);
-            Log.i(TAG, "De la galeria: " + photoGaleryPath);
-            cursor.close();
-            /*galeriaPrev.setVisibility(View.VISIBLE);*/
-
-            //tv_videocapturadogal.setVisibility(View.VISIBLE);
-
-            //Si hemos abierto correctamente la base de datos
-            if (db != null) {
-                /*db.execSQL("UPDATE Media SET galeriapath = '" + photoGaleryPath +"' WHERE idmedio == 1");
-                Log.i(TAG, "UPDATE Media SET galeriapath = '" + photoGaleryPath +"' WHERE idmedio == 1");*/
-
-                db.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + photoGaleryPath + "', galeria)");
-                Log.v(TAG, "INSERT INTO Media (medio, tipo) VALUES ('" + photoGaleryPath +", galeria ");
-            } else {
-                Log.v(TAG, "No Hay base");
-            }
-
-            //////actualizaPrevios();
-
-
-            if(photoGaleryPath != null){
-                if(photoGaleryPath.endsWith("mp4")){
-                    // galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(photoGaleryPath));
-                    // compress video
-
-                    //galeriaPrev.setVisibility(View.VISIBLE);
-                    /*tv_videocapturadogal.setVisibility(View.VISIBLE);*/
-                    Log.d(TAG, "Video seleccionado de galeria: " + photoGaleryPath);
-
-                    File f1 = new File(photoGaleryPath);
-                    Log.i(TAG, "Path gal: " + f1.getPath().toString());
-
-                    String[] paramsVideoGal = new String[]{photoGaleryPath, f1.getPath().toString(), f1.getPath().toString()};
-                    VideoCompressGalleryAsyncTask videoCompressGalleryAsyncTask = new VideoCompressGalleryAsyncTask(getApplicationContext());
-                    videoCompressGalleryAsyncTask.execute(paramsVideoGal);
-                    photoGaleryPath = fileVideoGalCompressedPath;
-                    Log.i(TAG, "compressVideo: " + photoGaleryPath);
-
-                }else{
-                    //btn_galeria.setImageBitmap(BitmapFactory.decodeFile(photoGaleryPath));
-                    /*Glide.with(this).load(photoGaleryPath).into(btn_galeria);
-                    tv_videocapturadogal.setVisibility(View.INVISIBLE);*/
-                    Log.d(TAG, "Foto seleccionada de galeria: " + photoGaleryPath);
-                }
-            }
-            else{
-                Toast.makeText(getApplicationContext(), "Error en la captura de la imagen, por favor intente de nuevo.", Toast.LENGTH_LONG).show();
-                Log.e(TAG, "Error en la captura de la imagen.");
-            }
-
-        }
         else{
             Log.e(TAG, "error en camara!");
         }
@@ -566,14 +584,14 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             String medio = c.getString(0);
             String tipo = c.getString(1);
 
-            Log.i(TAG, "foto: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + photoGaleryPathDB );
+            Log.i(TAG, "foto: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + vozPathDB );
                 /*imageView.setVisibility(View.VISIBLE);
                 imageView.setImageBitmap(BitmapFactory.decodeFile(photoPathDB));
                 galeriaPrev.setVisibility(View.VISIBLE);
-                galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(photoGaleryPathDB));
+                galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(vozPathDB));
                 db.close();*/
 
-            Log.i(TAG, "Medios DB: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + photoGaleryPathDB );
+            Log.i(TAG, "Medios DB: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + vozPathDB );
             if(tipo.equals("foto")){
                 Log.i(TAG, "hay foto db");
                /* imageCameraPreview.setVisibility(View.VISIBLE);*/
@@ -849,7 +867,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                     Log.i(TAG, "VOLLEY response submotivos: " + response);
 
                     tipoIncidenciaList = new ArrayList();
-                    idTipoIncidencia = new String[10];
+                    idTipoIncidencia = new String[jsonArr.length()];
 
                     for (int i = 0; i < jsonArr.length(); i++){
                         JSONObject jsonObj = null;
@@ -1013,62 +1031,6 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         }
     }
 
-    public class VideoCompressGalleryAsyncTask extends AsyncTask<String, String, String> {
-
-        Context mContext;
-
-        public VideoCompressGalleryAsyncTask(Context context){
-            mContext = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(Reporte911Activity.this);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Comprimiendo video...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setProgress(0);
-            progressDialog.show();
-            //dialog compressing...
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            fileVideoGalCompressedPath = null;
-            String videoGalleryPath = params[0];
-            String destinationPath = params[1];
-
-            try {
-                String destinationDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "";
-                File tempFile = new File(photoGaleryPath);
-
-                Log.i(TAG, "destination: " + destinationDir + ", path: " + tempFile.getPath());
-                Log.i(TAG, "video a comprimir de galeria: " + videoGalleryPath + ", params2: " + destinationPath);
-                fileVideoGalCompressedPath = SiliCompressor.with(mContext).compressVideo(videoGalleryPath, destinationDir);
-
-                Log.d(TAG , "filePath : " + fileVideoGalCompressedPath);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-            return  fileVideoCompressedPath;
-        }
-
-        @Override
-        protected void onPostExecute(String compressedFilePath) {
-            super.onPostExecute(compressedFilePath);
-            progressDialog.dismiss();
-            File imageFile = new File(compressedFilePath);
-            float length = imageFile.length() / 1024f; // Size in KB
-            String value;
-            if(length >= 1024)
-                value = length/1024f+" MB";
-            else
-                value = length+" KB";
-            Log.i(TAG, "Path: " + value);
-        }
-    }
-
     public class VideoCompressAsyncTask extends AsyncTask<String, String, String> {
 
         Context mContext;
@@ -1126,4 +1088,132 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
 
     @Override
     public void onBackPressed() { }
+
+    public class SendDenuncia911 extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+            // setting progress bar to zero
+            progressBar.setProgress(0);
+            //super.onPreExecute();
+            et_descripcion.setEnabled(false);
+            btn_enviar.setEnabled(false);
+            btn_enviar.getBackground().setAlpha(100);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            // Making progress bar visible
+            progressBar.setVisibility(View.VISIBLE);
+
+            // updating progress bar value
+            progressBar.setProgress(progress[0]);
+
+            // updating percentage value
+            txtPercentage.setText(String.valueOf(progress[0]) + "% completado");
+        }
+
+        protected String doInBackground(String... params) {
+            String idusrSend = params[0];
+            String descrpDenuSend = params[1];
+            String latitudSend = params[2];
+            String longitudSend = params[3];
+            String submotivoSend = params[4];
+            String responseString2 = null;
+
+
+            Log.i(TAG, "prepara: idusr: " + idusrSend + ", lat: " + latitudSend + ", long: " + longitudSend + ", descrip: " + descrpDenuSend + ", idsub: " + submotivoSend);
+
+            HttpClient httpclientAnonima = new DefaultHttpClient();
+            HttpPost httppostAnonima = new HttpPost(Config.NUEVEONCE_URL);
+
+            try {
+                AndroidMultiPartEntity entityAnonima = new AndroidMultiPartEntity(
+                        new AndroidMultiPartEntity.ProgressListener() {
+
+                            @Override
+                            public void transferred(long num) {
+                                publishProgress((int) ((num / (float) totalSize) * 100));
+                            }
+                        });
+
+                entityAnonima.addPart("idusr", new StringBody(idusrSend));
+                entityAnonima.addPart("descripcion", new StringBody(descrpDenuSend, Charset.forName("UTF-8")));
+                entityAnonima.addPart("lat", new StringBody(latitudSend));
+                entityAnonima.addPart("long", new StringBody(longitudSend));
+                entityAnonima.addPart("idsubmotivo", new StringBody(submotivoSend));
+
+                totalSize = entityAnonima.getContentLength();
+                httppostAnonima.setEntity(entityAnonima);
+
+                Log.i(TAG, "Total size: " + totalSize/1048576 + " MB");
+
+                HttpResponse response = httpclientAnonima.execute(httppostAnonima);
+                HttpEntity r_entity = response.getEntity();
+
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode == 200) {
+                    // Server response
+                    responseString911 = EntityUtils.toString(r_entity);
+                } else {
+                    responseString911 = "Error occurred! Http Status Code: "
+                            + statusCode;
+                }
+            }catch (ClientProtocolException e) {
+                responseString911 = e.toString();
+            }catch (IOException e) {
+                responseString911 = e.toString();
+            }
+            return responseString911;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "Response from server: " + result);
+            progressBar.setVisibility(View.INVISIBLE);
+            // showing the server response in an alert dialog
+
+            try {
+                JSONArray jsonRespuesta = new JSONArray(result);
+                String respuesta = jsonRespuesta.getJSONObject(0).getString("respuesta");
+                Log.i(TAG, "respuesta: " + respuesta);
+                String mensaje = jsonRespuesta.getJSONObject(0).getString("mensaje");
+                if(respuesta.equals("OK")){
+                    progressDialog.dismiss();
+                    showAlert("Denuncia recibida, folio: " + mensaje);
+                    ///Toast.makeText(getApplicationContext(), "Denuncia recibida", Toast.LENGTH_LONG).show();
+                    //finish();
+                }
+                else{
+                    progressDialog.dismiss();
+                    showAlert("Error! Tu denuncia no ha sido recibida. Intenta de nuevo.");
+                    //Toast.makeText(getApplicationContext(), "Error! Tu denuncia no ha sido recibida.", Toast.LENGTH_LONG).show();
+                    //finish();
+                }
+            } catch (JSONException e) {
+                Log.e(TAG, "Error envio: " + e.getMessage());
+                progressDialog.dismiss();
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Error en el envio.", Toast.LENGTH_LONG).show();
+                finish();
+
+            }
+
+            super.onPostExecute(result);
+        }
+    }
+
+    private void showAlert(String message) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setMessage(message).setTitle("Aviso")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // ok
+                        finish();
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+
+    }
 }

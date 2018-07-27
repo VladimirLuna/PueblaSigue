@@ -12,7 +12,7 @@
         android:layout_height="50dp" />
 
     <TextView
-        android:id="@+id/tv_mensaje1"
+        android:id="@+id/tv_motivo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -25,7 +25,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar_nueve_once" />
 
     <TextView
-        android:id="@+id/tv_mensaje1"
+        android:id="@+id/tv_motivo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -33,13 +33,13 @@
         android:layout_marginTop="127dp"
         android:text="Título del reporte"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_mensaje1" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_motivo" />
 
     <EditText
         android:id="@+id/et_nombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_mensaje1"
+        android:layout_below="@+id/tv_motivo"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
@@ -47,14 +47,14 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_mensaje1" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_motivo" />
 
     <TextView
-        android:id="@+id/tv_sigueme"
+        android:id="@+id/tv_celular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/tv_mensaje1"
+        android:layout_alignStart="@+id/tv_motivo"
         android:layout_marginTop="204dp"
         android:text="Descripción"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +64,7 @@
         android:id="@+id/et_celular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_sigueme"
+        android:layout_below="@+id/tv_celular"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
@@ -72,7 +72,7 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sigueme" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_celular" />
 
     <Spinner
         android:id="@+id/spinner_aquiennotifica"
@@ -157,12 +157,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_ajustes_informacion"
         android:layout_marginTop="-135dp"
-        android:layout_toStartOf="@+id/tv_mensaje1"
+        android:layout_toStartOf="@+id/tv_motivo"
         android:text="Fotografía"
         android:textColor="@color/naranjaToolbar" />
 
     <TextView
-        android:id="@+id/tv_chat"
+        android:id="@+id/tv_password1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/tv_info"
