@@ -70,7 +70,7 @@
                 android:layout_centerHorizontal="true"
                 android:ems="10"
                 android:inputType="text|textEmailAddress"
-                android:maxLength="20" />
+                android:maxLength="40" />
 
             <EditText
                 android:id="@+id/et_password"

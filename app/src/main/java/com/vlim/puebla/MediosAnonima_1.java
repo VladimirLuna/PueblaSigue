@@ -23,20 +23,20 @@ import com.bumptech.glide.RequestManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Medios_1 extends Fragment {
+public class MediosAnonima_1 extends Fragment {
     String TAG = "PUEBLA";
     private List<FotosBDModel> fotosList = new ArrayList<>();
     private RecyclerView fotosRecyclerView;
     private RecyclerViewHorizontalListAdapter fotosAdapter;
     String medioURL = "";
     //Constructor default
-    public Medios_1(){};
+    public MediosAnonima_1(){};
     Context context;
     ImageView img_fotos;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View PageOne = inflater.inflate(R.layout.medios1, container, false);
+        View PageOne = inflater.inflate(R.layout.mediosanonima1, container, false);
 
         img_fotos = PageOne.findViewById(R.id.img_fotos);
         img_fotos.setEnabled(false);
@@ -53,9 +53,6 @@ public class Medios_1 extends Fragment {
             String tipo = c.getString(1);
             Log.i(TAG, "medio: " + medioURL + ", tipo: " + tipo );
             img_fotos.setEnabled(true);
-
-            //Picasso.with(getActivity().getApplicationContext()).load(medioURL).memoryPolicy(MemoryPolicy.NO_STORE).into(img_fotos);
-            //Glide.with(getContext()).load(medioURL).into(img_fotos);
 
             // Create glide request manager
             RequestManager requestManager = Glide.with(this);
@@ -114,17 +111,15 @@ public class Medios_1 extends Fragment {
     }
 
     private void populateFotosList(){
-        int i = 0;
         fotosList.clear();
         userSQLiteHelper mediadbh =
                 new userSQLiteHelper(getContext(), "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT medio, tipo FROM Media WHERE tipo == 'foto'", null);
         if (c.moveToFirst()) {
-            //Log.v(TAG, "foto: " + c.getString(0) + ", tipo: " + c.getString(1));
+            Log.v(TAG, "foto: " + c.getString(0) + ", tipo: " + c.getString(1));
             while (!c.isAfterLast()) {
-                i++;
-                Log.v(TAG, "populateFotosList hay medios " + i);
+                Log.v(TAG, "populateFotosList hay medios");
                 String medio = c.getString(0);
                 String tipo = c.getString(1);
 

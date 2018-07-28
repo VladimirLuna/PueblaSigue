@@ -9,7 +9,7 @@
         android:id="@+id/img_audio"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        app:srcCompat="@drawable/p911" />
+        app:srcCompat="@drawable/p089g" />
 
     <TextView
         android:id="@+id/tv_audio"
@@ -20,6 +20,5 @@
         android:text="Audio capturado"
         android:textSize="19sp"
         android:visibility="invisible" />
-
 
 </FrameLayout>

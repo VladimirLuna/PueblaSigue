@@ -75,6 +75,12 @@
                 android:layout_height="match_parent"
                 android:background="@color/white">
 
+                <View
+                    android:id="@+id/separator"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/separator" />
+
                 <TextView
                     android:id="@+id/tv_mensaje1"
                     android:layout_width="wrap_content"
@@ -157,9 +163,8 @@
                     android:id="@+id/btn_video"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginEnd="72dp"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="17dp"
                     app:srcCompat="@drawable/video" />
 
@@ -176,9 +181,20 @@
                     android:id="@+id/btn_audio"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignTop="@+id/btn_video"
-                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="66dp"
                     app:srcCompat="@drawable/audio" />
+
+                <ImageView
+                    android:id="@+id/btn_stop"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/btn_video"
+                    android:layout_marginEnd="66dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/stop" />
 
                 <Button
                     android:id="@+id/btn_enviar"
@@ -186,10 +202,10 @@
                     android:layout_height="35dp"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/et_descripcion"
+                    android:layout_marginBottom="20dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
                     android:background="@drawable/cuadro_boton"
                     android:text="Enviar"
                     android:textAllCaps="false"
@@ -214,8 +230,9 @@
                     android:id="@+id/txtPercentage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/btn_audio"
-                    android:layout_alignTop="@+id/tv_motivo"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/progressBar911"
+                    android:layout_marginEnd="17dp"
                     android:textColor="@color/colorAccent"
                     android:textSize="18dp" />
             </android.support.percent.PercentRelativeLayout>

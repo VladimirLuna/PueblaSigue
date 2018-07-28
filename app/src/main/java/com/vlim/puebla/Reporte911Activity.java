@@ -19,6 +19,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -64,6 +65,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -74,24 +76,27 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.vlim.puebla.AjustesChatActivity.requestPermission;
 
 public class Reporte911Activity extends AppCompatActivity implements LocationListener {
 
-    String TAG = "PUEBLA";
+    static String TAG = "PUEBLA";
     String idusuario = "", tipo_emergencia = "";
     Spinner spinner_submotivos;
     TextView tv_titulo_toolbar, tv_mensaje1, tv_motivo, tv_descripcion;
     EditText et_descripcion;
     Button btn_enviar;
-    ImageView btn_back, btn_camara, btn_video, btn_audio, imageView, imgvideoPrev;
+    ImageView btn_back, btn_camara, btn_video, btn_audio, btn_stop, imgvideoPrev, img_fotos, img_video, img_audio;
     String tipo_submotivo, descrp_denuncia;
     Typeface tf;
     JSONArray jsonArr;
@@ -150,6 +155,9 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
     ViewPager MyPage;
 
     Cursor c = null;
+    Boolean flag_audio = false;
+    private File audioFile;
+    private MediaRecorder mediaRecorder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +185,9 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         tipo_emergencia = i.getStringExtra("emergencia");
 
         Log.d(TAG, "usr: " + idusuario + ", emergencia: " + tipo_emergencia);
+
+        audioFile = new File(Environment.getExternalStorageDirectory(),
+                "audio_puebla.mp3");
 
         progressBar = findViewById(R.id.progressBar911);
         progressBar.setVisibility(View.INVISIBLE);
@@ -219,8 +230,11 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             btn_camara = findViewById(R.id.btn_foto);
             btn_video = findViewById(R.id.btn_video);
             btn_audio = findViewById(R.id.btn_audio);
+            btn_stop = findViewById(R.id.btn_stop);
             txtPercentage = findViewById(R.id.txtPercentage);
             txtPercentage.setTypeface(tf);
+
+            img_fotos = findViewById(R.id.img_fotos);
 
             tv_titulo_toolbar.setTypeface(tf);
             tv_mensaje1.setTypeface(tf);
@@ -286,14 +300,50 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         btn_video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                recordVideo();
             }
         });
 
         btn_audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(flag_audio.equals(false)){
+                    flag_audio = true;
+                    btn_audio.setVisibility(View.INVISIBLE);
+                    btn_stop.setVisibility(View.VISIBLE);
+                    mediaRecorder = new MediaRecorder();
+                    resetRecorder();
+                    mediaRecorder.start();
+                    Toast.makeText(getApplicationContext(), "Inciando grabación de audio.", Toast.LENGTH_LONG).show();
+                }
+                else{
 
+                }
+            }
+        });
+
+        btn_stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "stop audio record. " + audioFile);
+                Toast.makeText(getApplicationContext(), "Se ha detenido la grabación de audio.", Toast.LENGTH_LONG).show();
+                // insert audio en bd
+                userSQLiteHelper usdbh =
+                        new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
+                SQLiteDatabase db = usdbh.getWritableDatabase();
+
+                Log.v(TAG, "Guardando audio");
+                if (db != null) {
+                    //Insertamos los datos en la tabla Media
+                    db.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + audioFile + "', 'audio')");
+                } else {
+                    Log.v(TAG, "No Hay base");
+                }
+                btn_stop.setVisibility(View.INVISIBLE);
+                mediaRecorder.stop();
+                mediaRecorder.release();
+                mediaRecorder = null;
+                btn_audio.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -304,33 +354,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 if(descrp_denuncia.equals("")){
                     et_descripcion.setError("Ingrese la descripcion de la denuncia");
                 }else{
-                    // lee datos del usuario
-                    userSQLiteHelper mediadbh =
-                            new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, 5);
-                    SQLiteDatabase db = mediadbh.getReadableDatabase();
-                    Cursor c = db.rawQuery("SELECT * FROM Media", null);
-                    if (c.moveToFirst()) {
-                        Log.v(TAG, "hay MEDIOS");
-                        photoPathDB = c.getString(1);
-                        videoPathDB = c.getString(2);
-                        vozPathDB = c.getString(2);
-
-                        Log.i(TAG, "foto: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + vozPathDB );
-                        //db.close();
-
-                        if((photoPathDB != null) || (videoPathDB != null) || (vozPathDB != null)){
-                            Log.d(TAG, "Envia Denuncia Anonima Archivos");
-                            borraMedios();
-                            //enviaDenuncia911Archivos(photoPathDB, videoPathDB, vozPathDB);
-                        }
-                        c.close();
-                    }
-                    else{
-                        Log.v(TAG, "NO hay MEDIOS");
-                        // Envio sin medios
-                        Log.d(TAG, "Envia Denuncia Anonima");
-                        enviaDenuncia911();
-                    }
+                    enviaReporte911();
                 }
             }
         });
@@ -344,7 +368,71 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         });
     }
 
-    private void enviaDenuncia911() {
+    private void recordVideo() {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
+        // set video quality
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 120);
+        Log.i(TAG, "Intent video: " + photoPath);
+        intent.putExtra("photoPath", photoPath);
+        intent.putExtra("galeriaPath", photoGaleryPath);
+        //////intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
+
+        if (Build.VERSION.SDK_INT > 23) {
+            intent.putExtra(Intent.EXTRA_STREAM, "content://" + fileUri);
+        } else {
+            intent.putExtra(Intent.EXTRA_STREAM, "file://" + fileUri);
+        }
+
+        // name
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        // start the video capture Intent
+        startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
+    }
+
+    /**
+     * Creating file uri to store image/video
+     */
+    public Uri getOutputMediaFileUri(int type) {
+        return Uri.fromFile(getOutputMediaFile(type));
+    }
+
+    /**
+     * returning image / video
+     */
+    private static File getOutputMediaFile(int type) {
+        // External sdcard location
+        File mediaStorageDir = new File(
+                Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                Config.IMAGE_DIRECTORY_NAME);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(TAG, "Oops! Failed create "
+                        + Config.IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+        File mediaFile;
+        if (type == MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                    + "IMG_" + timeStamp + ".jpg");
+        } else if (type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                    + "VID_" + timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+        return mediaFile;
+    }
+
+    private void enviaReporte911() {
         progressDialog = new ProgressDialog(Reporte911Activity.this);
         progressDialog.setCancelable(false);
         //progressDialog.setMessage("Enviando Denuncia. Por favor espere. \n No olvides notar tu folio para futuras aclaraciones.");
@@ -353,12 +441,40 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         progressDialog.setProgress(0);
         progressDialog.show();
 
-        String titulo = "hola";
-        // Envia denuncia anonima sin archivos
-        String[] paramsSinArch = new String[]{idusuario, descrp_denuncia, latitud, longitud, tipo_submotivo};
-        Log.d(TAG, "Denuncia 911 s/arch: " + idusuario + ", " + descrp_denuncia + ", " + latitud + ", " + longitud + ", " + tipo_submotivo);
-        SendDenuncia911 nueveOnceSend = new SendDenuncia911();
-        nueveOnceSend.execute(paramsSinArch);
+        userSQLiteHelper mediadbh =
+                new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, 5);
+        SQLiteDatabase db = mediadbh.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM Media", null);
+        if (c.moveToFirst()) {
+            Log.v(TAG, "hay MEDIOS");
+            String foto = c.getString(1);
+            String video = c.getString(2);
+            String audio = c.getString(2);
+
+            Log.i(TAG, "foto: " + foto + ", video: " + video + ", gal: " + audio );
+            db.close();
+
+            if((foto != null) || (video != null) || (audio != null)){
+                Log.d(TAG, "Envia Reporte 911 Archivos");
+                // Envia denuncia anonima con archivos
+                String[] paramsArch = new String[]{idusuario, descrp_denuncia, latitud, longitud, tipo_submotivo};
+                Log.d(TAG, "Denuncia 911 c/arch: " + idusuario + ", " + descrp_denuncia + ", " + latitud + ", " + longitud + ", " + tipo_submotivo);
+                SendDenuncia911Archivos nueveOnceSendArchivos = new SendDenuncia911Archivos();
+                nueveOnceSendArchivos.execute(paramsArch);
+            }
+            c.close();
+        }
+        else{   // Sin archivos
+            Log.v(TAG, "NO hay MEDIOS");
+            // Envio sin medios
+            Log.d(TAG, "Envia Reporte 911 sin Archivos");
+            // Envia denuncia anonima sin archivos
+            String[] paramsSinArch = new String[]{idusuario, descrp_denuncia, latitud, longitud, tipo_submotivo};
+            Log.d(TAG, "Denuncia 911 s/arch: " + idusuario + ", " + descrp_denuncia + ", " + latitud + ", " + longitud + ", " + tipo_submotivo);
+            SendDenuncia911 nueveOnceSend = new SendDenuncia911();
+            nueveOnceSend.execute(paramsSinArch);
+        }
+
     }
 
     private void abrirCamara() {
@@ -388,26 +504,10 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "Galeria fotos: " + requestCode + ", " + resultCode);
 
         userSQLiteHelper usdbh =
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getWritableDatabase();
-
-       /* Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM Media WHERE idmedio == 1", null);
-        if (c.moveToFirst()) {
-            Log.i(TAG, "ya existen medios");
-        }
-        else{
-            Log.v(TAG, "NO hay cosas, crear id 1");
-            //Abrimos la base de datos 'DBUsuarios' en modo escritura
-            if (db != null) {
-                //Insertamos los datos en la tabla Usuarios
-                db.execSQL("INSERT INTO Media (idmedio) VALUES (1)");
-            } else {
-                Log.v(TAG, "No Hay base");
-            }
-        }*/
 
         if(requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE_OLDIE){
 
@@ -422,10 +522,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                     fileUri = getImageUri(Reporte911Activity.this, bitmap);
                     File finalFile = new File(getRealPathFromUri(fileUri));
                     btn_camara.setVisibility(View.VISIBLE);  //imageView
-                    //btn_camara.setVisibility(View.INVISIBLE);
-                    //btn_camara.setImageBitmap(bitmap);
-                    //Glide.with(this).load(bitmap).into(btn_camara);
-                    Log.e(TAG, "finalFile: " + finalFile.getPath());
+                    Log.e(TAG, "finalFile photo: " + finalFile.getPath());
 
                     photoPath = getPath(fileUri);
                     System.out.println("Image Path : " + photoPath);
@@ -433,19 +530,58 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                     // Guarda en BD
                     //Si hemos abierto correctamente la base de datos
                     if (db != null) {
-                        //Insertamos los datos en la tabla Usuarios
-                        /*db.execSQL("UPDATE Media SET photopath = '" + photoPath +"' WHERE idmedio == 1");
-                        Log.v(TAG, "UPDATE Media SET medio = '" + photoPath +" tipo = 'foto' WHERE idmedio == 1");*/
-
-                        db.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + photoPath + "', foto)");
-                        Log.v(TAG, "INSERT INTO Media (medio, tipo) VALUES ('" + photoPath +", foto ");
+                        //Insertamos los datos en la tabla Media
+                        db.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + photoPath + "', 'foto')");
+                        Log.v(TAG, "INSERT INTO Media (medio, tipo) VALUES ('" + photoPath +", 'foto' ");
                     } else {
                         Log.v(TAG, "No Hay base");
                     }
 
                     actualizaPrevios();
 
-                } else if (data.getExtras() == null) {
+                }
+                else if (requestCode == CAMERA_CAPTURE_VIDEO_REQUEST_CODE && resultCode == RESULT_OK) {
+
+                    Log.d(TAG, "Video capturado: " + videoPath);
+                    imgvideoPrev.setVisibility(View.VISIBLE);
+
+                    Uri videoCaptured = data.getData();
+                    String[] videoPathColumn = { MediaStore.Images.Media.DATA };
+                    //Log.d(TAG, "Video grabado: " + videoPathColumn);
+
+                    Cursor cursorvid = getContentResolver().query(videoCaptured,
+                            videoPathColumn, null, null, null);
+                    cursorvid.moveToFirst();
+
+                    int columnIndex = cursorvid.getColumnIndex(videoPathColumn[0]);
+                    videoPath = cursorvid.getString(columnIndex);
+                    Log.d(TAG, "Video para cambiar nombre: " + videoPath);
+                    cursorvid.close();
+
+                    File f1 = new File(videoPath);
+                    VideoCompressAsyncTask videoCompressAsyncTask = new VideoCompressAsyncTask(getApplicationContext());
+                    videoCompressAsyncTask.execute(f1.getPath().toString(), f1.getPath().toString());
+                    Log.i(TAG, "compressVideo: " + fileVideoCompressedPath);
+
+                    actualizaPrevios();
+
+
+                    if (resultCode == RESULT_OK) {
+
+                    } else if (resultCode == RESULT_CANCELED) {
+                        // user cancelled recording
+                        Toast.makeText(getApplicationContext(),
+                                "Grabación de video cancelada por el usuario.", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                    else {
+                        // failed to record video
+                        Toast.makeText(getApplicationContext(),
+                                "Error en la grabación del video.", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                }
+                else if (data.getExtras() == null) {
                     Log.e(TAG, "nulos extras");
                     Toast.makeText(getApplicationContext(),
                             "No extras to retrieve!", Toast.LENGTH_SHORT)
@@ -490,7 +626,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 } else {
                     Log.v(TAG, "No Hay base");
                 }
-                //////actualizaPrevios();
+                actualizaPrevios();
 
             } catch(Exception e) {
                 e.printStackTrace();
@@ -520,14 +656,14 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             cursorvid.close();
 
             //Si hemos abierto correctamente la base de datos
-            if (db != null) {
+            /*if (db != null) {
                 //db.execSQL("UPDATE Media SET videopath = '" + videoPath +"' WHERE idmedio == 1");
 
-                db.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + videoPath + "', video)");
-                Log.v(TAG, "INSERT INTO Media (medio, tipo) VALUES ('" + videoPath +", video ");
+                db.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + videoPath + "', 'video')");
+                Log.v(TAG, "INSERT INTO Media (medio, tipo) VALUES ('" + videoPath +"', 'video'");
             } else {
                 Log.v(TAG, "No Hay base");
-            }
+            }*/
 
             //////actualizaPrevios();
 
@@ -584,16 +720,17 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             String medio = c.getString(0);
             String tipo = c.getString(1);
 
-            Log.i(TAG, "foto: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + vozPathDB );
                 /*imageView.setVisibility(View.VISIBLE);
                 imageView.setImageBitmap(BitmapFactory.decodeFile(photoPathDB));
                 galeriaPrev.setVisibility(View.VISIBLE);
                 galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(vozPathDB));
                 db.close();*/
 
-            Log.i(TAG, "Medios DB: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + vozPathDB );
             if(tipo.equals("foto")){
-                Log.i(TAG, "hay foto db");
+                Log.i(TAG, "hay foto db: " + medio);
+                //Glide.with(this).load(medio).into(img_fotos);
+                //Picasso.with(this).load(medio).into(img_fotos);
+
                /* imageCameraPreview.setVisibility(View.VISIBLE);*/
                 /*btn_camara.setVisibility(View.INVISIBLE);*/
                 ///btn_camara.setImageBitmap(BitmapFactory.decodeFile(fotoDB));
@@ -1065,6 +1202,19 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 fileVideoCompressedPath = SiliCompressor.with(mContext).compressVideo(videoPath, destinationDir);
 
                 Log.d(TAG , "filePath : " + fileVideoCompressedPath);
+
+                //Si hemos abierto correctamente la base de datos
+                userSQLiteHelper usdbhVid =
+                        new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
+                SQLiteDatabase dbVid = usdbhVid.getWritableDatabase();
+                if (dbVid != null) {
+                    dbVid.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + fileVideoCompressedPath.substring(1, fileVideoCompressedPath.length()) + "', 'video')");
+                    Log.v(TAG, "INSERT INTO Media (medio, tipo) VALUES ('" + fileVideoCompressedPath.substring(1, fileVideoCompressedPath.length()) +"', 'video' ");
+                } else {
+                    Log.v(TAG, "No Hay base");
+                }
+                usdbhVid.close();
+
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -1118,8 +1268,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             String latitudSend = params[2];
             String longitudSend = params[3];
             String submotivoSend = params[4];
-            String responseString2 = null;
-
+            String responseString2 = null;     //idusuario, descrp_denuncia, latitud, longitud, tipo_submotivo
 
             Log.i(TAG, "prepara: idusr: " + idusrSend + ", lat: " + latitudSend + ", long: " + longitudSend + ", descrip: " + descrpDenuSend + ", idsub: " + submotivoSend);
 
@@ -1202,6 +1351,197 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         }
     }
 
+    private class SendDenuncia911Archivos extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+            // setting progress bar to zero
+            progressBar.setProgress(0);
+            //super.onPreExecute();
+            et_descripcion.setEnabled(false);
+            et_descripcion.setFocusable(false);
+            btn_enviar.setEnabled(false);
+            btn_enviar.getBackground().setAlpha(100);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            // Making progress bar visible
+            progressBar.setVisibility(View.VISIBLE);
+            // updating progress bar value
+            progressBar.setProgress(progress[0]);
+            // updating percentage value
+            txtPercentage.setText(String.valueOf(progress[0]) + "% completado");
+        }
+
+        protected String doInBackground(String... params) {
+
+            String idusrSend = params[0];
+            String descrpLugSend = params[1];
+            String latitudSend = params[2];
+            String longitudSend = params[3];
+            String motivoSend = params[4];
+            String responseString2 = null;
+            String medioURL;
+
+            Log.i(TAG, "prepara arch: idusr: " + idusrSend +", descrpLugar: " + descrpLugSend);
+
+            HttpClient httpclient911Arch = new DefaultHttpClient();
+            HttpPost httpPost911Arch = new HttpPost(Config.NUEVEONCEARCHIVOS_URL);
+
+            try {
+                AndroidMultiPartEntity entity911Arch = new AndroidMultiPartEntity(
+                        new AndroidMultiPartEntity.ProgressListener() {
+                            @Override
+                            public void transferred(long num) {
+                                publishProgress((int) ((num / (float) totalSize) * 100));
+                            }
+                        });
+
+                userSQLiteHelper mediadbh =
+                        new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
+                SQLiteDatabase db = mediadbh.getReadableDatabase();
+                Cursor c = db.rawQuery("SELECT medio, tipo FROM Media", null);
+                Log.d(TAG, "registros: " + c.getColumnCount());
+
+                if (c.moveToFirst()) {
+                    Log.v(TAG, "hay medios! send");
+                    while (!c.isAfterLast()) {
+
+                        medioURL = c.getString(0);
+                        String tipo = c.getString(1);
+
+                        Log.i(TAG, "medio: " + medioURL + ", tipo: " + tipo );
+
+                        if(tipo.equals("foto")){
+                            Log.i(TAG, "hay imagen o video");
+                            galeriaBitmap = BitmapFactory.decodeFile(medioURL);
+                            Log.i(TAG, "Foto: " + medioURL);
+
+                            String filename = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+
+                            try{
+                                String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+                                File fileGal = new File(path, "/" + filename + ".png");
+
+                                FileOutputStream fileOutputStream = new FileOutputStream( fileGal );
+                                galeriaBitmap.compress( Bitmap.CompressFormat.JPEG, 100, fileOutputStream );
+                                fileOutputStream.flush();
+                                fileOutputStream.close();
+                                Log.i(TAG, "Send file: " + fileGal);
+
+                                entity911Arch.addPart("file", new FileBody(fileGal));
+
+                            }catch (FileNotFoundException e) {
+                                Log.e(TAG, e.getMessage(), e);
+
+                            }catch (IOException e) {
+                                e.printStackTrace();
+                                Log.e(TAG, "Error: " + e.getMessage());
+                            }
+                        }
+                        else if(tipo.equals("video")){
+                            Log.i(TAG, "VIDEO path original: " + medioURL);
+                            /*File sourceVideo = new File(videoPathDBSend);
+                            entityAnonimaArch.addPart("file", new FileBody(sourceVideo));*/
+
+                            //fileVideoCompressedPath
+
+                            File sourceVideo = new File(fileVideoCompressedPath);
+                            entity911Arch.addPart("file", new FileBody(sourceVideo));
+                        }
+                        c.moveToNext();
+                    }
+                    c.close();
+                }
+                else{
+                    Log.d(TAG, "No hay fotos!");
+                }
+
+                entity911Arch.addPart("idusr", new StringBody(idusrSend));
+                entity911Arch.addPart("descripcion", new StringBody(descrpLugSend, Charset.forName("UTF-8")));
+                entity911Arch.addPart("lat", new StringBody(latitudSend));
+                entity911Arch.addPart("long", new StringBody(longitudSend));
+                entity911Arch.addPart("idsubmotivo", new StringBody(motivoSend));
+
+                totalSize = entity911Arch.getContentLength();
+                httpPost911Arch.setEntity(entity911Arch);
+
+                Log.i(TAG, "Total size: " + totalSize/1048576 + " MB");
+
+                HttpResponse response = httpclient911Arch.execute(httpPost911Arch);
+                HttpEntity r_entity = response.getEntity();
+
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode == 200) {
+                    // Server response
+                    responseString911Archivos = EntityUtils.toString(r_entity);
+                } else {
+                    responseString911Archivos = "Error occurred! Http Status Code: "
+                            + statusCode;
+                }
+            }catch (ClientProtocolException e) {
+                responseString911Archivos = e.toString();
+            }catch (IOException e) {
+                responseString911Archivos = e.toString();
+            }
+            return responseString911Archivos;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "Response from server: " + result);
+            progressBar.setVisibility(View.INVISIBLE);
+            // showing the server response in an alert dialog
+
+            try {
+                JSONArray jsonRespuesta = new JSONArray(result);
+                String respuesta = jsonRespuesta.getJSONObject(0).getString("respuesta");
+                Log.i(TAG, "respuesta: " + respuesta);
+                String mensaje = jsonRespuesta.getJSONObject(0).getString("mensaje");
+                if(respuesta.equals("OK")){
+                    progressDialog.dismiss();
+                    showAlert("Denuncia recibida, folio: " + mensaje);
+                    ///Toast.makeText(getApplicationContext(), "Denuncia recibida", Toast.LENGTH_LONG).show();
+                    //finish();
+                }
+                else{
+                    progressDialog.dismiss();
+                    showAlert("Error! Tu denuncia no ha sido recibida. Intenta de nuevo.");
+                    //Toast.makeText(getApplicationContext(), "Error! Tu denuncia no ha sido recibida.", Toast.LENGTH_LONG).show();
+                    //finish();
+                }
+            } catch (JSONException e) {
+                progressDialog.dismiss();
+                Log.e(TAG, "Error envio: " + e.getMessage());
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Error en el envio.", Toast.LENGTH_LONG).show();
+                finish();
+
+            }
+
+            super.onPostExecute(result);
+        }
+
+                }
+
+    // this process must be done prior to the start of recording
+    private void resetRecorder() {
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mediaRecorder.setAudioEncodingBitRate(16);
+        mediaRecorder.setAudioSamplingRate(44100);
+        mediaRecorder.setOutputFile(audioFile.getAbsolutePath());
+
+        try {
+            mediaRecorder.prepare();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void showAlert(String message) {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setMessage(message).setTitle("Aviso")
@@ -1216,4 +1556,25 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         alert.show();
 
     }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        borraMedios();
+        super.onDestroy();
+    }
+
+    /*@Override
+    protected void onPause() {
+        Log.d(TAG, "onPause");
+        borraMedios();
+        super.onPause();
+    }*/
+
+    /*@Override
+    protected void onStop() {
+        Log.d(TAG, "onStop");
+        borraMedios();
+        super.onStop();
+    }*/
 }

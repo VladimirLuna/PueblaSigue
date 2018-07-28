@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         tv_sigueme = findViewById(R.id.tv_celular);
         tv_sigueme.setTypeface(tf_bold);
         tv_chat = findViewById(R.id.tv_password1);
-        tv_chat.setTypeface(tf);
+        tv_chat.setTypeface(tf_bold);
         tv_chat2 = findViewById(R.id.tv_chat2);
         tv_chat2.setTypeface(tf);
         tv_mensajes = findViewById(R.id.tv_password2);
@@ -337,6 +337,8 @@ public class MainActivity extends AppCompatActivity {
             permissionsNeeded.add("Control de medios");*/
         if (!addPermission(permissionsList, Manifest.permission.RECORD_AUDIO))
             permissionsNeeded.add("Grabar audio");
+        if (!addPermission(permissionsList, Manifest.permission.SEND_SMS))
+            permissionsNeeded.add("Enviar SMS");
 
         if (permissionsList.size() > 0) {
             if (permissionsNeeded.size() > 0) {

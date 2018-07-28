@@ -138,6 +138,7 @@ public class RegistroUsuarioActivity2 extends AppCompatActivity {
                     String correo = et_correo.getText().toString().trim();
                     String pass = et_pass.getText().toString().trim();
                     String numid = et_numidentificacion.getText().toString().trim();
+                    String padecimientos = et_padecimientos.getText().toString().trim();
 
                     if(correo.length() < 1){
                         et_correo.setError("Ingresa el correo electrónico.");
@@ -182,8 +183,9 @@ public class RegistroUsuarioActivity2 extends AppCompatActivity {
                             datosCuentaIntent.putExtra("tipo_identificacion", tipo_identificacion);
                             datosCuentaIntent.putExtra("numid", numid);
                             datosCuentaIntent.putExtra("colonia", colonia);
+                            datosCuentaIntent.putExtra("padecimientos", padecimientos);
 
-                            Log.i(TAG, "Reg2 tipoid: " + tipo_identificacion + ", numeroid: " + numid);
+                            Log.i(TAG, "Reg2 tipoid: " + tipo_identificacion + ", numeroid: " + numid + ", correo: " + correo + ", padecimientos: " + padecimientos);
                             startActivity(datosCuentaIntent);
                         }
                         else{

@@ -13,18 +13,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class Medios_3 extends Fragment {
+public class MediosAnonima_3 extends Fragment {
     String TAG = "PUEBLA";
     String medioURL = "";
     //Constructor default
-    public Medios_3(){};
+    public MediosAnonima_3(){};
     Context context;
     ImageView img_audio;
     TextView tv_audio;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View PageTree = inflater.inflate(R.layout.medios3, container, false);
+        View PageTree = inflater.inflate(R.layout.mediosanonima3, container, false);
 
         img_audio = PageTree.findViewById(R.id.img_audio);
         img_audio.setEnabled(false);

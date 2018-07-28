@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -39,10 +37,9 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
     Typeface tf;
     TextView tv_titulo_toolbar, tv_mensaje, tv_nombrecompleto, tv_tel, tv_celular;
     ImageView btn_back;
-    EditText et_nombrecomp, et_telefono, et_celular;
-    ImageView btn_agregainfante, btn_guardaregistro;
-    String nombrecompleto, domicilio, telefono, celular, usuario, pass, tipo_identificacion, numid, nombredependiente="0", teldependiente="0", celdependiente="0", usrdependiente="0", passdependiente="0",
-            nombrecontacto, telcontacto, celcontacto, colonia;
+    EditText et_nombrecomp, et_telefono, et_celular, et_correocontacto;
+    ImageView btn_guardaregistro;
+    String nombrecompleto, domicilio, telefono, celular, usuario, pass, tipo_identificacion, numid, nombrecontacto, telcontacto, celcontacto, correoContacto, condicionMedica, colonia;
     ProgressDialog progressDialog;
     JSONArray jsonArr;
     String JsonResponse = null;
@@ -59,32 +56,17 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
 
         tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
-        // recupera id usr
-        // lee datos del usuario
-        userSQLiteHelper usdbh =
-                new userSQLiteHelper(this, "DBUsuarios", null, 5);
-        SQLiteDatabase db = usdbh.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT idusuario FROM Usuarios", null);
-        String password = null;
-        if (c.moveToFirst()) {
-            Log.v(TAG, "hay cosas");
-            usrregistra = c.getString(0);
-            db.close();
-        }
-        else{
-            Log.v(TAG, "NO hay cosas");
-        }
-
         Intent i= getIntent();
         nombrecompleto = i.getStringExtra("nombrecompleto");
         domicilio = i.getStringExtra("domicilio");
         telefono = i.getStringExtra("telefono");
         celular = i.getStringExtra("celular");
-        usuario = i.getStringExtra("usuario");
+        usuario = i.getStringExtra("correo");
         pass = i.getStringExtra("pass");
         tipo_identificacion = i.getStringExtra("tipo_identificacion");
         numid = i.getStringExtra("numid");
         colonia = i.getStringExtra("colonia");
+        condicionMedica = i.getStringExtra("padecimientos");
 
         // Toolbar
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
@@ -104,16 +86,9 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
         et_telefono.setTypeface(tf);
         et_celular = findViewById(R.id.et_numidentificacion);
         et_celular.setTypeface(tf);
-        btn_agregainfante = findViewById(R.id.btn_enviardenuncia);
+        et_correocontacto = findViewById(R.id.et_correocontacto);
+        et_correocontacto.setTypeface(tf);
         btn_guardaregistro = findViewById(R.id.btn_guardaregistro);
-
-        btn_agregainfante.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent datosCuentaIntent = new Intent(RegistroUsuarioActivity3.this, RegistroUsuarioActivity4.class);
-                startActivityForResult(datosCuentaIntent, 1100);
-            }
-        });
 
         btn_guardaregistro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +98,7 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
                     nombrecontacto = et_nombrecomp.getText().toString().trim();
                     telcontacto = et_telefono.getText().toString().trim();
                     celcontacto = et_celular.getText().toString().trim();
+                    correoContacto = et_correocontacto.getText().toString();
 
                     if(nombrecontacto.length() < 1){
                         et_nombrecomp.setError("Ingresa el nombre completo de tu contacto.");
@@ -154,26 +130,27 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
         JSONObject post_dict = new JSONObject();
 
         try {
-            post_dict.put("nombrecompleto" , nombrecompleto);
+            post_dict.put("isdep" , "0");
+            post_dict.put("nombreCompleto" , nombrecompleto);
             post_dict.put("domicilio", domicilio);
-            post_dict.put("telefono", telefono);
-            post_dict.put("celular", celular);
-            post_dict.put("usuario", usuario);
-            post_dict.put("pass", pass);
-            post_dict.put("tipo_identificacion", tipo_identificacion);
-            post_dict.put("numid", numid);
-            post_dict.put("nombrecontacto", nombrecontacto);
-            post_dict.put("telcontacto", telcontacto);
-            post_dict.put("celcontacto", celcontacto);
-            post_dict.put("nombredependiente", nombredependiente);
-            post_dict.put("teldependiente", teldependiente);
-            post_dict.put("celdependiente", celdependiente);
-            post_dict.put("usrdependiente", usrdependiente);
-            post_dict.put("passdependiente", passdependiente);
+            post_dict.put("tel", telefono);
+            post_dict.put("cel", celular);
+            post_dict.put("nickname", usuario);
+            post_dict.put("passusuario", pass);
+            post_dict.put("tidienti", tipo_identificacion);
+            post_dict.put("numidenti", numid);
+            post_dict.put("nomContacto", nombrecontacto);
+            post_dict.put("telContacto", telcontacto);
+            post_dict.put("celContacto", celcontacto);
+            post_dict.put("correoContacto", correoContacto);
+            post_dict.put("condicionMedica", condicionMedica);
+            post_dict.put("comunidad", colonia);
+            post_dict.put("usrregistra", "0");
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "envia: " + post_dict.toString());
         if (post_dict.length() > 0) {
             progressDialog = new ProgressDialog(RegistroUsuarioActivity3.this);
             progressDialog.setCancelable(false);
@@ -191,46 +168,50 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
             final JSONObject jsonBody = new JSONObject();
 
             JSONObject jsonObject = new JSONObject(params);
-            String nombrecompleto = jsonObject.getString("nombrecompleto");
+
+            String isdep = jsonObject.getString("isdep");
+            String nombreCompleto = jsonObject.getString("nombreCompleto");
             String domicilio = jsonObject.getString("domicilio");
-            String telefono = jsonObject.getString("telefono");
-            String celular = jsonObject.getString("celular");
-            String usuario = jsonObject.getString("usuario");
-            String pass = jsonObject.getString("pass");
-            String tipo_identificacion = jsonObject.getString("tipo_identificacion");
-            String numid = jsonObject.getString("numid");
-            String nombrecontacto = jsonObject.getString("nombrecontacto");
-            String telcontacto = jsonObject.getString("telcontacto");
-            String celcontacto = jsonObject.getString("celcontacto");
+            String tel = jsonObject.getString("tel");
+            String cel = jsonObject.getString("cel");
+            String nickname = jsonObject.getString("nickname");
+            String passusuario = jsonObject.getString("passusuario");
+            String tidienti = jsonObject.getString("tidienti");
+            String numidenti = jsonObject.getString("numidenti");
+            String nomContacto = jsonObject.getString("nomContacto");
+            String telContacto = jsonObject.getString("telContacto");
+            String celContacto = jsonObject.getString("celContacto");
+            String correoContacto = jsonObject.getString("correoContacto");
+            String condicionMedica = jsonObject.getString("condicionMedica");
+            String comunidad = jsonObject.getString("comunidad");
+            String usrregistra = jsonObject.getString("usrregistra");
 
             jsonBody.put("isdep", isdep);
-            jsonBody.put("usrregistra", usrregistra);
-            jsonBody.put("nombreCompleto", nombrecompleto);
+            jsonBody.put("nombreCompleto", nombreCompleto);
             jsonBody.put("domicilio", domicilio);
             if(telefono.length() > 0){
-                jsonBody.put("tel", telefono);
+                jsonBody.put("tel", tel);
             }
             else{
                 jsonBody.put("tel", "0");
             }
-            jsonBody.put("cel", celular);
-            jsonBody.put("nickname", usuario);
-            jsonBody.put("passusuario", pass);
-            jsonBody.put("tidienti", tipo_identificacion);
-            jsonBody.put("numidenti", numid);
-            jsonBody.put("nomContacto", nombrecontacto);
-            if(telcontacto.length() > 0){
-                jsonBody.put("telContacto", telcontacto);
+            jsonBody.put("cel", cel);
+            jsonBody.put("nickname", nickname);
+            jsonBody.put("passusuario", passusuario);
+            jsonBody.put("tidienti", tidienti);
+            jsonBody.put("numidenti", numidenti);
+            jsonBody.put("nomContacto", nomContacto);
+            if(telContacto.length() > 0){
+                jsonBody.put("telContacto", telContacto);
             }
             else{
                 jsonBody.put("telContacto", "0");
             }
-            jsonBody.put("celContacto", celcontacto);
-            jsonBody.put("nomDep", nombredependiente);
-            jsonBody.put("telDep", teldependiente);
-            jsonBody.put("celDep", celdependiente);
-            jsonBody.put("nicknameDep", usrdependiente);
-            jsonBody.put("passDep", passdependiente);
+            jsonBody.put("celContacto", celContacto);
+            jsonBody.put("correoContacto", correoContacto);
+            jsonBody.put("condicionMedica", condicionMedica);
+            jsonBody.put("comunidad", comunidad);
+            jsonBody.put("usrregistra", usrregistra);
 
             final String requestBody = jsonBody.toString();
             Log.v(TAG, "Request nvoRegUsr: " + requestBody);
@@ -293,36 +274,6 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
         });
 
         alertDialog.show();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.d(TAG, "result: " + resultCode);
-
-        if(resultCode == RESULT_CANCELED){
-            Toast.makeText(this, "Sin dependientes.", Toast.LENGTH_LONG).show();
-            nombredependiente = "0";
-            teldependiente = "0";
-            celdependiente = "0";
-            usrdependiente = "0";
-            passdependiente = "0";
-            isdep = "0";
-        }
-        else if(requestCode == 1100)  {
-            Toast.makeText(getApplicationContext(), "Infante registrado", Toast.LENGTH_LONG).show();
-            nombredependiente = data.getExtras().getString("nombredependiente");
-            teldependiente = data.getExtras().getString("teldependiente");
-            if(teldependiente.length() < 1){
-                teldependiente = "0";
-            }
-            celdependiente = data.getExtras().getString("celdependiente");
-            usrdependiente = data.getExtras().getString("usrdependiente");
-            passdependiente = data.getExtras().getString("passdependiente");
-            isdep = "1";
-            Log.i(TAG, "nombre: " + nombredependiente);
-        }
     }
 
     @Override

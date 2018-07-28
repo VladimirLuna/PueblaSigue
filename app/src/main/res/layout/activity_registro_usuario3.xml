@@ -102,29 +102,37 @@
                 android:ems="10"
                 android:inputType="phone" />
 
+            <TextView
+                android:id="@+id/tv_correocontacto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/et_password"
+                android:layout_below="@+id/et_numidentificacion"
+                android:layout_marginTop="20dp"
+                android:text="* Correo"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_correocontacto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/et_password"
+                android:layout_alignStart="@+id/tv_numidentificacion"
+                android:layout_below="@+id/tv_correocontacto"
+                android:ems="10"
+                android:inputType="textEmailAddress" />
+
             <ImageView
                 android:id="@+id/btn_guardaregistro"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignStart="@+id/tv_numidentificacion"
-                android:layout_below="@+id/et_numidentificacion"
+                android:layout_below="@+id/et_correocontacto"
                 android:background="@drawable/boton_naranja_circular"
                 android:padding="5dp"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/enviar"
                 app:srcCompat="@drawable/enviar" />
-
-            <ImageView
-                android:id="@+id/btn_enviardenuncia"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_alignEnd="@+id/et_numidentificacion"
-                android:layout_alignTop="@+id/btn_guardaregistro"
-                android:layout_margin="5dp"
-                android:background="@drawable/boton_naranja_circular"
-                android:padding="14dp"
-                android:src="@drawable/contactos"
-                app:srcCompat="@drawable/contactos" />
 
         </RelativeLayout>
     </ScrollView>

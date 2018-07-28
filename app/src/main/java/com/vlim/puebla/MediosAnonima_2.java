@@ -20,22 +20,21 @@ import android.widget.VideoView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Medios_2 extends Fragment {
+public class MediosAnonima_2 extends Fragment {
     String TAG = "PUEBLA";
     private List<FotosBDModel> fotosList = new ArrayList<>();
     private RecyclerView fotosRecyclerView;
     private RecyclerViewHorizontalListAdapter fotosAdapter;
     String medioURL = "";
-    //Constructor default
-    public Medios_2(){};
     Context context;
     ImageView img_video;
     VideoView vid_preview;
+    //Constructor default
+    public MediosAnonima_2(){};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View PageTwo = inflater.inflate(R.layout.medios2, container, false);
-
+        View PageTwo = inflater.inflate(R.layout.mediosanonima2, container, false);
         img_video = PageTwo.findViewById(R.id.img_video);
         img_video.setEnabled(false);
         vid_preview = PageTwo.findViewById(R.id.vid_preview);

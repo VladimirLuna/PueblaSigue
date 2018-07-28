@@ -6,20 +6,16 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/img_audio"
+        android:id="@+id/img_video"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        app:srcCompat="@drawable/p911" />
+        app:srcCompat="@drawable/p089g" />
 
-    <TextView
-        android:id="@+id/tv_audio"
+    <VideoView
+        android:id="@+id/vid_preview"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
-        android:text="Audio capturado"
-        android:textSize="19sp"
-        android:visibility="invisible" />
-
+        app:srcCompat="@drawable/p911"
+        android:visibility="invisible"/>
 
 </FrameLayout>
