@@ -217,7 +217,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onClick(View v) {
                 // Inicia viaje
-                JSONObject segmentos = new JSONObject();
+
                 JSONArray segmentoArray = new JSONArray();
 
                 // Consulta tabla RutaSigueme
@@ -236,6 +236,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                         String lng1 = cRoute.getString(cRoute.getColumnIndex("lng1"));
                         String lat2 = cRoute.getString(cRoute.getColumnIndex("lat2"));
                         String lng2 = cRoute.getString(cRoute.getColumnIndex("lng2"));
+                        JSONObject segmentos = new JSONObject();
 
                         //Log.d(TAG, "Cosas: " + lat1 + ", " + lng1 + ", " + lat2 + ", " + lng2);
                         try {
