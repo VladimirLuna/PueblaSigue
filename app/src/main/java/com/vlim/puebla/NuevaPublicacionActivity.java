@@ -167,6 +167,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
         } else {
             //readDataExternal();
+            Log.d(TAG, "read data ext");
         }
 
         btn_nueva_publicacion.setOnClickListener(new View.OnClickListener() {
@@ -407,9 +408,9 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
         userSQLiteHelper usdbh =
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
-        SQLiteDatabase db = usdbh.getWritableDatabase();
+        SQLiteDatabase dbres = usdbh.getWritableDatabase();
 
-        Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM MediaChat WHERE idmedio == 1", null);
+        Cursor c = dbres.rawQuery("SELECT photopath, videopath, galeriapath FROM MediaChat WHERE idmedio == 1", null);
         if (c.moveToFirst()) {
             Log.i(TAG, "ya existen medios");
         }
@@ -419,24 +420,16 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             /*userSQLiteHelper mediadbh =
                     new userSQLiteHelper(ReporteBotonDeLaMujerActivity.this, "DBUsuarios", null, Config.VERSION_DB);
             SQLiteDatabase db = mediadbh.getWritableDatabase();*/
-            if (db != null) {
+            if (dbres != null) {
                 //Insertamos los datos en la tabla Usuarios
-                db.execSQL("INSERT INTO MediaChat (idmedio) VALUES (1)");
+                dbres.execSQL("INSERT INTO MediaChat (idmedio) VALUES (1)");
             } else {
                 Log.v(TAG, "No Hay base");
             }
         }
         c.close();
-        //Abrimos la base de datos 'DBUsuarios' en modo escritura
-        /*userSQLiteHelper mediadbh =
-                new userSQLiteHelper(NuevaPublicacionActivity.this, "DBUsuarios", null, Config.VERSION_DB);
-        SQLiteDatabase db = mediadbh.getWritableDatabase();
-        if (db != null) {
-            //Insertamos los datos en la tabla Usuarios
-            db.execSQL("INSERT INTO MediaChat (idmedio) VALUES (1)");
-        } else {
-            Log.v(TAG, "No Hay base");
-        }*/
+        ///////usdbh.close();
+
 
         //if (resultCode == Activity.RESULT_OK) {
         if(requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE && resultCode == RESULT_OK){
@@ -456,9 +449,9 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
                 // Guarda en BD
                 //Si hemos abierto correctamente la base de datos
-                if (db != null) {
+                if (dbres != null) {
                     //Insertamos los datos en la tabla Usuarios
-                    db.execSQL("UPDATE MediaChat SET photopath = '" + photoPath +"' WHERE idmedio == 1");
+                    dbres.execSQL("UPDATE MediaChat SET photopath = '" + photoPath +"' WHERE idmedio == 1");
                 } else {
                     Log.v(TAG, "No Hay base");
                 }
@@ -491,8 +484,8 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             cursorvid.close();
 
             //Si hemos abierto correctamente la base de datos
-            if (db != null) {
-                db.execSQL("UPDATE MediaChat SET videopath = '" + videoPath +"' WHERE idmedio == 1");
+            if (dbres != null) {
+                dbres.execSQL("UPDATE MediaChat SET videopath = '" + videoPath +"' WHERE idmedio == 1");
             } else {
                 Log.v(TAG, "No Hay base");
             }
@@ -530,18 +523,19 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             //Log.d(TAG, "Galeria selected: " + selectedImage + ", " + filePathColumn);
             Cursor cursor = getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
-            cursor.moveToFirst();
+            if(cursor.moveToFirst()){
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                photoGaleryPath = cursor.getString(columnIndex);
+                Log.i(TAG, "De la galeria: " + photoGaleryPath);
+                //Log.d(TAG, " photogalerypath: " + photoGaleryPath );
+                galeriaPrev.setVisibility(View.VISIBLE);
+            }
 
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            photoGaleryPath = cursor.getString(columnIndex);
-            Log.i(TAG, "De la galeria: " + photoGaleryPath);
-            cursor.close();
-            //Log.d(TAG, " photogalerypath: " + photoGaleryPath );
-            galeriaPrev.setVisibility(View.VISIBLE);
+
 
             //Si hemos abierto correctamente la base de datos
-            if (db != null) {
-                db.execSQL("UPDATE MediaChat SET galeriapath = '" + photoGaleryPath +"' WHERE idmedio == 1");
+            if (dbres != null) {
+                dbres.execSQL("UPDATE MediaChat SET galeriapath = '" + photoGaleryPath +"' WHERE idmedio == 1");
 
                 Log.i(TAG, "UPDATE MediaChat SET galeriapath = '" + photoGaleryPath +"' WHERE idmedio == 1");
                 //db.close();
@@ -594,8 +588,8 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
     private void actualizaPrevios() {
         userSQLiteHelper mediadbh =
                 new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
-        SQLiteDatabase db = mediadbh.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT photopath, videopath, galeriapath FROM MediaChat WHERE idmedio == 1", null);
+        SQLiteDatabase dbUpdatePrev = mediadbh.getReadableDatabase();
+        Cursor c = dbUpdatePrev.rawQuery("SELECT photopath, videopath, galeriapath FROM MediaChat WHERE idmedio == 1", null);
         if (c.moveToFirst()) {
             Log.v(TAG, "hay medios");
             String fotoDB = c.getString(0);

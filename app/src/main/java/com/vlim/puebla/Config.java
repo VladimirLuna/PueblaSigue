@@ -5,8 +5,8 @@ public class Config {
     //DB Version
     static int VERSION_DB = 6;
 
-    private static final String HOST = "http://201.139.97.155:8080/";   /* Puebla */
-    //public static final String HOST = "http://54.183.159.116:8182/";   /* VLIM */
+    //private static final String HOST = "http://201.139.97.155:8080/";   /* Puebla */
+    public static final String HOST = "http://54.183.159.116:8182/";   /* VLIM */
 
     // Servicios
     public static final String LOGIN_URL = HOST + "Escudo_Puebla/servicios/validaUsuario";

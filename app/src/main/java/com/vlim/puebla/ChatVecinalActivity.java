@@ -77,7 +77,7 @@ public class ChatVecinalActivity extends AppCompatActivity implements SwipeRefre
         tv_nuevapublicacion = (TextView) findViewById(R.id.btn_enviarreporte);
         tv_nuevapublicacion.setTypeface(tf);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         //btn_publicar = (Button) findViewById(R.id.btn_publicar);
 
         Intent i= getIntent();
