@@ -442,7 +442,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         progressDialog.show();
 
         userSQLiteHelper mediadbh =
-                new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, 5);
+                new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM Media", null);
         if (c.moveToFirst()) {

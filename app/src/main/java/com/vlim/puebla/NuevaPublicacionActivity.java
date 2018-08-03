@@ -35,6 +35,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.iceteck.silicompressorr.SiliCompressor;
 
@@ -49,12 +57,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -213,9 +223,10 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                         // Envio sin medios
                         Log.d(TAG, "Envia Denuncia sin archivos");
                         String[] params2noFiles = new String[]{titulopub, descripcionpub, idusuario};
-                        Log.d(TAG, "antes de enviar: " + titulopub + ", " + descripcionpub + ", " + idusuario);
+                        Log.d(TAG, "antes de enviar: " + params2noFiles.toString());
                         UploadFileToServer2NoFiles uploadFTS2noFiles = new UploadFileToServer2NoFiles();
                         uploadFTS2noFiles.execute(params2noFiles);
+                        //enviaPublicacionSM(titulopub, descripcionpub, idusuario);
                     }
                     c.close();
                 }
@@ -310,6 +321,68 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void enviaPublicacionSM(String titulopub, String descripcionpub, String idusuario) {
+        progressDialog = new ProgressDialog(NuevaPublicacionActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Enviando publicación...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            final JSONObject jsonBody = new JSONObject();
+
+            jsonBody.put("titulo", titulopub);
+            jsonBody.put("descripcion", descripcionpub);
+            jsonBody.put("idusr", idusuario);
+
+            final String requestBody = jsonBody.toString();
+            Log.d(TAG, "requestBody: " + requestBody);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.NUEVA_PUBLICACION_SINMEDIOS_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        jsonArr = new JSONArray(response);
+                        JsonResponse = response;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, "VOLLEY response login: " + response);
+                    progressDialog.dismiss();
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "VOLLEY: " + error.toString());
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Error en la conexión.", Toast.LENGTH_LONG).show();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -1047,17 +1120,13 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             try {
                 AndroidMultiPartEntity entity2 = new AndroidMultiPartEntity(
                         new AndroidMultiPartEntity.ProgressListener() {
-
                             @Override
                             public void transferred(long num) {
                                 publishProgress((int) ((num / (float) totalSize) * 100));
                             }
                         });
-
                 // Adding file data to http body
                 ///Log.i(TAG, "tipos archivos, foto: " + photoPath + ", video: " + videoPath + ", galeria: " + photoGaleryPath);
-
-
 
                 entity2.addPart("titulo", new StringBody(titulo2, Charset.forName("UTF-8")));
                 entity2.addPart("descripcion", new StringBody(descripcion2, Charset.forName("UTF-8")));
@@ -1074,6 +1143,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                 HttpEntity r_entity = response.getEntity();
 
                 int statusCode = response.getStatusLine().getStatusCode();
+                Log.d(TAG, "response: " + statusCode);
                 if (statusCode == 200) {
                     // Server response
                     responseString2 = EntityUtils.toString(r_entity);
@@ -1083,15 +1153,16 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                     Log.e(TAG, responseString2);
                 }
             }catch (ClientProtocolException e) {
-                responseString2 = e.toString();
+                Log.d(TAG, "client protocol exception");
+                responseString2 = e.getCause().toString();
                 Log.e(TAG, responseString2);
             }catch (IOException e) {
                 Log.e(TAG, responseString2);
-                responseString2 = e.toString();
+                Log.d(TAG, "io exception");
+                responseString2 = e.getCause().toString();
             }
             return responseString2;
         }
-
 
         /*private String uploadFile2(String titulo, String descripcion, String idusr) {
         }*/
@@ -1101,7 +1172,6 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             if (progressDialog.isShowing()){
                 progressDialog.dismiss();
             }
-
 
             // JSON respuesta  //[{"respuesta":"OK","mensaje":"Se registro bien la publicación"}]
             try {
@@ -1118,6 +1188,8 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "Error envio: " + e.getMessage());
+                //Log.e(TAG, "Error envio: " + e.getCause());
+
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), "Error en el envio.", Toast.LENGTH_LONG).show();
                 finish();

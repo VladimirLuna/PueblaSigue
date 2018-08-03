@@ -5,13 +5,14 @@ public class Config {
     //DB Version
     static int VERSION_DB = 6;
 
-    //private static final String HOST = "http://201.139.97.155:8080/";   /* Puebla */
-    public static final String HOST = "http://54.183.159.116:8182/";   /* VLIM */
+    private static final String HOST = "http://201.139.97.155:8080/";   /* Puebla */
+    ////public static final String HOST = "http://54.183.159.116:8182/";   /* VLIM */
 
     // Servicios
     public static final String LOGIN_URL = HOST + "Escudo_Puebla/servicios/validaUsuario";
     public static final String GET_POSTS_URL = HOST + "Escudo_Puebla/servicios/getPosts";
     public static final String NUEVA_PUBLICACION_URL = HOST + "Escudo_Puebla/servicios/nuevoPost";
+    public static final String NUEVA_PUBLICACION_SINMEDIOS_URL = HOST + "Escudo_Puebla/servicios/nuevoPostSN";
     public static final String REGISTRO_NUEVO_USUARIO_URL = HOST + "Escudo_Puebla/servicios/RegistroUsuario";   //idconv
     public static final String GET_TIPO_DOCUMENTO_URL = HOST + "Escudo_Puebla/servicios/getTipoDocumento";
     public static final String GET_COMENTARIOS_URL = HOST + "Escudo_Puebla/servicios/getComentarios";
@@ -37,7 +38,6 @@ public class Config {
     public static final String CERO89_ARCHIVOS_URL = HOST + "Escudo_Puebla/servicios/089Archivos";
     public static final String CERO89_URL = HOST + "Escudo_Puebla/servicios/089";
     public static final String BOTON_PANICO_UNIPOL_URL = HOST + "Escudo_Puebla/servicios/botonPanicoUNIPOL";
-    public static final String NUEVA_PUBLICACION_SINMEDIOS_URL = HOST + "Escudo_Puebla/servicios/nuevoPostSN";
     /////////////////
     public static final String IMAGE_DIRECTORY_NAME = "Puebla";
     /////
