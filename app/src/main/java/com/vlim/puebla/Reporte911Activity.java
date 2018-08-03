@@ -1500,13 +1500,13 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 String mensaje = jsonRespuesta.getJSONObject(0).getString("mensaje");
                 if(respuesta.equals("OK")){
                     progressDialog.dismiss();
-                    showAlert("Denuncia recibida, folio: " + mensaje);
+                    showAlert("Emergencia recibida, folio: " + mensaje);
                     ///Toast.makeText(getApplicationContext(), "Denuncia recibida", Toast.LENGTH_LONG).show();
                     //finish();
                 }
                 else{
                     progressDialog.dismiss();
-                    showAlert("Error! Tu denuncia no ha sido recibida. Intenta de nuevo.");
+                    showAlert("Error! Tu emergencia no ha sido recibida. Intenta de nuevo.");
                     //Toast.makeText(getApplicationContext(), "Error! Tu denuncia no ha sido recibida.", Toast.LENGTH_LONG).show();
                     //finish();
                 }
