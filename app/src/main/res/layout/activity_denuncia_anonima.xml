@@ -182,6 +182,16 @@
                     android:visibility="invisible"
                     app:srcCompat="@drawable/stop" />
 
+                <ImageView
+                    android:id="@+id/btn_play"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/btn_video"
+                    android:layout_marginEnd="66dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/play" />
+
                 <Button
                     android:id="@+id/btn_enviar"
                     android:layout_width="match_parent"

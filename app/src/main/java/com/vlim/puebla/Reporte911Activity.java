@@ -19,6 +19,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -96,7 +97,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
     TextView tv_titulo_toolbar, tv_mensaje1, tv_motivo, tv_descripcion;
     EditText et_descripcion;
     Button btn_enviar;
-    ImageView btn_back, btn_camara, btn_video, btn_audio, btn_stop, imgvideoPrev, img_fotos, img_video, img_audio;
+    ImageView btn_back, btn_camara, btn_video, btn_audio, btn_stop, btn_play, imgvideoPrev, img_fotos, img_video, img_audio;
     String tipo_submotivo, descrp_denuncia;
     Typeface tf;
     JSONArray jsonArr;
@@ -231,6 +232,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             btn_video = findViewById(R.id.btn_video);
             btn_audio = findViewById(R.id.btn_audio);
             btn_stop = findViewById(R.id.btn_stop);
+            btn_play = findViewById(R.id.btn_play);
             txtPercentage = findViewById(R.id.txtPercentage);
             txtPercentage.setTypeface(tf);
 
@@ -340,6 +342,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                     Log.v(TAG, "No Hay base");
                 }
                 btn_stop.setVisibility(View.INVISIBLE);
+                btn_play.setVisibility(View.VISIBLE);
                 mediaRecorder.stop();
                 mediaRecorder.release();
                 mediaRecorder = null;
@@ -356,6 +359,42 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 }else{
                     enviaReporte911();
                 }
+            }
+        });
+
+        btn_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Reproduciendo audio. " + audioFile);
+                Toast.makeText(getApplicationContext(), "Reproduciendo audio.", Toast.LENGTH_LONG).show();
+                // insert audio en bd
+                userSQLiteHelper usdbh =
+                        new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
+                SQLiteDatabase db = usdbh.getWritableDatabase();
+
+                Log.v(TAG, "Buscando audio");
+                Cursor c = db.rawQuery("SELECT medio, tipo FROM Media WHERE tipo = 'audio'", null);
+
+
+
+                if (c.moveToFirst()) {
+                    String audioPath = c.getString(0);
+                    Log.i(TAG, "audio: " + audioPath );
+                    MediaPlayer mediaPlayer = new MediaPlayer();
+                    mediaPlayer = new  MediaPlayer();
+                    try {
+                        mediaPlayer.setDataSource(audioPath);
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    db.close();
+                    c.close();
+                }
+
             }
         });
 
@@ -444,17 +483,17 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         userSQLiteHelper mediadbh =
                 new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM Media", null);
+        Cursor c = db.rawQuery("SELECT idmedio, medio, tipo FROM Media", null);
         if (c.moveToFirst()) {
             Log.v(TAG, "hay MEDIOS");
-            String foto = c.getString(1);
-            String video = c.getString(2);
-            String audio = c.getString(2);
+            String idmedio = c.getString(0);
+            String medio = c.getString(1);
+            String tipo = c.getString(2);
 
-            Log.i(TAG, "foto: " + foto + ", video: " + video + ", gal: " + audio );
+            Log.i(TAG, "idmedio: " + idmedio + ", medio: " + medio + ", tipo: " + tipo );
             db.close();
 
-            if((foto != null) || (video != null) || (audio != null)){
+            if(medio != null){
                 Log.d(TAG, "Envia Reporte 911 Archivos");
                 // Envia denuncia anonima con archivos
                 String[] paramsArch = new String[]{idusuario, descrp_denuncia, latitud, longitud, tipo_submotivo};
@@ -1448,6 +1487,16 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
 
                             File sourceVideo = new File(fileVideoCompressedPath);
                             entity911Arch.addPart("file", new FileBody(sourceVideo));
+                        }
+                        else if(tipo.equals("audio")){
+                            Log.i(TAG, "AUDIO path original: " + medioURL);
+                            /*File sourceVideo = new File(videoPathDBSend);
+                            entityAnonimaArch.addPart("file", new FileBody(sourceVideo));*/
+
+                            //fileVideoCompressedPath
+
+                            File sourceAudio = new File(fileVideoCompressedPath);
+                            entity911Arch.addPart("file", new FileBody(sourceAudio));
                         }
                         c.moveToNext();
                     }
