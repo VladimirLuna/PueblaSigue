@@ -58,4 +58,6 @@ public class Config {
     // Info del usuario
     public static final String GET_INFO_USUARIO = HOST + "Escudo_Puebla/servicios/getInfoUsuario ";   //{"idusr":"valor"} ||  "direccion": "Calzada Melchor Ocampo", "telefono_casa": 55555555,  "celular": 5533357812, "id_identificacion": 4, "num_identificcion": "MH6PO3MN", "condicion_medica": "Pues escuche una rola muy feita y baile :("
     public static final String UPDATE_INFO_USUARIO = HOST + "Escudo_Puebla/servicios/updateInfoUsuario  ";   //{"idusr":"valor"} || [{"id_cat089":valor, "nombre":"valor"}]
+
+    public static final String ESTA_EN_PUEBLA = "No se pueden realizar registros fuera del estado de Puebla.";
 }

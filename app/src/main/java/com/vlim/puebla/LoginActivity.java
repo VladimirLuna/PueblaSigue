@@ -146,8 +146,8 @@ public class LoginActivity extends AppCompatActivity {
             login(String.valueOf(post_dict));
         }
     }
-
     private void login(String params) {
+
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             final JSONObject jsonBody = new JSONObject();

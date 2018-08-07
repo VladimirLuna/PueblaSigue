@@ -90,6 +90,9 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
     TextView tv_toolbar;
     ImageView btn_back;
 
+    // valida ubicacion en puebla
+    EstaEnPuebla estaEnPuebla;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,30 +152,41 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
         progressDialog.setProgress(0);
         progressDialog.show();
 
-        // Preparando envio
-        preparaEnvioPanico(idusuario, latitud, longitud);
 
-        // Enviando parametros boton panico
-        // Get instance of Vibrator from current Context
-        final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        // Enviando params
+        estaEnPuebla = new EstaEnPuebla(getApplicationContext());
+        if(estaEnPuebla.estaEnPuebla(Double.valueOf(latitud), Double.valueOf(longitud))){
+            Log.d(TAG, "Está en Puebla");
 
-        if (vibrator.hasVibrator()) {
-            final long[] pattern = {100, 30, 100, 30, 100, 200, 200, 30, 200, 30, 200, 200, 100, 30, 100, 30, 100};   /*SOS*/
-            new Thread() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < 5; i++) { //repeat the pattern 5 times
-                        vibrator.vibrate(pattern, -1);
-                        try {
-                            Thread.sleep(2000); //the time, the complete pattern needs
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+            // Preparando envio
+            preparaEnvioPanico(idusuario, latitud, longitud);
+
+            // Enviando parametros boton panico
+            // Get instance of Vibrator from current Context
+            final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            // Enviando params
+
+            if (vibrator.hasVibrator()) {
+                final long[] pattern = {100, 30, 100, 30, 100, 200, 200, 30, 200, 30, 200, 200, 100, 30, 100, 30, 100};   /*SOS*/
+                new Thread() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < 5; i++) { //repeat the pattern 5 times
+                            vibrator.vibrate(pattern, -1);
+                            try {
+                                Thread.sleep(2000); //the time, the complete pattern needs
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
-                }
-            }.start();
+                }.start();
+            }
         }
+        else{
+            showAlert(Config.ESTA_EN_PUEBLA);
+        }
+
+
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override

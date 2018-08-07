@@ -160,6 +160,9 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
     private File audioFile;
     private MediaRecorder mediaRecorder;
 
+    // valida ubicacion en puebla
+    EstaEnPuebla estaEnPuebla;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -366,11 +369,19 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
             btn_enviar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    descrp_denuncia = et_descripcion.getText().toString().trim();
-                    if (descrp_denuncia.equals("")) {
-                        et_descripcion.setError("Ingrese la descripcion de la denuncia");
-                    } else {
-                        enviaDenunciaAnonima();
+                    estaEnPuebla = new EstaEnPuebla(getApplicationContext());
+                    if(estaEnPuebla.estaEnPuebla(Double.valueOf(latitud), Double.valueOf(longitud))){
+                        Log.d(TAG, "Está en Puebla!");
+                        descrp_denuncia = et_descripcion.getText().toString().trim();
+                        if (descrp_denuncia.equals("")) {
+                            et_descripcion.setError("Ingrese la descripcion de la denuncia");
+                        } else {
+                            enviaDenunciaAnonima();
+                        }
+                    }
+                    else{
+                        borraMedios();
+                        showAlert(Config.ESTA_EN_PUEBLA);
                     }
                 }
             });

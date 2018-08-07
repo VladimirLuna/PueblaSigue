@@ -86,6 +86,9 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     String JsonResponse = null;
     String colorRuta = "naranja";
 
+    // valida ubicacion en puebla
+    EstaEnPuebla estaEnPuebla;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,30 +125,32 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getAddress() + ", " + place.getLatLng());
-                end_latitude = place.getLatLng().latitude;
-                end_longitude = place.getLatLng().longitude;
+                    Log.d(TAG, "lat ahorita: " + latitude + ", lng: " + longitude);
+                    // TODO: Get info about the selected place.
+                    Log.i(TAG, "Place: " + place.getName() + ", " + place.getAddress() + ", " + place.getLatLng());
+                    end_latitude = place.getLatLng().latitude;
+                    end_longitude = place.getLatLng().longitude;
 
-                // Obtener ruta
-                String url = getDirectionsUrl(opcionRuta);
-                Log.d(TAG, "URL: " + url);
-                dataTransfer = new Object[9];
-                url = getDirectionsUrl(opcionRuta);
-                GetDirectionsData getDirectionsData = new GetDirectionsData();
-                dataTransfer[0] = mMap;
-                dataTransfer[1] = url;
-                dataTransfer[2] = new LatLng(end_latitude, end_longitude);
-                //dataTransfer[3] = new LatLng(latitude, longitude);
-                dataTransfer[3] = latitude;
-                dataTransfer[4] = longitude;
-                dataTransfer[5] = end_latitude;
-                dataTransfer[6] = end_longitude;
-                dataTransfer[7] = getApplicationContext();
-                dataTransfer[8] = colorRuta;
+                    // Obtener ruta
+                    String url = getDirectionsUrl(opcionRuta);
+                    Log.d(TAG, "URL: " + url);
+                    dataTransfer = new Object[9];
+                    url = getDirectionsUrl(opcionRuta);
+                    GetDirectionsData getDirectionsData = new GetDirectionsData();
+                    dataTransfer[0] = mMap;
+                    dataTransfer[1] = url;
+                    dataTransfer[2] = new LatLng(end_latitude, end_longitude);
+                    //dataTransfer[3] = new LatLng(latitude, longitude);
+                    dataTransfer[3] = latitude;
+                    dataTransfer[4] = longitude;
+                    dataTransfer[5] = end_latitude;
+                    dataTransfer[6] = end_longitude;
+                    dataTransfer[7] = getApplicationContext();
+                    dataTransfer[8] = colorRuta;
 
-                getDirectionsData.execute(dataTransfer);
-                menu_map.setVisibility(View.VISIBLE);
+                    getDirectionsData.execute(dataTransfer);
+                    menu_map.setVisibility(View.VISIBLE);
+
             }
 
             @Override
@@ -510,6 +515,14 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             LatLng coordinate = new LatLng(latitude, longitude);
             CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 19);
             mMap.animateCamera(yourLocation);
+
+            estaEnPuebla = new EstaEnPuebla(getApplicationContext());
+            if(estaEnPuebla.estaEnPuebla(latitude, longitude)){
+                Log.d(TAG, "Está en Puebla");
+            }
+            else{
+                showAlert(Config.ESTA_EN_PUEBLA);
+            }
         }
     }
 
