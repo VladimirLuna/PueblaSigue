@@ -627,7 +627,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             mMap.animateCamera(yourLocation);
 
             estaEnPuebla = new EstaEnPuebla(getApplicationContext());
-            if(!estaEnPuebla.estaEnPuebla(latitude, longitude)){
+            if(estaEnPuebla.estaEnPuebla(latitude, longitude)){
                 Log.d(TAG, "Está en Puebla");
             }
             else{
