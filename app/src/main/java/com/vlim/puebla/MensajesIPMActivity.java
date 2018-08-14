@@ -3,6 +3,7 @@ package com.vlim.puebla;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -32,7 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MensajesIPMActivity extends AppCompatActivity {
+public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     private ListView listView;
     private View btnSend;
@@ -49,6 +50,7 @@ public class MensajesIPMActivity extends AppCompatActivity {
     EditText msg_type;
     Button btn_chat_send;
     ImageView btn_back;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -64,9 +66,9 @@ public class MensajesIPMActivity extends AppCompatActivity {
 
         ChatBubbles = new ArrayList<>();
 
-        listView = (ListView) findViewById(R.id.list_msg);
+        listView = findViewById(R.id.list_msg);
         btnSend = findViewById(R.id.btn_chat_send);
-        editText = (EditText) findViewById(R.id.msg_type);
+        editText = findViewById(R.id.msg_type);
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_titulo_toolbar.setTypeface(tf);
         msg_type = findViewById(R.id.msg_type);
@@ -78,6 +80,9 @@ public class MensajesIPMActivity extends AppCompatActivity {
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.left_chat_bubble, ChatBubbles);
         listView.setAdapter(adapter);
+
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(MensajesIPMActivity.this);
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,6 +311,13 @@ public class MensajesIPMActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() { }
+
+    @Override
+    public void onRefresh() {
+        //Toast.makeText(getApplicationContext(), "Mensajes actualizados", Toast.LENGTH_LONG).show();
+        startActivity(getIntent());
+        finish();
+    }
 
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {

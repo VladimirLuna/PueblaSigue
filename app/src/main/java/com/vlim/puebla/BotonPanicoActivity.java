@@ -105,7 +105,7 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
         decorView.setSystemUiVisibility(uiOptions);
 
         Log.d(TAG, "inicia");
-        progressBar = (ProgressBar) findViewById(R.id.progressBarPanico);
+        progressBar = findViewById(R.id.progressBarPanico);
 
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 

@@ -1051,12 +1051,12 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
         super.onDestroy();
     }
 
-    /*@Override
+    @Override
     protected void onPause() {
         Log.d(TAG, "onPause");
         borraMedios();
         super.onPause();
-    }*/
+    }
 
     /*@Override
     protected void onStop() {
@@ -1534,4 +1534,6 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
         tvLongitude.setText(Double.toString(loc.getLongitude()));
         tvTime.setText(DateFormat.getTimeInstance().format(loc.getTime()));*/
     }
+
+
 }

@@ -191,7 +191,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         Log.d(TAG, "usr: " + idusuario + ", emergencia: " + tipo_emergencia);
 
         audioFile = new File(Environment.getExternalStorageDirectory(),
-                "audio_puebla.mp3");
+                "/Music/audio_puebla.mp3");
 
         progressBar = findViewById(R.id.progressBar911);
         progressBar.setVisibility(View.INVISIBLE);
@@ -337,7 +337,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                         new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
                 SQLiteDatabase db = usdbh.getWritableDatabase();
 
-                Log.v(TAG, "Guardando audio");
+                Log.v(TAG, "Guardando audio: INSERT INTO Media (medio, tipo) VALUES ('" + audioFile + "', 'audio')");
                 if (db != null) {
                     //Insertamos los datos en la tabla Media
                     db.execSQL("INSERT INTO Media (medio, tipo) VALUES ('" + audioFile + "', 'audio')");
@@ -387,7 +387,6 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 Cursor c = db.rawQuery("SELECT medio, tipo FROM Media WHERE tipo = 'audio'", null);
 
 
-
                 if (c.moveToFirst()) {
                     String audioPath = c.getString(0);
                     Log.i(TAG, "audio: " + audioPath );
@@ -400,7 +399,6 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
 
                     db.close();
                     c.close();
@@ -1503,10 +1501,9 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                             Log.i(TAG, "AUDIO path original: " + medioURL);
                             /*File sourceVideo = new File(videoPathDBSend);
                             entityAnonimaArch.addPart("file", new FileBody(sourceVideo));*/
-
                             //fileVideoCompressedPath
 
-                            File sourceAudio = new File(fileVideoCompressedPath);
+                            File sourceAudio = new File(medioURL);
                             entity911Arch.addPart("file", new FileBody(sourceAudio));
                         }
                         c.moveToNext();

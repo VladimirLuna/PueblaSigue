@@ -22,6 +22,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -69,16 +70,17 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     LatLng myPosition;
     Location location;
     double latitude, longitude, end_latitude = 0, end_longitude = 0;
-    ConstraintLayout menu_map, mensaje_map;
+    ConstraintLayout menu_map, mensaje_map, menu_cancela;
     Double latEnvia = 0.0, lngEnvia = 0.0;
     // Toolbar
-    TextView tv_titulo_toolbar, tv_emergencia_a_reportar, tv_medica, tv_bomberos, tv_policia, tv_mensaje_click_mapa, tv_pregunta, tv_cancelar, tv_comenzar, tv_apie, tv_encarro;
+    TextView tv_titulo_toolbar, tv_emergencia_a_reportar, tv_medica, tv_bomberos, tv_policia, tv_mensaje_click_mapa, tv_pregunta, tv_cancelar, tv_comenzar, tv_apie, tv_encarro, tv_cancelar_viaje;
     ImageView btn_back, img_apie, img_encarro;
     String idusuario;
     String opcionRuta = "DRIVING";  // 1: WALKING,   2: DRIVING
 
     // Rutas
     Object dataTransfer[] = new Object[2];
+    Object dataTransferB[] = new Object[2];
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
     ProgressDialog progressDialog;
@@ -101,15 +103,18 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         btn_back = findViewById(R.id.btn_back);
         tv_pregunta = findViewById(R.id.tv_pregunta);
         tv_cancelar = findViewById(R.id.tv_cancelar);
+        tv_cancelar_viaje = findViewById(R.id.tv_cancelar_viaje);
         tv_comenzar = findViewById(R.id.tv_comenzar);
         tv_apie = findViewById(R.id.tv_apie);
         tv_encarro = findViewById(R.id.tv_encarro);
         img_apie = findViewById(R.id.img_apie);
         img_encarro = findViewById(R.id.img_encarro);
         menu_map = findViewById(R.id.menu_map);
+        menu_cancela = findViewById(R.id.menu_cancela);
 
         tv_pregunta.setTypeface(tf);
         tv_cancelar.setTypeface(tf);
+        tv_cancelar_viaje.setTypeface(tf);
         tv_comenzar.setTypeface(tf);
         tv_apie.setTypeface(tf);
         tv_encarro.setTypeface(tf);
@@ -186,6 +191,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         db.close();
         //////
 
+        buscaRutaActual();
+
         img_apie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,12 +216,29 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             }
         });
 
-        tv_cancelar.setOnClickListener(new View.OnClickListener() {
+        tv_cancelar_viaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                borraRuta();
-                stopService(new Intent(getApplicationContext(), TrackingService.class));
-                finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        Sigueme2Activity.this);
+                //builder.setTitle("DoxSteel");
+                builder.setTitle(Html.fromHtml("<font color='#ea7e01'>Sígueme y Cuídame</font>"));
+                builder.setMessage(Html.fromHtml("<font color='black'>¿Deseas cancelar tu viaje?</font>"));
+                builder.setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                // Toast.makeText(getApplicationContext(),"No is clicked",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                builder.setPositiveButton("Si",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                showAlertCancelado("Viaje cancelado");
+                            }
+                        });
+                builder.show();
             }
         });
 
@@ -294,6 +318,58 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
 
     }
 
+    private void buscaRutaActual() {
+        String lat1B, lat2B, lng1B, lng2B, idviajeB;
+        // busca ruta en proceso
+        userSQLiteHelper usdbh =
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
+        SQLiteDatabase db = usdbh.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM RutaSigueme", null);
+
+        if (c.moveToFirst()) {
+            Log.v(TAG, "hay ruta en proceso");
+            do {
+                lat1B = c.getString(1);
+                lng1B = c.getString(2);
+                lat2B = c.getString(3);
+                lng2B = c.getString(4);
+                idviajeB = c.getString(5);
+
+            } while(c.moveToNext());
+            c.close();
+
+            // Pintar ruta
+            /*String url = getDirectionsUrl(opcionRuta);
+            Log.d(TAG, "data transferB lat1: " + lat1B + ", " + lng1B + ", " + lat2B + ", " + lng2B);
+            dataTransferB = new Object[9];
+            url = getDirectionsUrl(opcionRuta);
+            GetDirectionsData getDirectionsData = new GetDirectionsData();
+            dataTransferB[0] = mMap;
+            dataTransferB[1] = url;
+            dataTransferB[2] = new LatLng(Double.valueOf(lat2B), Double.valueOf(lng2B));
+            dataTransferB[3] = Double.valueOf(lat1B);
+            dataTransferB[4] = Double.valueOf(lng1B);
+            dataTransferB[5] = Double.valueOf(lat2B);
+            dataTransferB[6] = Double.valueOf(lng2B);
+            dataTransferB[7] = getApplicationContext();
+            dataTransferB[8] = colorRuta;
+            getDirectionsData.execute(dataTransferB);*/
+
+            menu_cancela.setVisibility(View.VISIBLE);
+            /*img_apie.setVisibility(View.INVISIBLE);
+            img_encarro.setVisibility(View.INVISIBLE);
+            tv_apie.setVisibility(View.INVISIBLE);
+            tv_encarro.setVisibility(View.INVISIBLE);
+            tv_comenzar.setVisibility(View.INVISIBLE);
+            tv_pregunta.setText("Ruta en proceso");*/
+        }
+        else{
+            Log.v(TAG, "NO hay ruta en proceso");
+        }
+        db.close();
+
+    }
+
     private void nuevaRuta(JSONObject cosasObject, JSONObject rutaObject) {
         progressDialog = new ProgressDialog(Sigueme2Activity.this);
         progressDialog.setCancelable(false);
@@ -370,7 +446,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                         } else {
                             Log.v(TAG, "No Hay base");
                         }
-                        showAlert("Se ha comenzado la ruta.");   // mensaje es el numero de ruta
+                        showAlertOK("Se ha comenzado la ruta.");   // mensaje es el numero de ruta
+                        //finish();
                     }
                     else{
                         Toast.makeText(getApplicationContext(), "Error! Tu ruta no ha sido generada correctamente, por favor intenta de nuevo.", Toast.LENGTH_LONG).show();
@@ -416,6 +493,39 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // ok
+                        //finish();
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    private void showAlertOK(String message) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setMessage(message).setTitle("Sígueme y cuídame")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // ok
+                        finish();
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    private void showAlertCancelado(String message) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setMessage(message).setTitle("Sígueme y cuídame")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // ok
+                        borraRuta();
+                        stopService(new Intent(getApplicationContext(), TrackingService.class));
+                        startActivity(getIntent());
                         finish();
                     }
                 });
@@ -517,11 +627,11 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             mMap.animateCamera(yourLocation);
 
             estaEnPuebla = new EstaEnPuebla(getApplicationContext());
-            if(estaEnPuebla.estaEnPuebla(latitude, longitude)){
+            if(!estaEnPuebla.estaEnPuebla(latitude, longitude)){
                 Log.d(TAG, "Está en Puebla");
             }
             else{
-                showAlert(Config.ESTA_EN_PUEBLA);
+                showAlertOK(Config.ESTA_EN_PUEBLA);
             }
         }
     }

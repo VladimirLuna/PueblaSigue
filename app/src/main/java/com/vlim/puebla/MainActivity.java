@@ -13,6 +13,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
     private long timeElapsed = 0L;
     private Toolbar toolbar;
+    private int longClickDuration = 3000;  // 5 secgundos para el boton de panico
+    Contador counter;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
 
@@ -232,13 +236,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_botonpanico.setOnLongClickListener(new View.OnLongClickListener() {
+        btn_botonpanico.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    nt_check = new NetworkConnection(getApplicationContext());
+                    if(nt_check.isOnline()){
+                        counter = new Contador(3000,1000);
+                        counter.start();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
+                    }
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    counter.cancel();
+                }
+                return true;
+            }
+        });
+
+        /*btn_botonpanico.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 // Comprueba conexion a Internet
                 nt_check = new NetworkConnection(getApplicationContext());
                 if(nt_check.isOnline()){
-                    // Mantener presionado por 3 segundos
+                    // Mantener presionado por 5 segundos
                     if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
                             PackageManager.PERMISSION_GRANTED &&
                             ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
@@ -261,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return false;
             }
-        });
+        });*/
 
         btn_sigueme.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -461,4 +484,40 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         finish();
     }
+
+    public class Contador extends CountDownTimer {
+
+        public Contador(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onFinish() {
+            Log.d(TAG, "Terminando de contar");
+            if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                            PackageManager.PERMISSION_GRANTED) {
+                Intent btnpanico = new Intent(MainActivity.this, BotonPanicoActivity.class);
+                btnpanico.putExtra("idusuario", idusuario);
+                startActivity(btnpanico);
+
+            } else {
+                //Toast.makeText(getApplicationContext(), "Error en permiso mapa", Toast.LENGTH_LONG).show();
+                Log.d(TAG, "Error en permisos ubicacion");
+
+                ActivityCompat.requestPermissions(MainActivity.this, new String[] {
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION },
+                        MY_LOCATION_REQUEST_CODE);
+            }
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            Log.d(TAG, "Contando " + (millisUntilFinished/1000));
+        }
+
+    }
+
 }

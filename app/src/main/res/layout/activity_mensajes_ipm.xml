@@ -1,61 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_refresh_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-    <include
-        android:id="@+id/toolbar_mensajessecretario"
-        layout="@layout/appbar_mensajessecre"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
-
-    <View
-        android:id="@+id/separator"
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@color/separator"/>
-
-    <RelativeLayout
-        android:id="@+id/container"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/msg_type"
+        <include
+            android:id="@+id/toolbar_mensajessecretario"
+            layout="@layout/appbar_mensajessecre"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/btn_chat_send"
-            android:layout_weight="0.7"
-            android:hint="Escribe tu mensaje"
-            android:inputType="text|textCapSentences" />
+            android:layout_height="50dp" />
 
-        <Button
-            android:id="@+id/btn_chat_send"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/roundedbutton"
-            android:text="Enviar"
-            android:textColor="@color/background_material_light" />
+        <View
+            android:id="@+id/separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/separator" />
 
-        <ListView
-            android:id="@+id/list_msg"
+        <RelativeLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/msg_type"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentTop="false"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="10dp"
-            android:divider="@null"
-            android:listSelector="@android:color/transparent"
-            android:transcriptMode="alwaysScroll" />
+            android:orientation="vertical"
+            android:padding="20dp">
 
-    </RelativeLayout>
-</LinearLayout>
+            <EditText
+                android:id="@+id/msg_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@+id/btn_chat_send"
+                android:layout_weight="0.7"
+                android:hint="Escribe tu mensaje"
+                android:inputType="text|textCapSentences" />
+
+            <Button
+                android:id="@+id/btn_chat_send"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/roundedbutton"
+                android:text="Enviar"
+                android:textColor="@color/background_material_light" />
+
+            <ListView
+                android:id="@+id/list_msg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/msg_type"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentTop="false"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:divider="@null"
+                android:listSelector="@android:color/transparent"
+                android:transcriptMode="alwaysScroll" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
