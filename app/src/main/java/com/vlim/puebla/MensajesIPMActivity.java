@@ -3,9 +3,11 @@ package com.vlim.puebla;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -51,6 +53,9 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
     Button btn_chat_send;
     ImageView btn_back;
     private SwipeRefreshLayout swipeRefreshLayout;
+    NetworkConnection nt_check;
+    Contador counter;
+    int tiempo = 30000;
 
 
     @Override
@@ -84,6 +89,15 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(MensajesIPMActivity.this);
 
+        // contador
+        nt_check = new NetworkConnection(getApplicationContext());
+        if(nt_check.isOnline()){
+            counter = new Contador(tiempo,1000);
+            counter.start();
+        }else{
+            Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
+        }
+
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,15 +125,29 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
             }
         });
 
+        editText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                /*if(event.getAction() == MotionEvent.ACTION_UP){
+                    Log.d(TAG, "Escribiendo...");
+                }
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    Log.d(TAG, "Dejando de escribir...");
+                }*/
+                counter.cancel();
+                return false;
+            }
+        });
+
         obtieneComentarios();
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                counter.cancel();
                 finish();
             }
         });
-
 
     }
 
@@ -336,5 +364,57 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
                 return super.onOptionsItemSelected(item);
         }
     }*/
+
+    public class Contador extends CountDownTimer {
+
+        public Contador(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onFinish() {
+            Log.d(TAG, "Terminando de contar");
+            // Reload
+            finish();
+            startActivity(getIntent());
+
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            Log.d(TAG, "Contando " + (millisUntilFinished/1000));
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause");
+        counter.cancel();
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop");
+
+        super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart");
+        counter = new Contador(tiempo,1000);
+        counter.start();
+        super.onStop();
+    }
 
 }

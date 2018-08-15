@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView btn_cerrar_sesion, btn_ajustes, btn_nueveonce, btn_denunciaanonima, btn_telmujer, btn_botonpanico;
     Button btn_sigueme, btn_chat, btn_mensajesipm;
-    TextView tv_version, tv_sigueme, tv_chat, tv_chat2, tv_mensajes, tv_botonmujer, tv_botonpanico, tv_servicios;
+    TextView tv_version, tv_sigueme, tv_chat, tv_chat2, tv_mensajes, tv_botonmujer, tv_botonpanico, tv_servicios, tv_presionado;
     String TAG = "PUEBLA";
     // Toolbar
     TextView tv_titulo_toolbar;
@@ -109,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
         tv_botonpanico.setTypeface(tf_bold);
         tv_servicios = findViewById(R.id.tv_motivo);
         tv_servicios.setTypeface(tf_bold);
+        tv_presionado = findViewById(R.id.tv_presionado);
+        tv_presionado.setTypeface(tf);
 
         // Get extras
         puedeRegistrar = getIntent().getExtras().getInt("isReg");
@@ -200,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "Llamando...");
                 // dialog preguntar imagen o video
-                final CharSequence[] options = {"Lamar a 01 800 624 2330", "Cancelar"};
+                final CharSequence[] options = {"Llamar a 01 800 624 2330", "Cancelar"};
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Tel Mujer");
                 builder.setItems(options, new DialogInterface.OnClickListener() {

@@ -208,7 +208,7 @@
                 android:id="@+id/tv_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/tv_audiocapturado"
+                android:layout_alignStart="@+id/tv_videocapturado"
                 android:layout_alignTop="@+id/tv_fotografia"
                 android:text="Micrófono"
                 android:textColor="@color/naranjaToolbar" />
@@ -236,7 +236,7 @@
                 android:textSize="18dp" />
 
             <TextView
-                android:id="@+id/tv_audiocapturado"
+                android:id="@+id/tv_videocapturado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

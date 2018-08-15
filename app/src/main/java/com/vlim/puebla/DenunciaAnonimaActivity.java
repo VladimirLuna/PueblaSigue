@@ -284,7 +284,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
             btn_video.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    recordVideo();
                 }
             });
 
@@ -393,6 +393,70 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
                 }
             });
         }
+    }
+
+    private void recordVideo() {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
+        // set video quality
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 120);
+        Log.i(TAG, "Intent video: " + photoPath);
+        intent.putExtra("photoPath", photoPath);
+        intent.putExtra("galeriaPath", photoGaleryPath);
+        //////intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
+
+        if (Build.VERSION.SDK_INT > 23) {
+            intent.putExtra(Intent.EXTRA_STREAM, "content://" + fileUri);
+        } else {
+            intent.putExtra(Intent.EXTRA_STREAM, "file://" + fileUri);
+        }
+
+        // name
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        // start the video capture Intent
+        startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
+    }
+
+    /**
+     * Creating file uri to store image/video
+     */
+    public Uri getOutputMediaFileUri(int type) {
+        return Uri.fromFile(getOutputMediaFile(type));
+    }
+
+    /**
+     * returning image / video
+     */
+    private static File getOutputMediaFile(int type) {
+        // External sdcard location
+        File mediaStorageDir = new File(
+                Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                Config.IMAGE_DIRECTORY_NAME);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("PUEBLA", "Oops! Failed create "
+                        + Config.IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+        File mediaFile;
+        if (type == MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                    + "IMG_" + timeStamp + ".jpg");
+        } else if (type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                    + "VID_" + timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+        return mediaFile;
     }
 
     private void obtieneMotivos(String idusr) {
@@ -1054,7 +1118,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
     @Override
     protected void onPause() {
         Log.d(TAG, "onPause");
-        borraMedios();
+        //borraMedios();
         super.onPause();
     }
 

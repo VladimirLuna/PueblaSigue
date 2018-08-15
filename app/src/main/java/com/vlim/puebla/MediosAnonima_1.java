@@ -48,11 +48,14 @@ public class MediosAnonima_1 extends Fragment {
         Cursor c = db.rawQuery("SELECT medio, tipo FROM Media WHERE tipo == 'foto'", null);
 
         if (c.moveToFirst()) {
-            Log.v(TAG, "hay fotos! Medio1");
+            Log.v(TAG, "hay fotos! MedioAnonima1");
             medioURL = c.getString(0);
             String tipo = c.getString(1);
             Log.i(TAG, "medio: " + medioURL + ", tipo: " + tipo );
             img_fotos.setEnabled(true);
+
+            //Picasso.with(getActivity().getApplicationContext()).load(medioURL).memoryPolicy(MemoryPolicy.NO_STORE).into(img_fotos);
+            //Glide.with(getContext()).load(medioURL).into(img_fotos);
 
             // Create glide request manager
             RequestManager requestManager = Glide.with(this);
@@ -63,7 +66,7 @@ public class MediosAnonima_1 extends Fragment {
             c.close();
         }
         else{
-            Log.d(TAG, "No hay fotos! Medios1");
+            Log.d(TAG, "No hay fotos! MediosAnonima1");
         }
 
         img_fotos.setOnClickListener(new View.OnClickListener() {
@@ -111,15 +114,17 @@ public class MediosAnonima_1 extends Fragment {
     }
 
     private void populateFotosList(){
+        int i = 0;
         fotosList.clear();
         userSQLiteHelper mediadbh =
                 new userSQLiteHelper(getContext(), "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT medio, tipo FROM Media WHERE tipo == 'foto'", null);
         if (c.moveToFirst()) {
-            Log.v(TAG, "foto: " + c.getString(0) + ", tipo: " + c.getString(1));
+            //Log.v(TAG, "foto: " + c.getString(0) + ", tipo: " + c.getString(1));
             while (!c.isAfterLast()) {
-                Log.v(TAG, "populateFotosList hay medios");
+                i++;
+                Log.v(TAG, "populateFotosList hay medios " + i);
                 String medio = c.getString(0);
                 String tipo = c.getString(1);
 
@@ -145,10 +150,10 @@ public class MediosAnonima_1 extends Fragment {
                     /*if(medio != null){
                         Log.i(TAG, "hay medio db");
                         /* imageCameraPreview.setVisibility(View.VISIBLE);*/
-            /*btn_camara.setVisibility(View.INVISIBLE);*/
-            ///btn_camara.setImageBitmap(BitmapFactory.decodeFile(fotoDB));
-            //imageCameraPreview.setImageBitmap(BitmapFactory.decodeFile(fotoDB));
-            /*Glide.with(this).load(fotoDB).into(imageCameraPreview);*/
+        /*btn_camara.setVisibility(View.INVISIBLE);*/
+        ///btn_camara.setImageBitmap(BitmapFactory.decodeFile(fotoDB));
+        //imageCameraPreview.setImageBitmap(BitmapFactory.decodeFile(fotoDB));
+        /*Glide.with(this).load(fotoDB).into(imageCameraPreview);*/
                     /*}
                     else{
                         Log.i(TAG, "no hay medio db");
@@ -160,13 +165,13 @@ public class MediosAnonima_1 extends Fragment {
                         Log.i(TAG, "hay video db");
                         //btn_video.setVisibility(View.INVISIBLE);
                         /*imgvideoPrev.setVisibility(View.VISIBLE);*/
-            /*tv_videocapturado.setVisibility(View.VISIBLE);*/
+        /*tv_videocapturado.setVisibility(View.VISIBLE);*/
                    /* }
                     else{
                         Log.i(TAG, "no hay video db");
                         btn_video.setVisibility(View.VISIBLE);
                         /*tv_videocapturado.setVisibility(View.INVISIBLE);*/
-            /*imgvideoPrev.setVisibility(View.INVISIBLE);*/
+        /*imgvideoPrev.setVisibility(View.INVISIBLE);*/
                     /*}
 
                     if(galeriaDB != null){
@@ -183,7 +188,7 @@ public class MediosAnonima_1 extends Fragment {
                     //galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(galeriaDB));
                     Glide.with(this).load(galeriaDB).into(galeriaPrev);
                     tv_videocapturadogal.setVisibility(View.INVISIBLE);*/
-            //tv_videocapturadogal.setText("Imagen \n Seleccionada");
+        //tv_videocapturadogal.setText("Imagen \n Seleccionada");
                       /*  }
                     }
                     else{
@@ -191,7 +196,7 @@ public class MediosAnonima_1 extends Fragment {
                 /*galeriaPrev.setVisibility(View.INVISIBLE);
                 btn_galeria.setVisibility(View.VISIBLE);
                 tv_videocapturadogal.setVisibility(View.INVISIBLE);*/
-            /* }*/
+        /* }*/
 
 
         /*FotosBDModel potato = new FotosBDModel("Potato", R.drawable.agregar);

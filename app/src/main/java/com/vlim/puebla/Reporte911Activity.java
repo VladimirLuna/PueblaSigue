@@ -1621,17 +1621,25 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         super.onDestroy();
     }
 
-    /*@Override
+    @Override
     protected void onPause() {
         Log.d(TAG, "onPause");
-        borraMedios();
+        //borraMedios();
         super.onPause();
-    }*/
+    }
 
-    /*@Override
+    @Override
     protected void onStop() {
         Log.d(TAG, "onStop");
-        borraMedios();
+        //borraMedios();
         super.onStop();
-    }*/
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart");
+        //borraMedios();
+        super.onStop();
+    }
 }

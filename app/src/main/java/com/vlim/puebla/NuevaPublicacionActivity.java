@@ -79,7 +79,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
     JSONArray jsonArr;
     String JsonResponse = null;
     ProgressDialog progressDialog;
-    ImageView btn_camara, btn_video, btn_galeria, Videoprev2;
+    ImageView btn_camara, btn_video, btn_galeria;
     Uri selectedImage;
     Bitmap photo;
     /*private ProgressBar miprogress;
@@ -91,8 +91,8 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
     public static final int SELECT_FILE = 3;
     public static final String TAG = "VLIMDEV";
     String photoPath = "", photoGaleryPath = "", videoPath = "";
-    ImageView galeriaPrev;   //imageView
-    VideoView videoPrev;
+    ImageView galeriaPrev, videoPrev;   //imageView
+    //VideoView videoPrev;
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     String photoPathDB = "", videoPathDB = "", photoGaleryPathDB = "";
 
@@ -156,20 +156,22 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
         /*imageView = (ImageView) findViewById(R.id.Imageprev);
         imageView.setVisibility(View.INVISIBLE);*/
-        galeriaPrev = (ImageView) findViewById(R.id.Galeriaprev);
+        galeriaPrev = findViewById(R.id.Galeriaprev);
         galeriaPrev.setVisibility(View.INVISIBLE);
-        videoPrev = (VideoView) findViewById(R.id.videoPreview);
+        videoPrev = findViewById(R.id.Videoprev);
         videoPrev.setVisibility(View.INVISIBLE);
-        Videoprev2 = (ImageView) findViewById(R.id.Videoprev2);
-        Videoprev2.setVisibility(View.INVISIBLE);
-        imageCameraPreview = (ImageView) findViewById(R.id.imageCameraPreview);
+        //videoPrev = findViewById(R.id.videoPreview);
+        videoPrev.setVisibility(View.INVISIBLE);
+        imageCameraPreview = findViewById(R.id.imageCameraPreview);
         imageCameraPreview.setVisibility(View.INVISIBLE);
-        tv_videocapturado = (TextView) findViewById(R.id.tv_audiocapturado);
+        tv_videocapturado = findViewById(R.id.tv_videocapturado);
         tv_videocapturado.setVisibility(View.INVISIBLE);
         tv_videocapturado.setTypeface(tf);
-        tv_videocapturadogal = (TextView) findViewById(R.id.tv_videocapturadogal);
+        tv_videocapturadogal = findViewById(R.id.tv_videocapturadogal);
         tv_videocapturadogal.setVisibility(View.INVISIBLE);
         tv_videocapturadogal.setTypeface(tf);
+        txtPercentage = findViewById(R.id.txtPercentage);
+        txtPercentage.setTypeface(tf);
 
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
@@ -544,7 +546,8 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             Uri videoCaptured = data.getData();
             String[] videoPathColumn = { MediaStore.Images.Media.DATA };
             //Log.d(TAG, "Video grabado: " + videoPathColumn);
-            Videoprev2.setVisibility(View.VISIBLE);
+
+            videoPrev.setVisibility(View.VISIBLE);
             tv_videocapturado.setVisibility(View.VISIBLE);
 
             Cursor cursorvid = getContentResolver().query(videoCaptured,
@@ -698,14 +701,18 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             if(videoDB != null){
                 Log.i(TAG, "hay video db");
                 //btn_video.setVisibility(View.INVISIBLE);
-                Videoprev2.setVisibility(View.VISIBLE);
+                videoPrev.setVisibility(View.VISIBLE);
                 tv_videocapturado.setVisibility(View.VISIBLE);
+
+                btn_video.setVisibility(View.INVISIBLE);
+                videoPrev.setVisibility(View.VISIBLE);
+                videoPrev.setImageDrawable(getResources().getDrawable(R.drawable.boton_naranja_circular));
             }
             else{
                 Log.i(TAG, "no hay video db");
                 btn_video.setVisibility(View.VISIBLE);
                 tv_videocapturado.setVisibility(View.INVISIBLE);
-                Videoprev2.setVisibility(View.INVISIBLE);
+                videoPrev.setVisibility(View.INVISIBLE);
             }
 
             if(galeriaDB != null){
@@ -1338,6 +1345,5 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             Log.i(TAG, "Path: " + value);
         }
     }
-
 
 }
