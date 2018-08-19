@@ -122,6 +122,7 @@ public class RegistroUsuarioActivity extends AppCompatActivity {
                 else{
                     btn_datoscuenta.getBackground().setAlpha(70);
                 }
+
             }
         });
 

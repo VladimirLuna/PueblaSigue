@@ -34,6 +34,8 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegistroUsuarioActivity2 extends AppCompatActivity {
 
@@ -143,6 +145,10 @@ public class RegistroUsuarioActivity2 extends AppCompatActivity {
                     if(correo.length() < 1){
                         et_correo.setError("Ingresa el correo electrónico.");
                     }
+                    else if(!isEmailValid(correo)){
+                        et_correo.setError("Ingresa un correo electrónico válido.");
+                    }
+
                     else if(pass.length() < 1){
                         et_pass.setError("Ingresa la contraseña.");
                     }
@@ -403,5 +409,12 @@ public class RegistroUsuarioActivity2 extends AppCompatActivity {
 
     @Override
     public void onBackPressed() { }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
 
 }

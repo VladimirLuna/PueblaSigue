@@ -91,6 +91,7 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
         btn_guardaregistro = findViewById(R.id.btn_guardaregistro);
 
         btn_guardaregistro.setOnClickListener(new View.OnClickListener() {
+            int flag = 0;
             @Override
             public void onClick(View v) {
                 nt_check = new NetworkConnection(getApplicationContext());
@@ -100,16 +101,39 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
                     celcontacto = et_celular.getText().toString().trim();
                     correoContacto = et_correocontacto.getText().toString();
 
+                    if(celular.equals(celcontacto)){
+                        et_celular.setError("El número celular del contacto de emergencia debe ser distinto a tu teléfono celular.");
+                        flag = 0;
+                    }
+                    else{
+                        flag = 1;
+                    }
+
+                    if(usuario.equals(correoContacto)){
+                        et_correocontacto.setError("El correo electrónico del contacto de emergencia debe ser distinto a tu correo electrónico.");
+                        flag = 0;
+                    }
+                    else{
+                        flag = 1;
+                    }
+
                     if(nombrecontacto.length() < 1){
                         et_nombrecomp.setError("Ingresa el nombre completo de tu contacto.");
+                        flag=0;
                     }
                     else if(celcontacto.length() < 1){
                         et_celular.setError("Ingresa el celular.");
+                        flag=0;
                     }
                     else{
+                        flag=1;
+                    }
+
+                    if(flag==1){
                         Log.i(TAG, "Prepara envio de registro de usuario");
                         preparaRegistroNuevoUsuario();
                     }
+
                 }else{
                     Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
                 }
