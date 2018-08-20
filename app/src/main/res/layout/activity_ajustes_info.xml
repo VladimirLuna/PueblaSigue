@@ -23,7 +23,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar_ajustes" />
 
     <ImageView
-        android:id="@+id/btn_ajustes_informacion"
+        android:id="@+id/btn_camara"
         android:layout_width="148dp"
         android:layout_height="148dp"
         android:layout_marginStart="20dp"
@@ -33,14 +33,14 @@
         app:srcCompat="@drawable/infopersonal" />
 
     <ImageView
-        android:id="@+id/btn_contactos"
+        android:id="@+id/btn_galeria"
         android:layout_width="148dp"
         android:layout_height="148dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="64dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btn_ajustes_informacion"
+        app:layout_constraintStart_toEndOf="@+id/btn_camara"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_ajustes"
         app:srcCompat="@drawable/contactos" />
 
@@ -78,7 +78,7 @@
         android:textColor="@color/naranjaToolbar"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_ajustes_informacion" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_camara" />
 
     <TextView
         android:id="@+id/tv_password1"
@@ -89,7 +89,7 @@
         android:textColor="@color/naranjaToolbar"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_contactos" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_galeria" />
 
     <TextView
         android:id="@+id/tv_pass"

@@ -115,6 +115,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
     ImageView btn_back;
     private FileOutputStream fOut;
     String fileVideoCompressedPath = "", fileVideoGalCompressedPath = "";
+    int flagHayFoto = 0, flagHayVideo = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,25 +130,25 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
-        btn_nueva_publicacion = (TextView) findViewById(R.id.btn_enviar911);
+        btn_nueva_publicacion = findViewById(R.id.btn_enviar911);
         btn_nueva_publicacion.setTypeface(tf);
-        et_titulopub = (EditText) findViewById(R.id.et_nombreusr);
-        et_descripcionpub = (EditText) findViewById(R.id.et_domicilio);
-        btn_camara = (ImageView) findViewById(R.id.btn_ajustes_informacion);
-        btn_galeria = (ImageView) findViewById(R.id.btn_contactos);
-        btn_video = (ImageView) findViewById(R.id.btn_audio);
+        et_titulopub = findViewById(R.id.et_nombreusr);
+        et_descripcionpub = findViewById(R.id.et_domicilio);
+        btn_camara = findViewById(R.id.btn_camara);
+        btn_galeria = findViewById(R.id.btn_galeria);
+        btn_video = findViewById(R.id.btn_video);
 
         // Toolbar
-        tv_titulo_toolbar = (TextView) findViewById(R.id.tv_titulo_toolbar);
+        tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_titulo_toolbar.setTypeface(tf);
-        btn_back = (ImageView) findViewById(R.id.btn_back);
+        btn_back = findViewById(R.id.btn_back);
 
         //miprogress = (ProgressBar) findViewById(R.id.circularProgress);
 
         /* Aproximacion 2 */
-        txtPercentage = (TextView) findViewById(R.id.txtPercentage);
-        ////btnUpload = (Button) findViewById(R.id.btnUpload);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        txtPercentage = findViewById(R.id.txtPercentage);
+        ////btnUpload = findViewById(R.id.btnUpload);
+        progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
         /// --------------------------------------------------------------
 
@@ -239,80 +240,96 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Check Camera
-
-                //if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (checkPermissionREAD_EXTERNAL_STORAGE(NuevaPublicacionActivity.this)) {
-                    Log.i(TAG, "Permiso SD OK");
-
-                    if (getApplicationContext().getPackageManager().hasSystemFeature(
-                            PackageManager.FEATURE_CAMERA)) {
-                        // Open default camera
-                        int permissionCheck = ContextCompat.checkSelfPermission(NuevaPublicacionActivity.this, Manifest.permission.CAMERA);
-                        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                            Log.i(TAG, "abrir camera");
-                            abrirCamara();
-                        }
-                        else{
-                            Log.e(TAG, "Error, permiso camara: " + String.valueOf(permissionCheck));
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA);
-                            }
-                            else{
-                                Log.i(TAG, "version oldie");
-                            }
-                        }
-
-                    } else {
-                        Toast.makeText(getApplication(), "Camera not supported", Toast.LENGTH_LONG).show();
-                    }
+                if(flagHayFoto == 1){
+                    Toast.makeText(getApplicationContext(), "Sólo puedes elegir un archivo de imagen", Toast.LENGTH_LONG).show();
                 }
                 else{
-                    Log.i(TAG, "error en permisos");
-                }
-                //}else{
-                //   abrirCamara();
-                // }
+                    //if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkPermissionREAD_EXTERNAL_STORAGE(NuevaPublicacionActivity.this)) {
+                        Log.i(TAG, "Permiso SD OK");
 
+                        if (getApplicationContext().getPackageManager().hasSystemFeature(
+                                PackageManager.FEATURE_CAMERA)) {
+                            // Open default camera
+                            int permissionCheck = ContextCompat.checkSelfPermission(NuevaPublicacionActivity.this, Manifest.permission.CAMERA);
+                            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                                Log.i(TAG, "abrir camera");
+                                abrirCamara();
+                            }
+                            else{
+                                Log.e(TAG, "Error, permiso camara: " + String.valueOf(permissionCheck));
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA);
+                                }
+                                else{
+                                    Log.i(TAG, "version oldie");
+                                }
+                            }
+
+                        } else {
+                            Toast.makeText(getApplication(), "Camera not supported", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    else{
+                        Log.i(TAG, "error en permisos");
+                    }
+                }
             }
         });
 
         btn_galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent galeriaIntent = new Intent();
-                galeriaIntent.setType("image/*");
-                galeriaIntent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(galeriaIntent, "Selecciona una imagen"), SELECT_FILE);*/
+                if(flagHayFoto == 1){
+                    Toast.makeText(getApplicationContext(), "Sólo puedes elegir un archivo de imagen", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    // dialog preguntar imagen o video
+                    final CharSequence[] options = {"Imágenes", "Videos", "Cancelar"};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(NuevaPublicacionActivity.this);
+                    builder.setTitle("Buscar...");
+                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int item) {
+                            if (options[item].equals("Imágenes")) {
+                                if(flagHayFoto == 1){
+                                    Toast.makeText(getApplicationContext(), "Sólo puedes elegir un archivo de imagen", Toast.LENGTH_LONG).show();
+                                }
+                                else{
+                                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                    startActivityForResult(intent, SELECT_FILE);
+                                }
 
-                // dialog preguntar imagen o video
-                final CharSequence[] options = {"Imágenes", "Videos", "Cancelar"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(NuevaPublicacionActivity.this);
-                builder.setTitle("Buscar...");
-                builder.setItems(options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-                        if (options[item].equals("Imágenes")) {
-                            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                            startActivityForResult(intent, SELECT_FILE);
-                        } else if (options[item].equals("Videos")) {
-                            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-                            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                            startActivityForResult(intent, SELECT_FILE);
-                        } else if (options[item].equals("Cancelar")) {
+                            } else if (options[item].equals("Videos")) {
+                                if(flagHayVideo == 1){
+                                    Toast.makeText(getApplicationContext(), "Sólo puedes elegir un video", Toast.LENGTH_LONG).show();
+                                }
+                                else{
+                                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                    startActivityForResult(intent, SELECT_FILE);
+                                }
+                            } else if (options[item].equals("Cancelar")) {
+                                dialog.dismiss();
+                            }
                             dialog.dismiss();
                         }
-                        dialog.dismiss();
-                    }
-                });
-                builder.show();
+                    });
+                    builder.show();
+                }
             }
         });
 
         btn_video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recordVideo();
+                if(flagHayFoto == 1){
+                    Toast.makeText(getApplicationContext(), "Sólo puedes elegir un video", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    recordVideo();
+                }
             }
         });
 
@@ -515,11 +532,11 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                 //imageView.setVisibility(View.VISIBLE);
                 /*btn_camara.setImageBitmap(photo);  //imageView
                 btn_camara.setImageBitmap(fotoBitmap);*/
-                Glide.with(this)
+                /*Glide.with(this)
                         .load(photoPath)
                         //.diskCacheStrategy( DiskCacheStrategy.NONE )
                         //.skipMemoryCache( true )
-                        .into(btn_camara);
+                        .into(btn_camara);*/
                 Log.d(TAG, "Foto capturada: " + photoPath);
 
                 // Guarda en BD
@@ -594,6 +611,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
         else if (requestCode == SELECT_FILE && null != data) {
             Log.i(TAG, "Se selecciona archivo de galeria");
+            btn_camara.setVisibility(View.INVISIBLE);
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
             //Log.d(TAG, "Galeria selected: " + selectedImage + ", " + filePathColumn);
@@ -604,9 +622,8 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                 photoGaleryPath = cursor.getString(columnIndex);
                 Log.i(TAG, "De la galeria: " + photoGaleryPath);
                 //Log.d(TAG, " photogalerypath: " + photoGaleryPath );
-                galeriaPrev.setVisibility(View.VISIBLE);
+                //galeriaPrev.setVisibility(View.VISIBLE);
             }
-
 
 
             //Si hemos abierto correctamente la base de datos
@@ -641,11 +658,11 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
                 }else{
                     ///galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(photoGaleryPath));
-                    Glide.with(this)
+                    /*Glide.with(this)
                             .load(photoGaleryPath)
                             /*.diskCacheStrategy( DiskCacheStrategy.NONE )
                             .skipMemoryCache( true )*/
-                            .into(galeriaPrev);
+                            /*.into(galeriaPrev);*/
                     Log.d(TAG, "Foto seleccionada de galeria: " + photoGaleryPath);
                 }
             }
@@ -667,12 +684,12 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         SQLiteDatabase dbUpdatePrev = mediadbh.getReadableDatabase();
         Cursor c = dbUpdatePrev.rawQuery("SELECT photopath, videopath, galeriapath FROM MediaChat WHERE idmedio == 1", null);
         if (c.moveToFirst()) {
-            Log.v(TAG, "hay medios");
+            Log.v(TAG, "Actualizando previos...");
             String fotoDB = c.getString(0);
             String videoDB = c.getString(1);
             String galeriaDB = c.getString(2);
 
-            Log.i(TAG, "foto: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + photoGaleryPathDB );
+            Log.i(TAG, "foto: " + fotoDB + ", video: " + videoDB + ", gal: " + galeriaDB );
                 /*imageView.setVisibility(View.VISIBLE);
                 imageView.setImageBitmap(BitmapFactory.decodeFile(photoPathDB));
                 galeriaPrev.setVisibility(View.VISIBLE);
@@ -681,11 +698,13 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
             Log.i(TAG, "Medios DB: " + photoPathDB + ", video: " + videoPathDB + ", gal: " + photoGaleryPathDB );
             if(fotoDB != null){
-                Log.i(TAG, "hay foto db");
+                Log.i(TAG, "hay foto de camara db");
+                flagHayFoto = 1;
                 imageCameraPreview.setVisibility(View.VISIBLE);
                 btn_camara.setVisibility(View.INVISIBLE);
-                ///btn_camara.setImageBitmap(BitmapFactory.decodeFile(fotoDB));
-                ///imageCameraPreview.setImageBitmap(BitmapFactory.decodeFile(fotoDB));
+                btn_galeria.setVisibility(View.INVISIBLE);
+                galeriaPrev.setVisibility(View.INVISIBLE);
+
                 Glide.with(this)
                         .load(fotoDB)
                         /*.diskCacheStrategy( DiskCacheStrategy.NONE )
@@ -700,6 +719,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
             if(videoDB != null){
                 Log.i(TAG, "hay video db");
+                flagHayVideo = 1;
                 //btn_video.setVisibility(View.INVISIBLE);
                 videoPrev.setVisibility(View.VISIBLE);
                 tv_videocapturado.setVisibility(View.VISIBLE);
@@ -719,12 +739,16 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                 Log.i(TAG, "hay archivo galeria db");
                 galeriaPrev.setVisibility(View.VISIBLE);
                 if(galeriaDB.endsWith("mp4")){
+                    flagHayVideo = 1;
                     btn_galeria.setVisibility(View.INVISIBLE);
                     galeriaPrev.setVisibility(View.VISIBLE);
                     galeriaPrev.setImageDrawable(getResources().getDrawable(R.drawable.boton_naranja_circular));
                     tv_videocapturadogal.setVisibility(View.VISIBLE);
+                    btn_camara.setVisibility(View.INVISIBLE);
+
                 }
                 else{
+                    flagHayFoto = 1;
                     btn_galeria.setVisibility(View.VISIBLE);
                     ///galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(galeriaDB));
                     Glide.with(this)
@@ -734,6 +758,8 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                             .into(galeriaPrev);
                     tv_videocapturadogal.setVisibility(View.INVISIBLE);
                     //tv_videocapturadogal.setText("Imagen \n Seleccionada");
+                    btn_galeria.setVisibility(View.INVISIBLE);
+                    imageCameraPreview.setVisibility(View.INVISIBLE);
                 }
             }
             else{

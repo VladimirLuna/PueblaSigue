@@ -162,7 +162,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
                     Log.d(TAG, "idpublicacion: " + idPublicacion);
                     Intent comentariosIntent = new Intent(v.getContext(), ComentariosActivity.class);
                     comentariosIntent.putExtra("idPublicacion", idPublicacion);
+                    ((ChatVecinalActivity)context).finish();
                     v.getContext().startActivity(comentariosIntent);
+
                 }
             });
 
@@ -174,6 +176,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
                     Log.d(TAG, "idpublicacion: " + idPublicacion);
                     Intent comentariosIntent = new Intent(v.getContext(), ComentariosActivity.class);
                     comentariosIntent.putExtra("idPublicacion", idPublicacion);
+                    ((ChatVecinalActivity)context).finish();
                     v.getContext().startActivity(comentariosIntent);
                 }
             });

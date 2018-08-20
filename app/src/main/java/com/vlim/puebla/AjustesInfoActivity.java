@@ -82,8 +82,8 @@ public class AjustesInfoActivity extends AppCompatActivity {
         tv_titulo_toolbar.setTypeface(tf);
         btn_back = findViewById(R.id.btn_back);
         btn_cambiar_pass = findViewById(R.id.btn_cambiar_pass);
-        btn_contactos = findViewById(R.id.btn_contactos);
-        btn_info_personal = findViewById(R.id.btn_ajustes_informacion);
+        btn_contactos = findViewById(R.id.btn_galeria);
+        btn_info_personal = findViewById(R.id.btn_camara);
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override

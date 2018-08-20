@@ -153,9 +153,9 @@ public class InfoPersonalActivity extends AppCompatActivity {
                     et_direccion.setError("Debes escribir tu domicilio.");
                 }
 
-                else if(telefono_casa.length() < 1){
+                /*else if(telefono_casa.length() < 1){
                     et_telefono.setError("Debes escribir tu número de teléfono.");
-                }
+                }*/
                 else if(celular.length() < 1){
                     et_celular.setError("Debes escribir tu número de celular.");
                 }

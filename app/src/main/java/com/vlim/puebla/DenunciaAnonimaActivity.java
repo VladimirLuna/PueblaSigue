@@ -232,7 +232,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
             btn_back = findViewById(R.id.btn_back);
             btn_camara = findViewById(R.id.btn_foto);
             btn_video = findViewById(R.id.btn_video);
-            btn_audio = findViewById(R.id.btn_audio);
+            btn_audio = findViewById(R.id.btn_video);
             btn_stop = findViewById(R.id.btn_stop);
             btn_play = findViewById(R.id.btn_play);
             txtPercentage = findViewById(R.id.txtPercentage);

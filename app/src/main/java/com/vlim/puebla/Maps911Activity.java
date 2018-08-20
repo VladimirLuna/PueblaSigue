@@ -53,6 +53,8 @@ public class Maps911Activity extends FragmentActivity implements OnMapReadyCallb
     String idusuario;
     String TAG = "PUEBLA";
     ImageView img_medica, img_policia, img_bomberos;
+    // valida ubicacion en puebla
+    EstaEnPuebla estaEnPuebla;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,6 +236,14 @@ public class Maps911Activity extends FragmentActivity implements OnMapReadyCallb
             LatLng coordinate = new LatLng(latitude, longitude);
             CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 19);
             mMap.animateCamera(yourLocation);
+
+            estaEnPuebla = new EstaEnPuebla(getApplicationContext());
+            if(estaEnPuebla.estaEnPuebla(latitude, longitude)){
+                Log.d(TAG, "Está en Puebla");
+            }
+            else{
+                showAlertOK(Config.ESTA_EN_PUEBLA);
+            }
         }
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -367,6 +377,21 @@ public class Maps911Activity extends FragmentActivity implements OnMapReadyCallb
                 });
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
+    }
+
+    private void showAlertOK(String message) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setMessage(message).setTitle("911 Emergencias")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // ok
+                        finish();
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+
     }
 
     @Override

@@ -48,6 +48,7 @@ public class ChatVecinalActivity extends AppCompatActivity implements SwipeRefre
     TextView tv_titulo_toolbar;
     ImageView btn_back;
     int NUEVA_PUBLICACION_REQUEST = 1200;
+    int NUEVO_COMENTARIO_REQUEST = 1300;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     public static final String TAG = "PUEBLA";

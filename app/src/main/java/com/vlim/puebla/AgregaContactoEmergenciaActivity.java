@@ -31,6 +31,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
 
@@ -39,7 +41,7 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
     EditText et_nombre, et_telefono, et_celular, et_correo;
     ImageView btn_back;
     Button btn_guardar;
-    String idusuario;
+    String idusuario, correo_usr;
     ProgressDialog progressDialog;
     JSONArray jsonArr;
     String JsonResponse = null;
@@ -83,13 +85,15 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
         userSQLiteHelper usdbh =
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT idusuario, nick, nombre FROM Usuarios", null);
+        Cursor c = db.rawQuery("SELECT idusuario, usr FROM Usuarios", null);
 
         if (c.moveToFirst()) {
             Log.v(TAG, "hay cosas");
             //Recorremos el cursor hasta que no haya más registros
             do {
                 idusuario = c.getString(0);
+                correo_usr = c.getString(1);
+                Log.d(TAG, "correo_usr: " + correo_usr);
             } while(c.moveToNext());
         }
         else{
@@ -110,17 +114,24 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
                 if(nombre.length() < 1){
                     et_nombre.setError("Escribe el nombre de tu contacto");
                 }
-                else if(telefono.length() < 1){
+                /*else if(telefono.length() < 1){
                     et_telefono.setError("Escribe el teléfono de tu contacto");
-                }
+                }*/
                 else if(celular.length() < 1){
                     et_celular.setError("Escribe el celular de tu contacto");
                 }
                 else if(correo.length() < 1){
                     et_correo.setError("Escribe el correo electrónico de tu contacto");
                 }
+                else if(!isEmailValid(correo)){
+                    et_correo.setError("Ingresa un correo electrónico válido.");
+                }
+                else if(correo.equals(correo_usr)){
+                    et_correo.setError("El correo electrónico de tu contacto de emergencia debe ser diferentes a tu correo electrónico.");
+                }
                 else{
                     // Envia parámetros
+                    Log.d(TAG, "envia parametros");
                     preparaContacto(idusuario, nombre, telefono, celular, correo);
                 }
             }
@@ -255,5 +266,12 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
         android.app.AlertDialog alert = builder.create();
         alert.show();
 
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

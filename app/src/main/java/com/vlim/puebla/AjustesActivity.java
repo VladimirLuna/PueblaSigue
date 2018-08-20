@@ -23,8 +23,8 @@ public class AjustesActivity extends AppCompatActivity {
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_titulo_toolbar.setTypeface(tf);
         btn_back = findViewById(R.id.btn_back);
-        btn_ajustes_informacion = findViewById(R.id.btn_ajustes_informacion);
-        btn_ajustes_chat = findViewById(R.id.btn_contactos);
+        btn_ajustes_informacion = findViewById(R.id.btn_camara);
+        btn_ajustes_chat = findViewById(R.id.btn_galeria);
         tv_info = findViewById(R.id.tv_info);
         tv_chat = findViewById(R.id.tv_password1);
         tv_mensaje1 = findViewById(R.id.tv_motivo);

@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
-                        if (options[item].equals("Lamar a 01 800 624 2330")) {
+                        if (options[item].equals("Llamar a 01 800 624 2330")) {
                             Intent btnllamarTelMujer = new Intent(Intent.ACTION_CALL);
                             btnllamarTelMujer.setData(Uri.parse("tel:018006242330"));
                             if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -256,37 +256,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        /*btn_botonpanico.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                // Comprueba conexion a Internet
-                nt_check = new NetworkConnection(getApplicationContext());
-                if(nt_check.isOnline()){
-                    // Mantener presionado por 5 segundos
-                    if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
-                            PackageManager.PERMISSION_GRANTED &&
-                            ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                                    PackageManager.PERMISSION_GRANTED) {
-                        Intent btnpanico = new Intent(MainActivity.this, BotonPanicoActivity.class);
-                        btnpanico.putExtra("idusuario", idusuario);
-                        startActivity(btnpanico);
-
-                    } else {
-                        //Toast.makeText(getApplicationContext(), "Error en permiso mapa", Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "Error en permisos ubicacion");
-
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {
-                                        Manifest.permission.ACCESS_FINE_LOCATION,
-                                        Manifest.permission.ACCESS_COARSE_LOCATION },
-                                MY_LOCATION_REQUEST_CODE);
-                    }
-                }else{
-                    Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
-                }
-                return false;
-            }
-        });*/
 
         btn_sigueme.setOnClickListener(new View.OnClickListener() {
             @Override

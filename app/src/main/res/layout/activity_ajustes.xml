@@ -25,19 +25,19 @@
         tools:layout_editor_absoluteX="0dp" />
 
     <ImageView
-        android:id="@+id/btn_ajustes_informacion"
+        android:id="@+id/btn_camara"
         android:layout_width="148dp"
         android:layout_height="148dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="120dp"
-        app:layout_constraintEnd_toStartOf="@+id/btn_contactos"
+        app:layout_constraintEnd_toStartOf="@+id/btn_galeria"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_ajustes"
         app:srcCompat="@drawable/info" />
 
     <ImageView
-        android:id="@+id/btn_contactos"
+        android:id="@+id/btn_galeria"
         android:layout_width="148dp"
         android:layout_height="148dp"
         android:layout_marginEnd="24dp"
@@ -68,7 +68,7 @@
         android:textColor="@color/naranjaToolbar"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_ajustes_informacion" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_camara" />
 
 
     <TextView
@@ -83,7 +83,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.632"
         app:layout_constraintStart_toEndOf="@+id/tv_info"
-        app:layout_constraintTop_toBottomOf="@+id/btn_contactos" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_galeria" />
 
 
 </android.support.constraint.ConstraintLayout>

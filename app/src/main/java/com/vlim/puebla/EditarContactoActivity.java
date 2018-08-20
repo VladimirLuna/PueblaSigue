@@ -96,9 +96,9 @@ public class EditarContactoActivity extends AppCompatActivity {
                 if(nombre.length() < 1){
                     et_nombre.setError("Escribe el nombre de tu contacto");
                 }
-                else if(telefono.length() < 1){
+                /*else if(telefono.length() < 1){
                     et_telefono.setError("Escribe el teléfono de tu contacto");
-                }
+                }*/
                 else if(celular.length() < 1){
                     et_celular.setError("Escribe el celular de tu contacto");
                 }
@@ -112,6 +112,12 @@ public class EditarContactoActivity extends AppCompatActivity {
             }
         });
 
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 
@@ -318,4 +324,7 @@ public class EditarContactoActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onBackPressed() { }
 }

@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="* Teléfono:"
+                android:text="Teléfono particular:"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_direccion" />
 
@@ -61,6 +61,7 @@
                 android:layout_marginStart="8dp"
                 android:ems="10"
                 android:inputType="phone"
+                android:maxLength="10"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_telefono" />
@@ -83,6 +84,7 @@
                 android:layout_marginStart="8dp"
                 android:ems="10"
                 android:inputType="phone"
+                android:maxLength="10"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_celular" />
@@ -125,6 +127,7 @@
                 android:layout_marginStart="8dp"
                 android:ems="10"
                 android:inputType="textPersonName"
+                android:maxLength="50"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_num_identificacion" />
@@ -147,6 +150,7 @@
                 android:layout_marginStart="8dp"
                 android:ems="10"
                 android:inputType="textAutoComplete|textMultiLine|textPersonName"
+                android:maxLength="500"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_cond_med" />
@@ -175,6 +179,7 @@
                 android:layout_marginStart="8dp"
                 android:ems="10"
                 android:inputType="textPersonName"
+                android:maxLength="100"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_direccion" />

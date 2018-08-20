@@ -1,6 +1,7 @@
 package com.vlim.puebla;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -55,6 +56,8 @@ public class ComentariosActivity extends AppCompatActivity implements SwipeRefre
     // Toolbar
     TextView tv_titulo_toolbar;
     ImageView btn_back;
+    String TAG = "PUEBLA";
+    String idusuario = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,26 @@ public class ComentariosActivity extends AppCompatActivity implements SwipeRefre
         tv_titulo_toolbar = (TextView) findViewById(R.id.tv_titulo_toolbar);
         tv_titulo_toolbar.setTypeface(tf);
         btn_back = (ImageView) findViewById(R.id.btn_back);
+
+        // lee datos del usuario
+        userSQLiteHelper usdbh =
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
+        SQLiteDatabase db = usdbh.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT idusuario FROM Usuarios", null);
+
+        if (c.moveToFirst()) {
+            Log.v(TAG, "hay cosas");
+            //Recorremos el cursor hasta que no haya más registros
+            do {
+                idusuario = c.getString(0);
+            } while(c.moveToNext());
+        }
+        else{
+            Log.v(TAG, "NO hay cosas");
+        }
+        c.close();
+        db.close();
+        //////
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -115,6 +138,9 @@ public class ComentariosActivity extends AppCompatActivity implements SwipeRefre
             @Override
             public void onClick(View v) {
                 finish();
+                Intent btnredvecinal = new Intent(ComentariosActivity.this, ChatVecinalActivity.class);
+                btnredvecinal.putExtra("idusuario", idusuario);
+                startActivity(btnredvecinal);
             }
         });
     }
