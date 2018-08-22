@@ -232,7 +232,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
             btn_back = findViewById(R.id.btn_back);
             btn_camara = findViewById(R.id.btn_foto);
             btn_video = findViewById(R.id.btn_video);
-            btn_audio = findViewById(R.id.btn_video);
+            btn_audio = findViewById(R.id.btn_audio);
             btn_stop = findViewById(R.id.btn_stop);
             btn_play = findViewById(R.id.btn_play);
             txtPercentage = findViewById(R.id.txtPercentage);
@@ -327,6 +327,8 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
                     mediaRecorder.stop();
                     mediaRecorder.release();
                     mediaRecorder = null;
+
+                    actualizaPrevios();
                 }
             });
 
@@ -976,6 +978,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
     }
 
     private void actualizaPrevios() {
+        int contaFoto = 0, contaVideo = 0, contaAudio = 0;
         userSQLiteHelper mediadbh =
                 new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getReadableDatabase();
@@ -1049,6 +1052,32 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
         else{
             Log.v(TAG, "NO hay MEDIOS");
         }
+
+        if (c != null && c.moveToFirst()) {
+            do {
+                String medio = c.getString(0);
+                String tipo = c.getString(1);
+
+                if(tipo.equals("foto")){
+                    contaFoto++;
+                }
+                if(tipo.equals("video")){
+                    contaVideo++;
+                }
+                if(tipo.equals("audio")){
+                    contaAudio++;
+                }
+            } while(c.moveToNext());
+        }
+
+        // preseleccionar un tab
+        Log.d(TAG, "seleccionado tabs");
+        MyTabs.getTabAt(1).select();
+        MyTabs.getTabAt(2).select();
+        MyTabs.getTabAt(0).select();
+        MyTabs.getTabAt(0).setText("Imagen (" + contaFoto + ")");
+        MyTabs.getTabAt(1).setText("Video (" + contaVideo + ")");
+        MyTabs.getTabAt(2).setText("Audio (" + contaAudio + ")");
     }
 
     public void showSettingsAlert() {
@@ -1418,7 +1447,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
                 Log.v(TAG, "No Hay base");
             }*/
 
-            //////actualizaPrevios();
+            actualizaPrevios();
 
 
             File f1 = new File(videoPath);
@@ -1571,6 +1600,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
             else
                 value = length+" KB";
             Log.i(TAG, "Path: " + value);
+            actualizaPrevios();
         }
     }
 

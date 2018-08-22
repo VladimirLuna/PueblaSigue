@@ -120,7 +120,7 @@
                 app:civ_border_width="0dp" />
 
             <ImageView
-                android:id="@+id/btn_video"
+                android:id="@+id/btn_audio2"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignTop="@+id/btn_camara"
@@ -134,7 +134,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_alignEnd="@+id/tv_nuevapub1"
-                android:layout_alignTop="@+id/btn_video"
+                android:layout_alignTop="@+id/btn_audio2"
                 android:background="@drawable/boton_naranja_circular"
                 android:padding="15dp"
                 android:visibility="visible"
@@ -200,15 +200,15 @@
                 android:id="@+id/videoPreview"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_alignStart="@+id/btn_video"
-                android:layout_alignTop="@+id/btn_video"
+                android:layout_alignStart="@+id/btn_audio2"
+                android:layout_alignTop="@+id/btn_audio2"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/txtPercentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/btn_video"
+                android:layout_below="@+id/btn_audio2"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
@@ -227,7 +227,7 @@
                 android:id="@+id/tv_videocapturado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/btn_video"
+                android:layout_alignTop="@+id/btn_audio2"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="19dp"
                 android:gravity="center_horizontal"

@@ -233,7 +233,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             btn_back = findViewById(R.id.btn_back);
             btn_camara = findViewById(R.id.btn_foto);
             btn_video = findViewById(R.id.btn_video);
-            btn_audio = findViewById(R.id.btn_video);
+            btn_audio = findViewById(R.id.btn_audio);
             btn_stop = findViewById(R.id.btn_stop);
             btn_play = findViewById(R.id.btn_play);
             txtPercentage = findViewById(R.id.txtPercentage);
@@ -319,7 +319,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                     mediaRecorder = new MediaRecorder();
                     resetRecorder();
                     mediaRecorder.start();
-                    Toast.makeText(getApplicationContext(), "Inciando grabación de audio.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Iniciando grabación de audio.", Toast.LENGTH_LONG).show();
                 }
                 else{
 
@@ -350,6 +350,8 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 mediaRecorder.release();
                 mediaRecorder = null;
                 btn_audio.setVisibility(View.INVISIBLE);
+
+                actualizaPrevios();
             }
         });
 
@@ -414,6 +416,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 finish();
             }
         });
+
     }
 
     private void recordVideo() {
@@ -613,7 +616,6 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
 
                     actualizaPrevios();
 
-
                     if (resultCode == RESULT_OK) {
 
                     } else if (resultCode == RESULT_CANCELED) {
@@ -713,14 +715,12 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 Log.v(TAG, "No Hay base");
             }*/
 
-            //////actualizaPrevios();
-
+            actualizaPrevios();
 
             File f1 = new File(videoPath);
             VideoCompressAsyncTask videoCompressAsyncTask = new VideoCompressAsyncTask(getApplicationContext());
             videoCompressAsyncTask.execute(f1.getPath().toString(), f1.getPath().toString());
             Log.i(TAG, "compressVideo: " + fileVideoCompressedPath);
-
 
             if (resultCode == RESULT_OK) {
 
@@ -759,20 +759,16 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
     }
 
     private void actualizaPrevios() {
+        int contaFoto = 0, contaVideo = 0, contaAudio = 0;
         userSQLiteHelper mediadbh =
                 new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getReadableDatabase();
         c = db.rawQuery("SELECT medio, tipo FROM Media", null);
+
         if (c != null && c.moveToFirst()) {
             Log.v(TAG, "hay medios");
             String medio = c.getString(0);
             String tipo = c.getString(1);
-
-                /*imageView.setVisibility(View.VISIBLE);
-                imageView.setImageBitmap(BitmapFactory.decodeFile(photoPathDB));
-                galeriaPrev.setVisibility(View.VISIBLE);
-                galeriaPrev.setImageBitmap(BitmapFactory.decodeFile(vozPathDB));
-                db.close();*/
 
             if(tipo.equals("foto")){
                 Log.i(TAG, "hay foto db: " + medio);
@@ -832,6 +828,32 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         else{
             Log.v(TAG, "NO hay MEDIOS");
         }
+
+        if (c != null && c.moveToFirst()) {
+            do {
+                String medio = c.getString(0);
+                String tipo = c.getString(1);
+
+                if(tipo.equals("foto")){
+                    contaFoto++;
+                }
+                if(tipo.equals("video")){
+                    contaVideo++;
+                }
+                if(tipo.equals("audio")){
+                    contaAudio++;
+                }
+            } while(c.moveToNext());
+        }
+
+        // preseleccionar un tab
+        Log.d(TAG, "seleccionado tabs");
+        MyTabs.getTabAt(1).select();
+        MyTabs.getTabAt(2).select();
+        MyTabs.getTabAt(0).select();
+        MyTabs.getTabAt(0).setText("Imagen (" + contaFoto + ")");
+        MyTabs.getTabAt(1).setText("Video (" + contaVideo + ")");
+        MyTabs.getTabAt(2).setText("Audio (" + contaAudio + ")");
     }
 
     private Uri getImageUri(Reporte911Activity reportebotondelamujeractivity, Bitmap bitmap) {
@@ -1281,6 +1303,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             else
                 value = length+" KB";
             Log.i(TAG, "Path: " + value);
+            actualizaPrevios();
         }
     }
 

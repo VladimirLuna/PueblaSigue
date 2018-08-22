@@ -136,7 +136,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         et_descripcionpub = findViewById(R.id.et_domicilio);
         btn_camara = findViewById(R.id.btn_camara);
         btn_galeria = findViewById(R.id.btn_galeria);
-        btn_video = findViewById(R.id.btn_video);
+        btn_video = findViewById(R.id.btn_audio2);
 
         // Toolbar
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);

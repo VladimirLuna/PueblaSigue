@@ -147,7 +147,7 @@
                 app:srcCompat="@drawable/galeria" />
 
             <ImageView
-                android:id="@+id/btn_video"
+                android:id="@+id/btn_audio2"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_alignTop="@+id/btn_galeria"
