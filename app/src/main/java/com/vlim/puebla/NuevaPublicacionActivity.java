@@ -324,7 +324,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         btn_video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(flagHayFoto == 1){
+                if(flagHayVideo == 1){
                     Toast.makeText(getApplicationContext(), "Sólo puedes elegir un video", Toast.LENGTH_LONG).show();
                 }
                 else{

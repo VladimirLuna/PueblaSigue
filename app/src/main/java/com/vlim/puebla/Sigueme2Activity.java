@@ -221,7 +221,6 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         Sigueme2Activity.this);
-                //builder.setTitle("DoxSteel");
                 builder.setTitle(Html.fromHtml("<font color='#ea7e01'>Sígueme y Cuídame</font>"));
                 builder.setMessage(Html.fromHtml("<font color='black'>¿Deseas cancelar tu viaje?</font>"));
                 builder.setNegativeButton("No",

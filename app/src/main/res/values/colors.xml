@@ -8,4 +8,14 @@
     <color name="grayIconTint">#ea7e01</color>
     <color name="separator">#dadada</color>
     <color name="textogris">#737373</color>
+    <color name="textShadow">#FFF</color>
+    <color name="textColor">#000</color>
+    <color name="textFieldColor">#000</color>
+    <color name="barDarkColor">#CECECE</color>
+    <color name="barMeduimColor">#DFDEE0</color>
+    <color name="barLightColor">#F2F2F2</color>
+    <color name="listViewBg">#DADFEE</color>
+    <color name="sendLightColor">#ea7e01</color>
+    <color name="sendMeduimColor">#ea7e01</color>
+    <color name="sendDarkColor">#ea7e01</color>
 </resources>

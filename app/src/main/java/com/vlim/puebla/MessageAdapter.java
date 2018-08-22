@@ -1,6 +1,7 @@
 package com.vlim.puebla;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,14 @@ class MessageAdapter extends ArrayAdapter<ChatBubble> {
         ChatBubble ChatBubble = getItem(position);
         int viewType = getItemViewType(position);
 
-        if (ChatBubble.myMessage()) {
+        //Log.d("PUEBLA", ChatBubble.side());
+        //if (ChatBubble.myMessage()) {
+
+        if (ChatBubble.side().equals("left")) {
+            Log.d("PUEBLA", "left: " + ChatBubble.getContent());
             layoutResource = R.layout.left_chat_bubble;
-        } else {
+        } else{ // if(ChatBubble.side().equals("right")){
+            Log.d("PUEBLA", "right: " + ChatBubble.getContent());
             layoutResource = R.layout.right_chat_bubble;
         }
 

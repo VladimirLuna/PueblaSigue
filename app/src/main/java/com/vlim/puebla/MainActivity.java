@@ -279,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
                 if(nt_check.isOnline()){
                     Intent btnredvecinal = new Intent(MainActivity.this, ChatVecinalActivity.class);
                     btnredvecinal.putExtra("idusuario", idusuario);
+                    btnredvecinal.putExtra("refresh", "si");
                     startActivity(btnredvecinal);
                 }else{
                     Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
@@ -292,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
                 // Comprueba conexion a Internet
                 nt_check = new NetworkConnection(getApplicationContext());
                 if(nt_check.isOnline()){
-                    Intent secretarioIntent = new Intent(MainActivity.this, MensajesIPMActivity.class);
+                    Intent secretarioIntent = new Intent(MainActivity.this, MensajesIPMActivity2.class);
                     secretarioIntent.putExtra("idusuario", idusuario);
                     startActivity(secretarioIntent);
                 }else{

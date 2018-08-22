@@ -110,26 +110,35 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
                 String telefono = et_telefono.getText().toString();
                 String celular = et_celular.getText().toString();
                 String correo = et_correo.getText().toString();
+                int tagValido = 0;
 
                 if(nombre.length() < 1){
                     et_nombre.setError("Escribe el nombre de tu contacto");
+                    tagValido = 0;
                 }
                 /*else if(telefono.length() < 1){
                     et_telefono.setError("Escribe el teléfono de tu contacto");
                 }*/
                 else if(celular.length() < 1){
                     et_celular.setError("Escribe el celular de tu contacto");
+                    tagValido = 0;
                 }
                 else if(correo.length() < 1){
                     et_correo.setError("Escribe el correo electrónico de tu contacto");
+                    tagValido = 0;
                 }
                 else if(!isEmailValid(correo)){
                     et_correo.setError("Ingresa un correo electrónico válido.");
+                    tagValido = 0;
                 }
                 else if(correo.equals(correo_usr)){
                     et_correo.setError("El correo electrónico de tu contacto de emergencia debe ser diferentes a tu correo electrónico.");
+                    tagValido = 0;
                 }
-                else{
+                else
+                    tagValido = 1;
+
+                if(tagValido == 1){
                     // Envia parámetros
                     Log.d(TAG, "envia parametros");
                     preparaContacto(idusuario, nombre, telefono, celular, correo);

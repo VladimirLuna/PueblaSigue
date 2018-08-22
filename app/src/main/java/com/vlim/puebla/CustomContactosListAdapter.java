@@ -17,7 +17,7 @@ public class CustomContactosListAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private OnCustomClickListener callback;
     private List<Contactos> contactoItems;
-    String TAG = "DOXSTEEL";
+    String TAG = "PUEBLA";
     Contactos contacts;
     Context context;
 

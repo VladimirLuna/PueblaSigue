@@ -140,6 +140,7 @@ public class ComentariosActivity extends AppCompatActivity implements SwipeRefre
                 finish();
                 Intent btnredvecinal = new Intent(ComentariosActivity.this, ChatVecinalActivity.class);
                 btnredvecinal.putExtra("idusuario", idusuario);
+                btnredvecinal.putExtra("refresh", "no");
                 startActivity(btnredvecinal);
             }
         });

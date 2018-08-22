@@ -43,6 +43,7 @@ public class ChatVecinalActivity extends AppCompatActivity implements SwipeRefre
     TextView tv_nuevapublicacion;
     ImageView img_settings, img_msjprivado;
     NetworkConnection nt_check;
+    String refresh = "100";
 
     // Toolbar
     TextView tv_titulo_toolbar;
@@ -59,41 +60,44 @@ public class ChatVecinalActivity extends AppCompatActivity implements SwipeRefre
         setContentView(R.layout.activity_chat_vecinal);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //video_pub = (ImageView) findViewById(R.id.img_video);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_chat);
+        //video_pub = findViewById(R.id.img_video);
+        Toolbar toolbar = findViewById(R.id.toolbar_chat);
         toolbar.setTitle("");
         toolbar.setSubtitle("");
         setSupportActionBar(toolbar);
 
-        btn_nueva_publicacion = (TextView) findViewById(R.id.btn_enviarreporte);
-        img_msjprivado = (ImageView) findViewById(R.id.img_msjprivado);
+        btn_nueva_publicacion = findViewById(R.id.btn_enviarreporte);
+        img_msjprivado = findViewById(R.id.img_msjprivado);
 
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
         // Toolbar
-        tv_titulo_toolbar = (TextView) findViewById(R.id.tv_titulo_toolbar);
+        tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_titulo_toolbar.setTypeface(tf);
-        btn_back = (ImageView) findViewById(R.id.btn_back);
+        btn_back = findViewById(R.id.btn_back);
 
-        tv_nuevapublicacion = (TextView) findViewById(R.id.btn_enviarreporte);
+        tv_nuevapublicacion = findViewById(R.id.btn_enviarreporte);
         tv_nuevapublicacion.setTypeface(tf);
 
         recyclerView = findViewById(R.id.recyclerView);
-        //btn_publicar = (Button) findViewById(R.id.btn_publicar);
+        //btn_publicar = findViewById(R.id.btn_publicar);
 
         Intent i= getIntent();
         idusuario = i.getStringExtra("idusuario");
+        refresh = i.getStringExtra("refresh");
         //Toast.makeText(getApplicationContext(), "Id: " + idusuario, Toast.LENGTH_LONG).show();
 
         llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(ChatVecinalActivity.this);
 
-        muestraMensaje();
+        if(refresh.equals("si")){
+            muestraMensaje();
+        }
 
-        img_settings = (ImageView) findViewById(R.id.img_settings);
+        img_settings = findViewById(R.id.img_settings);
         img_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,8 +174,12 @@ public class ChatVecinalActivity extends AppCompatActivity implements SwipeRefre
     @Override
     public void onRefresh() {
         Toast.makeText(getApplicationContext(), "Lista de publicaciones actualizada", Toast.LENGTH_LONG).show();
-        startActivity(getIntent());
+        //startActivity(getIntent());
         finish();
+        Intent btnredvecinal = new Intent(ChatVecinalActivity.this, ChatVecinalActivity.class);
+        btnredvecinal.putExtra("idusuario", idusuario);
+        btnredvecinal.putExtra("refresh", "no");
+        startActivity(btnredvecinal);
     }
 
     /**

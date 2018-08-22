@@ -1,20 +1,19 @@
 package com.vlim.puebla;
 
+import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,14 +32,11 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.List;
 
-public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class MensajesIPMActivity2 extends ListActivity{
 
-    private ListView listView;
+    ////private ListView listView;
     boolean myMessage = false;
-    private List<ChatBubble> ChatBubbles;
-    private ArrayAdapter<ChatBubble> adapter;
     String idusuario = "";
     JSONArray jsonArr;
     String JsonResponse = null;
@@ -49,26 +45,27 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
     TextView tv_titulo_toolbar;
     EditText msg_type;
     Button btn_chat_send;
-    ImageView btn_back;
+    ImageView btn_back, btn_refresh;
     private SwipeRefreshLayout swipeRefreshLayout;
     NetworkConnection nt_check;
     Contador counter;
     int tiempo = 30000;
+    ProgressDialog progressDialog;
 
+    ArrayList<Message> messages;
+    AwesomeAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        setContentView(R.layout.activity_mensajes_ipm);
+        setContentView(R.layout.activity_mensajes_ipm2);
         Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/BoxedBook.otf");
 
         Intent i= getIntent();
         idusuario = i.getStringExtra("idusuario");
 
-        ChatBubbles = new ArrayList<>();
-
-        listView = findViewById(R.id.list_msg);
+        ///listView = findViewById(R.id.list_msg);
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
         tv_titulo_toolbar.setTypeface(tf);
         msg_type = findViewById(R.id.msg_type);
@@ -76,13 +73,11 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
         btn_chat_send = findViewById(R.id.btn_chat_send);
         btn_chat_send.setTypeface(tf);
         btn_back = findViewById(R.id.btn_back);
+        btn_refresh = findViewById(R.id.btn_refresh);
 
         //set ListView adapter first
-        adapter = new MessageAdapter(this, R.layout.left_chat_bubble, ChatBubbles);
-        listView.setAdapter(adapter);
-
-        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(MensajesIPMActivity.this);
+        /*adapter = new MessageAdapter(this, R.layout.left_chat_bubble, ChatBubbles);
+        listView.setAdapter(adapter);*/
 
         // contador
         nt_check = new NetworkConnection(getApplicationContext());
@@ -92,6 +87,8 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
         }else{
             Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
         }
+
+        obtieneComentarios();
 
         btn_chat_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +131,13 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
             }
         });
 
-        obtieneComentarios();
+        btn_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(getIntent());
+                finish();
+            }
+        });
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,6 +226,13 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
     }
 
     private void obtieneComentarios() {
+        progressDialog = new ProgressDialog(MensajesIPMActivity2.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Leyendo mensajes...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
         JSONObject post_dict = new JSONObject();
         try {
             post_dict.put("idusr", idusuario);
@@ -255,6 +265,8 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
                         Log.i("VOLLEYresponse", response);
 
                         leeMensajes(response);
+
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -291,12 +303,14 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
     private void leeMensajes(String response) {
         Log.i("mensajesecre", response);
         String autorIPM = null;
+        messages = new ArrayList<Message>();
         try {
             JSONArray array = new JSONArray(response);
-            JSONObject obj;
+            JSONObject objZero, obj;
 
-            obj = array.getJSONObject(0);
-            autorIPM = obj.getString("autor");
+            objZero = array.getJSONObject(0);
+            autorIPM = objZero.getString("autor");
+
             Log.d(TAG, "autor IPM: " + autorIPM);
 
             for (int i = 0; i < array.length(); i++) {
@@ -309,7 +323,7 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
                 //Log.i("secre", id_mensaje_conv + ", " + conversacion + ", " + id_conversacion + ", " + autor);
                 //Log.d(TAG, "lado autor: " + Integer.valueOf(autor));
 
-                if(autor.equals(autorIPM)){
+                /*if(autor.equals(autorIPM)){
                     Log.d(TAG, "bubble IPM. left: " + conversacion);
                     ChatBubble ChatBubble = new ChatBubble(conversacion, true, "left");
                     ChatBubbles.add(ChatBubble);
@@ -322,42 +336,37 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
                     ChatBubbles.add(ChatBubble);
                     adapter.notifyDataSetChanged();
                     msg_type.setText("");
+                }*/
+
+                if(autor.equals(autorIPM)){
+                   messages.add(new Message(conversacion, false));
+
+                }
+                else{
+                    messages.add(new Message(conversacion, true));
                 }
 
-            }
+            } // for
+
+            adapter = new AwesomeAdapter(getApplicationContext(), messages);
+            setListAdapter(adapter);
+
+            /*messages.add(new Message("Hello", false));
+            messages.add(new Message("Hi!", true));
+            messages.add(new Message("Wassup??", false));
+            messages.add(new Message("nothing much, working on speech bubbles.", true));
+            messages.add(new Message("you say!", true));
+            messages.add(new Message("oh thats great. how are you showing them", false));*/
+            progressDialog.dismiss();
 
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
+
     @Override
     public void onBackPressed() { }
-
-    @Override
-    public void onRefresh() {
-        //Toast.makeText(getApplicationContext(), "Mensajes actualizados", Toast.LENGTH_LONG).show();
-        startActivity(getIntent());
-        finish();
-    }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_chatvecinal, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.action_regresar:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }*/
 
     public class Contador extends CountDownTimer {
 
@@ -380,35 +389,4 @@ public class MensajesIPMActivity extends AppCompatActivity implements SwipeRefre
         }
 
     }
-
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy");
-
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onPause() {
-        Log.d(TAG, "onPause");
-        counter.cancel();
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        Log.d(TAG, "onStop");
-
-        super.onStop();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d(TAG, "onRestart");
-        counter = new Contador(tiempo,1000);
-        counter.start();
-        super.onStop();
-    }
-
 }

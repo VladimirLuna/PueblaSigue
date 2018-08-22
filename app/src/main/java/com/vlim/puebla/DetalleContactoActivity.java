@@ -68,8 +68,7 @@ public class DetalleContactoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         DetalleContactoActivity.this);
-                //builder.setTitle("DoxSteel");
-                builder.setTitle(Html.fromHtml("<font color='#303F9F'>DoxSteel</font>"));
+                builder.setTitle(Html.fromHtml("<font color='#303F9F'>Atención</font>"));
                 builder.setMessage(Html.fromHtml("<font color='black'>¿Estás seguro que deseas eliminar este contacto de emergencia?</font>"));
                 builder.setNegativeButton("Si",
                         new DialogInterface.OnClickListener() {

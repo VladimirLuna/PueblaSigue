@@ -207,7 +207,7 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
             String celContacto = jsonObject.getString("celContacto");
             String correoContacto = jsonObject.getString("correoContacto");
             String condicionMedica = jsonObject.getString("condicionMedica");
-            String comunidad = jsonObject.getString("comunidad");
+            int comunidad = Integer.valueOf(jsonObject.getString("comunidad"));
             String usrregistra = jsonObject.getString("usrregistra");
 
             jsonBody.put("isdep", isdep);
