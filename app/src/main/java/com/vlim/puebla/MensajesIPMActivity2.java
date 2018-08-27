@@ -134,8 +134,12 @@ public class MensajesIPMActivity2 extends ListActivity{
         btn_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(getIntent());
+                /*startActivity(getIntent());
+                finish();*/
                 finish();
+                Intent secretarioIntent = new Intent(MensajesIPMActivity2.this, MensajesIPMActivity2.class);
+                secretarioIntent.putExtra("idusuario", idusuario);
+                startActivity(secretarioIntent);
             }
         });
 
@@ -301,17 +305,12 @@ public class MensajesIPMActivity2 extends ListActivity{
     }
 
     private void leeMensajes(String response) {
-        Log.i("mensajesecre", response);
+        //Log.i("mensajesecre", response);
         String autorIPM = null;
         messages = new ArrayList<Message>();
         try {
             JSONArray array = new JSONArray(response);
-            JSONObject objZero, obj;
-
-            objZero = array.getJSONObject(0);
-            autorIPM = objZero.getString("autor");
-
-            Log.d(TAG, "autor IPM: " + autorIPM);
+            JSONObject obj;
 
             for (int i = 0; i < array.length(); i++) {
                 obj = array.getJSONObject(i);
@@ -320,8 +319,8 @@ public class MensajesIPMActivity2 extends ListActivity{
                 conversacion = obj.getString("conversacion");
                 autor = obj.getString("autor");
 
-                //Log.i("secre", id_mensaje_conv + ", " + conversacion + ", " + id_conversacion + ", " + autor);
-                //Log.d(TAG, "lado autor: " + Integer.valueOf(autor));
+                Log.i("secre", id_mensaje_conv + ", " + conversacion + ", " + id_conversacion + ", " + autor);
+                Log.d(TAG, "lado autor: " + Integer.valueOf(autor));
 
                 /*if(autor.equals(autorIPM)){
                     Log.d(TAG, "bubble IPM. left: " + conversacion);
@@ -338,12 +337,11 @@ public class MensajesIPMActivity2 extends ListActivity{
                     msg_type.setText("");
                 }*/
 
-                if(autor.equals(autorIPM)){
-                   messages.add(new Message(conversacion, false));
-
+                if(autor.equals(idusuario)){
+                   messages.add(new Message(conversacion, true));
                 }
                 else{
-                    messages.add(new Message(conversacion, true));
+                    messages.add(new Message(conversacion, false));
                 }
 
             } // for
@@ -351,12 +349,6 @@ public class MensajesIPMActivity2 extends ListActivity{
             adapter = new AwesomeAdapter(getApplicationContext(), messages);
             setListAdapter(adapter);
 
-            /*messages.add(new Message("Hello", false));
-            messages.add(new Message("Hi!", true));
-            messages.add(new Message("Wassup??", false));
-            messages.add(new Message("nothing much, working on speech bubbles.", true));
-            messages.add(new Message("you say!", true));
-            messages.add(new Message("oh thats great. how are you showing them", false));*/
             progressDialog.dismiss();
 
         }catch (Exception e){
@@ -379,7 +371,10 @@ public class MensajesIPMActivity2 extends ListActivity{
             Log.d(TAG, "Terminando de contar");
             // Reload
             finish();
-            startActivity(getIntent());
+            //startActivity(getIntent());
+            Intent secretarioIntent = new Intent(MensajesIPMActivity2.this, MensajesIPMActivity2.class);
+            secretarioIntent.putExtra("idusuario", idusuario);
+            startActivity(secretarioIntent);
 
         }
 
@@ -388,5 +383,35 @@ public class MensajesIPMActivity2 extends ListActivity{
             //Log.d(TAG, "Contando " + (millisUntilFinished/1000));
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop");
+        Log.d(TAG, "deteniendo contador");
+        counter.cancel();
+        super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart");
+        //counter = new Contador(tiempo,1000);
+        Log.d(TAG, "Reiniciando contador");
+        counter.start();
+        super.onStop();
     }
 }

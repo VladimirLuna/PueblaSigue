@@ -62,7 +62,7 @@
                 android:layout_below="@+id/tv_correo"
                 android:ems="10"
                 android:inputType="text|textCapWords|textAutoComplete|textPersonName"
-                android:maxLength="40" />
+                android:maxLength="35" />
 
             <EditText
                 android:id="@+id/et_domicilio"

@@ -70,7 +70,8 @@
                 android:layout_below="@+id/tv_correo"
                 android:layout_centerHorizontal="true"
                 android:ems="10"
-                android:inputType="text|textCapWords|textPersonName" />
+                android:inputType="text|textCapWords|textPersonName"
+                android:maxLength="35" />
 
             <EditText
                 android:id="@+id/et_password"
@@ -80,7 +81,8 @@
                 android:layout_alignStart="@+id/tv_pass"
                 android:layout_below="@+id/tv_pass"
                 android:ems="10"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:maxLength="10" />
 
             <TextView
                 android:id="@+id/tv_numidentificacion"
@@ -100,7 +102,8 @@
                 android:layout_alignStart="@+id/tv_numidentificacion"
                 android:layout_below="@+id/tv_numidentificacion"
                 android:ems="10"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:maxLength="10" />
 
             <TextView
                 android:id="@+id/tv_correocontacto"
@@ -126,11 +129,11 @@
                 android:id="@+id/btn_guardaregistro"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_alignStart="@+id/tv_numidentificacion"
                 android:layout_below="@+id/et_correocontacto"
-                android:background="@drawable/boton_naranja_circular"
-                android:padding="5dp"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/boton_naranja_circular"
+                android:padding="10dp"
                 android:src="@drawable/enviar"
                 app:srcCompat="@drawable/enviar" />
 

@@ -26,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegistroUsuarioActivity extends AppCompatActivity {
 
@@ -139,20 +141,26 @@ public class RegistroUsuarioActivity extends AppCompatActivity {
                     if(nombreCompleto.length() < 1){
                         et_nombre.setError("Escriba el nombre.");
                     }
-                    else if(domicilio.length() < 1){
-                        et_domicilio.setError("Escriba el nombre.");
+                    else if(domicilio.length() <= 5){
+                        et_domicilio.setError("Escriba el domicilio.");
                     }
-                    else if(celular.length() < 1){
-                        et_celular.setError("Escriba el nombre.");
+                    else if(celular.length() <= 5){
+                        et_celular.setError("Teléfono celular no válido.");
                     }
                     else{
-                        Log.i(TAG, "Envio OK");
-                        Intent datosCuentaIntent = new Intent(RegistroUsuarioActivity.this, RegistroUsuarioActivity2.class);
-                        datosCuentaIntent.putExtra("nombrecompleto", nombreCompleto);
-                        datosCuentaIntent.putExtra("domicilio", domicilio);
-                        datosCuentaIntent.putExtra("telefono", telefono);
-                        datosCuentaIntent.putExtra("celular", celular);
-                        startActivity(datosCuentaIntent);
+                        if(!validaNombre(nombreCompleto)){
+                            Log.d(TAG, "Error, nombre con caracteres no válidos");
+                            et_nombre.setError("Nombre incorrecto");
+                        }
+                        else{
+                            Log.i(TAG, "Datos correctos");
+                            Intent datosCuentaIntent = new Intent(RegistroUsuarioActivity.this, RegistroUsuarioActivity2.class);
+                            datosCuentaIntent.putExtra("nombrecompleto", nombreCompleto);
+                            datosCuentaIntent.putExtra("domicilio", domicilio);
+                            datosCuentaIntent.putExtra("telefono", telefono);
+                            datosCuentaIntent.putExtra("celular", celular);
+                            startActivity(datosCuentaIntent);
+                        }
                     }
                 }else{
                     Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
@@ -166,6 +174,18 @@ public class RegistroUsuarioActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    // valida nombres
+    public static boolean validaNombre( String nombre )
+    {
+        ///String regx = "^[a-zA-Z]+[\\-'\\s]?[a-zA-Z]+$";
+        //String regx = "^[A-Za-z]+[\\-'\\s]?[a-zA-Z]{3,35}$";
+        String regx = "^[a-zA-Z\\sáéíóúñüàèñ]{3,35}$";
+
+        Pattern pattern = Pattern.compile(regx,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(nombre);
+        return matcher.find();
     }
 
     @Override

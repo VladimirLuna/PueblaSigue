@@ -194,7 +194,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="20dp"
                 android:layout_below="@+id/tv_nuevousr5"
-                android:layout_marginBottom="35dp" />
+                android:layout_marginBottom="35dp"
+                android:visibility="invisible" />
 
             <VideoView
                 android:id="@+id/videoPreview"
@@ -213,7 +214,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/colorAccent"
-                android:textSize="18dp" />
+                android:textSize="18dp"
+                android:visibility="invisible" />
 
             <!-- ImageView
                 android:id="@+id/Videoprev2"

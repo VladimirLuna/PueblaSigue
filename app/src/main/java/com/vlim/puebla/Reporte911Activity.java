@@ -45,7 +45,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -127,8 +126,8 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
     String responseStringIncidencia = null;
     String responseStringIncidenciaArchivos = null;
     String latitud, longitud;
-    private ProgressBar progressBar;
-    private TextView txtPercentage;
+    ////private ProgressBar progressBar;
+    ////private TextView txtPercentage;
     ProgressDialog progressDialogLista, progressDialogEnvio, progressDialogVideo, progressDialogVideoGal;
     ProgressDialog progressDialog;
     String responseString911 = null;
@@ -193,8 +192,8 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         audioFile = new File(Environment.getExternalStorageDirectory(),
                 "/Music/audio_puebla.mp3");
 
-        progressBar = findViewById(R.id.progressBar911);
-        progressBar.setVisibility(View.INVISIBLE);
+        /*progressBar = findViewById(R.id.progressBar911);
+        progressBar.setVisibility(View.INVISIBLE);*/
 
         // obtiene posicion
         locationManager = (LocationManager) getSystemService(Service.LOCATION_SERVICE);
@@ -236,8 +235,8 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             btn_audio = findViewById(R.id.btn_audio);
             btn_stop = findViewById(R.id.btn_stop);
             btn_play = findViewById(R.id.btn_play);
-            txtPercentage = findViewById(R.id.txtPercentage);
-            txtPercentage.setTypeface(tf);
+            /*txtPercentage = findViewById(R.id.txtPercentage);
+            txtPercentage.setTypeface(tf);*/
 
             img_fotos = findViewById(R.id.img_fotos);
 
@@ -484,13 +483,13 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
     }
 
     private void enviaReporte911() {
-        progressDialog = new ProgressDialog(Reporte911Activity.this);
+        /*progressDialog = new ProgressDialog(Reporte911Activity.this);
         progressDialog.setCancelable(false);
         //progressDialog.setMessage("Enviando Denuncia. Por favor espere. \n No olvides notar tu folio para futuras aclaraciones.");
         progressDialog.setMessage("Enviando Reporte. Por favor espere.");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setProgress(0);
-        progressDialog.show();
+        progressDialog.show();*/
 
         userSQLiteHelper mediadbh =
                 new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
@@ -1238,7 +1237,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         }
     }
 
-    public class VideoCompressAsyncTask extends AsyncTask<String, String, String> {
+    public class VideoCompressAsyncTask extends AsyncTask<String, Integer, String> {
 
         Context mContext;
 
@@ -1257,6 +1256,11 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
             //dialog compressing...
             super.onPreExecute();
         }
+
+        /*@Override
+        protected void onProgressUpdate(Integer... progress) {
+            progressDialog.setProgress(progress[0]);
+        }*/
 
         @Override
         protected String doInBackground(String... strings) {
@@ -1314,23 +1318,32 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         @Override
         protected void onPreExecute() {
             // setting progress bar to zero
-            progressBar.setProgress(0);
+            ////progressBar.setProgress(0);
             //super.onPreExecute();
             et_descripcion.setEnabled(false);
             btn_enviar.setEnabled(false);
             btn_enviar.getBackground().setAlpha(100);
+
+            progressDialog = new ProgressDialog(Reporte911Activity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Enviando Reporte. Por favor espere.");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setProgress(0);
+            progressDialog.show();
         }
 
         @Override
         protected void onProgressUpdate(Integer... progress) {
             // Making progress bar visible
-            progressBar.setVisibility(View.VISIBLE);
+            /*progressBar.setVisibility(View.VISIBLE);
 
             // updating progress bar value
             progressBar.setProgress(progress[0]);
 
             // updating percentage value
-            txtPercentage.setText(String.valueOf(progress[0]) + "% completado");
+            txtPercentage.setText(String.valueOf(progress[0]) + "% completado");*/
+
+            progressDialog.setProgress(progress[0]);
         }
 
         protected String doInBackground(String... params) {
@@ -1389,7 +1402,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         @Override
         protected void onPostExecute(String result) {
             Log.i(TAG, "Response from server: " + result);
-            progressBar.setVisibility(View.INVISIBLE);
+            //////progressBar.setVisibility(View.INVISIBLE);
             // showing the server response in an alert dialog
 
             try {
@@ -1426,22 +1439,31 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         @Override
         protected void onPreExecute() {
             // setting progress bar to zero
-            progressBar.setProgress(0);
+           //// progressBar.setProgress(0);
             //super.onPreExecute();
             et_descripcion.setEnabled(false);
             et_descripcion.setFocusable(false);
             btn_enviar.setEnabled(false);
             btn_enviar.getBackground().setAlpha(100);
+
+            progressDialog = new ProgressDialog(Reporte911Activity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Enviando Reporte. Por favor espere.");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setProgress(0);
+            progressDialog.show();
         }
 
         @Override
         protected void onProgressUpdate(Integer... progress) {
             // Making progress bar visible
-            progressBar.setVisibility(View.VISIBLE);
+           /* progressBar.setVisibility(View.VISIBLE);
             // updating progress bar value
             progressBar.setProgress(progress[0]);
             // updating percentage value
-            txtPercentage.setText(String.valueOf(progress[0]) + "% completado");
+            txtPercentage.setText(String.valueOf(progress[0]) + "% completado");*/
+
+            progressDialog.setProgress(progress[0]);
         }
 
         protected String doInBackground(String... params) {
@@ -1570,7 +1592,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
         @Override
         protected void onPostExecute(String result) {
             Log.i(TAG, "Response from server: " + result);
-            progressBar.setVisibility(View.INVISIBLE);
+            ////progressBar.setVisibility(View.INVISIBLE);
             // showing the server response in an alert dialog
 
             try {

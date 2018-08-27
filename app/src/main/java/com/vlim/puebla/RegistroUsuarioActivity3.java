@@ -30,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegistroUsuarioActivity3 extends AppCompatActivity {
 
@@ -130,8 +132,14 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
                     }
 
                     if(flag==1){
-                        Log.i(TAG, "Prepara envio de registro de usuario");
-                        preparaRegistroNuevoUsuario();
+                        if(!validaNombre(nombrecontacto)){
+                            Log.d(TAG, "Error, nombre con caracteres no válidos");
+                            et_nombrecomp.setError("Nombre incorrecto");
+                        }
+                        else{
+                            Log.i(TAG, "Prepara envio de registro de usuario");
+                            preparaRegistroNuevoUsuario();
+                        }
                     }
 
                 }else{
@@ -147,6 +155,15 @@ public class RegistroUsuarioActivity3 extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    // valida nombres
+    public static boolean validaNombre( String nombre )
+    {
+        String regx = "^[a-zA-Z\\sáéíóúñüàèñ]{3,35}$";
+        Pattern pattern = Pattern.compile(regx,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(nombre);
+        return matcher.find();
     }
 
     private void preparaRegistroNuevoUsuario() {

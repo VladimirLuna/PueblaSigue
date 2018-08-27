@@ -38,6 +38,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/message_field"
                     android:hint="Escribe aquí"
+                    android:inputType="text|textCapSentences|textAutoCorrect|textAutoComplete"
                     android:padding="5sp"
                     android:textColor="@color/textFieldColor" />
 

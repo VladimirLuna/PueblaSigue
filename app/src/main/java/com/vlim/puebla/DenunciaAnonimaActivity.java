@@ -45,7 +45,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -127,8 +126,8 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
     String responseStringIncidencia = null;
     String responseStringIncidenciaArchivos = null;
     String latitud, longitud;
-    private ProgressBar progressBar;
-    private TextView txtPercentage;
+    /*private ProgressBar progressBar;
+    private TextView txtPercentage;*/
     ProgressDialog progressDialogLista, progressDialogEnvio, progressDialogVideo, progressDialogVideoGal;
     ProgressDialog progressDialog;
     String responseStringAnonima = null;
@@ -192,8 +191,8 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
         audioFile = new File(Environment.getExternalStorageDirectory(),
                 "audio_puebla.mp3");
 
-        progressBar = findViewById(R.id.progressBar911);
-        progressBar.setVisibility(View.INVISIBLE);
+       /* progressBar = findViewById(R.id.progressBar911);
+        progressBar.setVisibility(View.INVISIBLE);*/
 
         // obtiene posicion
         locationManager = (LocationManager) getSystemService(Service.LOCATION_SERVICE);
@@ -235,8 +234,8 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
             btn_audio = findViewById(R.id.btn_audio);
             btn_stop = findViewById(R.id.btn_stop);
             btn_play = findViewById(R.id.btn_play);
-            txtPercentage = findViewById(R.id.txtPercentage);
-            txtPercentage.setTypeface(tf);
+            /*txtPercentage = findViewById(R.id.txtPercentage);
+            txtPercentage.setTypeface(tf);*/
 
             img_fotos = findViewById(R.id.img_fotos);
 
@@ -480,7 +479,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
         progressDialogLista = new ProgressDialog(DenunciaAnonimaActivity.this);
         progressDialogLista.setCancelable(false);
         progressDialogLista.setMessage("Obteniendo información...");
-        progressDialogLista.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialogLista.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialogLista.setProgress(0);
         progressDialogLista.show();
 
@@ -580,16 +579,9 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
     }
 
     private void enviaDenunciaAnonima() {
-        progressDialog = new ProgressDialog(DenunciaAnonimaActivity.this);
-        progressDialog.setCancelable(false);
-        //progressDialog.setMessage("Enviando Denuncia. Por favor espere. \n No olvides notar tu folio para futuras aclaraciones.");
-        progressDialog.setMessage("Enviando Reporte. Por favor espere.");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setProgress(0);
-        progressDialog.show();
 
         userSQLiteHelper mediadbh =
-                new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, 5);
+                new userSQLiteHelper(getApplicationContext(), "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = mediadbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM Media", null);
         if (c.moveToFirst()) {
@@ -627,23 +619,32 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
         @Override
         protected void onPreExecute() {
             // setting progress bar to zero
-            progressBar.setProgress(0);
+           /// progressBar.setProgress(0);
             //super.onPreExecute();
             et_descripcion.setEnabled(false);
             btn_enviar.setEnabled(false);
             btn_enviar.getBackground().setAlpha(100);
+
+            progressDialog = new ProgressDialog(DenunciaAnonimaActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Enviando Reporte. Por favor espere.");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setProgress(0);
+            progressDialog.show();
         }
 
         @Override
         protected void onProgressUpdate(Integer... progress) {
             // Making progress bar visible
-            progressBar.setVisibility(View.VISIBLE);
+            /*progressBar.setVisibility(View.VISIBLE);
 
             // updating progress bar value
             progressBar.setProgress(progress[0]);
 
             // updating percentage value
-            txtPercentage.setText(String.valueOf(progress[0]) + "% completado");
+            txtPercentage.setText(String.valueOf(progress[0]) + "% completado");*/
+
+            progressDialog.setProgress(progress[0]);
         }
 
         protected String doInBackground(String... params) {
@@ -702,7 +703,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
         @Override
         protected void onPostExecute(String result) {
             Log.i(TAG, "Response from server: " + result);
-            progressBar.setVisibility(View.INVISIBLE);
+            ////progressBar.setVisibility(View.INVISIBLE);
             // showing the server response in an alert dialog
 
             try {
@@ -739,22 +740,31 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
         @Override
         protected void onPreExecute() {
             // setting progress bar to zero
-            progressBar.setProgress(0);
+            ////progressBar.setProgress(0);
             //super.onPreExecute();
             et_descripcion.setEnabled(false);
             et_descripcion.setFocusable(false);
             btn_enviar.setEnabled(false);
             btn_enviar.getBackground().setAlpha(100);
+
+            progressDialog = new ProgressDialog(DenunciaAnonimaActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Enviando Reporte. Por favor espere.");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setProgress(0);
+            progressDialog.show();
         }
 
         @Override
         protected void onProgressUpdate(Integer... progress) {
             // Making progress bar visible
-            progressBar.setVisibility(View.VISIBLE);
+            ////progressBar.setVisibility(View.VISIBLE);
             // updating progress bar value
-            progressBar.setProgress(progress[0]);
+            ///progressBar.setProgress(progress[0]);
             // updating percentage value
-            txtPercentage.setText(String.valueOf(progress[0]) + "% completado");
+            ////txtPercentage.setText(String.valueOf(progress[0]) + "% completado");
+
+            progressDialog.setProgress(progress[0]);
         }
 
         protected String doInBackground(String... params) {
@@ -874,7 +884,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
         @Override
         protected void onPostExecute(String result) {
             Log.i(TAG, "Response from server: " + result);
-            progressBar.setVisibility(View.INVISIBLE);
+            ////progressBar.setVisibility(View.INVISIBLE);
             // showing the server response in an alert dialog
 
             try {

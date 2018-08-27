@@ -30,7 +30,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -82,8 +81,6 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
     ImageView btn_camara, btn_video, btn_galeria;
     Uri selectedImage;
     Bitmap photo;
-    /*private ProgressBar miprogress;
-    private ObjectAnimator anim;*/
     Bitmap fotoBitmap, galeriaBitmap, videoBitmap;
     String titulopub, descripcionpub;
     // Camera activity request codes
@@ -103,9 +100,9 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
     public static final int MEDIA_TYPE_VIDEO = 2;
     private Uri fileUri; // file url to store image/video
 
-    private ProgressBar progressBar;
+    //private ProgressBar progressBar;
     private String filePath = null;
-    private TextView txtPercentage;
+    //private TextView txtPercentage;
     private ImageView imgPreview, imageCameraPreview;
     private VideoView vidPreview;
     private Button btnUpload;
@@ -146,10 +143,10 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         //miprogress = (ProgressBar) findViewById(R.id.circularProgress);
 
         /* Aproximacion 2 */
-        txtPercentage = findViewById(R.id.txtPercentage);
+        //txtPercentage = findViewById(R.id.txtPercentage);
         ////btnUpload = findViewById(R.id.btnUpload);
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
+        /*progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);*/
         /// --------------------------------------------------------------
 
         Intent i= getIntent();
@@ -171,8 +168,8 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         tv_videocapturadogal = findViewById(R.id.tv_videocapturadogal);
         tv_videocapturadogal.setVisibility(View.INVISIBLE);
         tv_videocapturadogal.setTypeface(tf);
-        txtPercentage = findViewById(R.id.txtPercentage);
-        txtPercentage.setTypeface(tf);
+        /*txtPercentage = findViewById(R.id.txtPercentage);
+        txtPercentage.setTypeface(tf);*/
 
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
@@ -870,13 +867,12 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(NuevaPublicacionActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setMessage("Enviando Publicación. Por favor espere.");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setProgress(0);
             progressDialog.show();
 
-            //
             // setting progress bar to zero
-            progressBar.setProgress(0);
+            //progressBar.setProgress(0);
             //super.onPreExecute();
 
             et_titulopub.setEnabled(false);
@@ -890,13 +886,13 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Integer... progress) {
             // Making progress bar visible
-            progressBar.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.VISIBLE);
 
             // updating progress bar value
-            progressBar.setProgress(progress[0]);
+           // progressBar.setProgress(progress[0]);
 
-            // updating percentage value
-            txtPercentage.setText(String.valueOf(progress[0]) + "% completado");
+            progressDialog.setProgress(progress[0]);
+
         }
 
         @SuppressWarnings("deprecation")
@@ -1111,11 +1107,11 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(NuevaPublicacionActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setMessage("Enviando Publicación. Por favor espere.");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setProgress(0);
             progressDialog.show();
             // setting progress bar to zero
-            progressBar.setProgress(0);
+            ////progressBar.setProgress(0);
             //super.onPreExecute();
 
             et_titulopub.setEnabled(false);
@@ -1129,13 +1125,14 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Integer... progress) {
             // Making progress bar visible
-            progressBar.setVisibility(View.VISIBLE);
+            ///progressBar.setVisibility(View.VISIBLE);
 
             // updating progress bar value
-            progressBar.setProgress(progress[0]);
+           //// progressBar.setProgress(progress[0]);
+            progressDialog.setProgress(progress[0]);
 
             // updating percentage value
-            txtPercentage.setText(String.valueOf(progress[0]) + "% completado");
+           ////txtPercentage.setText(String.valueOf(progress[0]) + "% completado");
         }
 
         @SuppressWarnings("deprecation")
@@ -1274,7 +1271,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(NuevaPublicacionActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setMessage("Comprimiendo video...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setProgress(0);
             progressDialog.show();
             //dialog compressing...
