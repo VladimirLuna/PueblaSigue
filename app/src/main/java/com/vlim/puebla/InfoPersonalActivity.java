@@ -36,6 +36,8 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class InfoPersonalActivity extends AppCompatActivity {
 
@@ -163,10 +165,34 @@ public class InfoPersonalActivity extends AppCompatActivity {
                     et_num_identificacion.setError("Debes escribir tu número de identificación.");
                 }
                 else{
-                    preparaInfo(idusuario, direccion, telefono_casa, celular, id_identificacion, num_identificacion, condicion_med);
+                    if(validaTelefono(celular)){
+                        Log.d(TAG, "Telefono valido!");
+                        if(validaTelefono(telefono_casa)){
+                            Log.d(TAG, "Telefono valido!");
+
+                            preparaInfo(idusuario, direccion, telefono_casa, celular, id_identificacion, num_identificacion, condicion_med);
+                        }
+                        else{
+                            Log.d(TAG, "Telefono No valido!");
+                            et_telefono.setError("Teléfono no válido");
+                        }
+                    }
+                    else{
+                        Log.d(TAG, "Telefono No valido!");
+                        et_celular.setError("Teléfono no válido");
+                    }
                 }
             }
         });
+    }
+
+    public static boolean validaTelefono( String tel )
+    {
+        String regx = "^[0-9]{5,10}$";
+
+        Pattern pattern = Pattern.compile(regx,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(tel);
+        return matcher.find();
     }
 
     private void preparaInfo(String idusr, String direccion, String telefono_casa, String celular, String id_identificacion, String num_identificacion, String condicion_medica) {

@@ -30,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EditarContactoActivity extends AppCompatActivity {
 
@@ -105,9 +107,38 @@ public class EditarContactoActivity extends AppCompatActivity {
                 else if(correo.length() < 1){
                     et_correo.setError("Escribe el correo electrónico de tu contacto");
                 }
-                else{
+                /*else{
                     // Envia parámetros
                     preparaContacto(id_contacto, nombre, telefono, celular, correo);
+                }*/
+                else{
+                    if(!validaNombre(nombre)){
+                        Log.d(TAG, "Error, nombre con caracteres no válidos");
+                        et_nombre.setError("Nombre incorrecto");
+                    }
+                    else{
+                        Log.i(TAG, "Datos correctos");
+                        if(validaTelefono(telefono)){
+                            Log.d(TAG, "Telefono valido");
+                            if(validaTelefono(celular)){
+                                Log.d(TAG, "Celular valido");
+
+                                if(!isEmailValid(correo)){
+                                    et_correo.setError("Ingresa un correo electrónico válido.");
+                                }
+                                else{
+                                    // Envia parámetros
+                                    preparaContacto(id_contacto, nombre, telefono, celular, correo);
+                                }
+                            }
+                            else{
+                                et_celular.setError("Teléfono celular no válido");
+                            }
+                        }
+                        else{
+                            et_telefono.setError("Teléfono no válido");
+                        }
+                    }
                 }
             }
         });
@@ -119,6 +150,30 @@ public class EditarContactoActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public static boolean validaTelefono( String tel )
+    {
+        String regx = "^[0-9]{5,10}$";
+
+        Pattern pattern = Pattern.compile(regx,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(tel);
+        return matcher.find();
+    }
+
+    public static boolean validaNombre( String nombre )
+    {
+        String regx = "^[a-zA-Z\\sáéíóúñüàèñ]{3,35}$";
+        Pattern pattern = Pattern.compile(regx,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(nombre);
+        return matcher.find();
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     private void preparaContacto(String idcontacto, String nombre, String tel, String cel, String correo) {

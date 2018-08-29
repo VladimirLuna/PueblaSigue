@@ -153,13 +153,19 @@ public class RegistroUsuarioActivity extends AppCompatActivity {
                             et_nombre.setError("Nombre incorrecto");
                         }
                         else{
-                            Log.i(TAG, "Datos correctos");
-                            Intent datosCuentaIntent = new Intent(RegistroUsuarioActivity.this, RegistroUsuarioActivity2.class);
-                            datosCuentaIntent.putExtra("nombrecompleto", nombreCompleto);
-                            datosCuentaIntent.putExtra("domicilio", domicilio);
-                            datosCuentaIntent.putExtra("telefono", telefono);
-                            datosCuentaIntent.putExtra("celular", celular);
-                            startActivity(datosCuentaIntent);
+                            if(!validaTelefono(celular)){
+                                et_celular.setError("Teléfono celular no válido");
+                                }
+                                else{
+                                    Log.i(TAG, "Datos correctos");
+                                    Intent datosCuentaIntent = new Intent(RegistroUsuarioActivity.this, RegistroUsuarioActivity2.class);
+                                    datosCuentaIntent.putExtra("nombrecompleto", nombreCompleto);
+                                    datosCuentaIntent.putExtra("domicilio", domicilio);
+                                    datosCuentaIntent.putExtra("telefono", telefono);
+                                    datosCuentaIntent.putExtra("celular", celular);
+                                    startActivity(datosCuentaIntent);
+                                }
+
                         }
                     }
                 }else{
@@ -179,12 +185,17 @@ public class RegistroUsuarioActivity extends AppCompatActivity {
     // valida nombres
     public static boolean validaNombre( String nombre )
     {
-        ///String regx = "^[a-zA-Z]+[\\-'\\s]?[a-zA-Z]+$";
-        //String regx = "^[A-Za-z]+[\\-'\\s]?[a-zA-Z]{3,35}$";
         String regx = "^[a-zA-Z\\sáéíóúñüàèñ]{3,35}$";
-
         Pattern pattern = Pattern.compile(regx,Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(nombre);
+        return matcher.find();
+    }
+
+    public static boolean validaTelefono( String tel )
+    {
+        String regx = "^[0-9]{5,10}$";
+        Pattern pattern = Pattern.compile(regx,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(tel);
         return matcher.find();
     }
 
