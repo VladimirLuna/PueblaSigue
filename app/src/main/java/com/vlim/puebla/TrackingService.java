@@ -1,6 +1,10 @@
 package com.vlim.puebla;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,6 +14,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,7 +38,7 @@ public class TrackingService extends Service {
 
     private static final String TAG = "PUEBLA";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 30000; // 5 minutos 300000
+    private static final int LOCATION_INTERVAL = 10000; // 1 minuto 60000      5 minutos 300000ms
     private static final float LOCATION_DISTANCE = 100f;
     int contador = 0;
     String idviaje = "0", nombreUsr;
@@ -42,13 +47,22 @@ public class TrackingService extends Service {
     String JsonResponse = null;
     Context context;
     String idusuario;
-    SmsManager sms = SmsManager.getDefault();
+
+    final static String ACTION = "NotifyServiceAction";
+    final static String STOP_SERVICE = "";
+    final static int RQS_STOP_SERVICE = 1;
+    private static final int MY_NOTIFICATION_ID=1;
+    private NotificationManager notificationManager;
+    private Notification myNotification;
+
+    NotifyServiceReceiver notifyServiceReceiver;
+
 
     private class LocationListener implements android.location.LocationListener{
         Location mLastLocation;
         public LocationListener(String provider)
         {
-            Log.i(TAG, "LocationListener " + provider);
+            Log.i(TAG, "LocationListener, provider: " + provider);
             mLastLocation = new Location(provider);
         }
 
@@ -63,47 +77,13 @@ public class TrackingService extends Service {
             lastLatitude = String.valueOf(location.getLatitude());
             lastLongitude = String.valueOf(location.getLongitude());
 
-            /*File gpsTxt = new File(Environment.getExternalStorageDirectory() + "/" + getResources().getString(R.string.external_dir) + "/");
-            File gpxfile = new File(gpsTxt, "tracking.txt");
-            try{
-                if(!gpsTxt.exists()){
-                    System.out.println("We had to make a new file.");
-                    gpsTxt.createNewFile();
-                }
-                FileWriter writer = null;
-                try {
-                    writer = new FileWriter(gpxfile, true);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    if(location.getProvider().equals("gps")){
-                        String fecha = new SimpleDateFormat("dd/MM/yyyy_HH:mm:ss", Locale.getDefault()).format(new Date());
-                        writer.append(contador + "," + fecha + ", " + location.getProvider() + ", " + location.getLatitude() +
-                                ", " + location.getLongitude() + ", " + location.getSpeed()*3.6 + "\n");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    writer.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }catch(IOException e) {
-                System.out.println("COULD NOT LOG!!");
-            }*/
+            bufferRuta();
 
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.i(TAG, "onStatusChanged: " + provider + ", status: " + status);
+            Log.i(TAG, "onStatusChanged, provider: " + provider + ", status: " + status);
 
             // preguntar si está dentro del buffer
             bufferRuta();
@@ -119,10 +99,12 @@ public class TrackingService extends Service {
         public void onProviderDisabled(String provider) {
             Log.i(TAG, "onProviderDisabled: " + provider);
         }
+
     }
 
     private void bufferRuta() {
         // lee idviaje
+        Log.d(TAG, "Buffer Ruta");
         userSQLiteHelper usdbh =
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getReadableDatabase();
@@ -167,7 +149,9 @@ public class TrackingService extends Service {
                     try {
                         jsonObj = jsonArr.getJSONObject(0);
                         if(jsonObj.getString("respuesta").equals("Error")){
-                            Toast.makeText(getApplicationContext(), "Ha salido de la ruta, avisar a contactos", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Ha salido de la ruta, enviando mensaje a contactos de emergencia", Toast.LENGTH_LONG).show();
+                            muestraNotificacion();
+
                             enviaSMSContactos();
                             borraRuta();
                             stopService(new Intent(getApplicationContext(), TrackingService.class));
@@ -324,14 +308,30 @@ public class TrackingService extends Service {
                                 e.printStackTrace();
                             }
                             String nombre_completo = jsonObj.getString("nombre_completo");
-                            String telefono = jsonObj.getString("telefono");
+                            //String telefono = jsonObj.getString("telefono");
                             String celular = jsonObj.getString("celular");
-                            String correo_contacto = jsonObj.getString("correo_contacto");
+                            //String correo_contacto = jsonObj.getString("correo_contacto");
 
-                            Log.i(TAG, "info contacto nombre: " + nombre_completo + ", tel: " + telefono);
+                            Log.i(TAG, "info contacto nombre: " + nombre_completo + ", tel: " + celular);
 
-                            String mensajeSMS = "Alerta: " + nombreUsr + " ha salido de su ruta.";
-                            sms.sendTextMessage(celular, null, mensajeSMS, null, null);
+                            String mensajeSMS = "Alerta: " + nombreUsr + " ha salido de su ruta. Su última ubicación es: http://maps.google.com/maps?saddr=" + lastLatitude + "," + lastLongitude;
+                            Log.d(TAG, "sms: " + mensajeSMS);
+
+
+                            PendingIntent sentPI = PendingIntent.getBroadcast(getApplicationContext(), 0,
+                                    new Intent("SMS_SENT"), 0);
+
+                            /*PendingIntent piEnvio   = PendingIntent.getBroadcast(this,0,new Intent(SENT_BROADCAST),0);
+                            PendingIntent piEntrega = PendingIntent.getBroadcast(this,0,new Intent(DELIVERED_BROADCAST),0);*/
+
+                            try{
+                                SmsManager sms = SmsManager.getDefault();
+                                sms.sendTextMessage(celular, null, mensajeSMS, null, null);
+                            }
+                            catch (Exception e) {
+                                Log.e(TAG, "SMS faild, please try again. " + e.getMessage());
+                                e.printStackTrace();
+                            }
 
                         }
 
@@ -389,9 +389,24 @@ public class TrackingService extends Service {
         return null;
     }
 
+    public class NotifyServiceReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context arg0, Intent arg1) {
+            // TODO Auto-generated method stub
+            int rqs = arg1.getIntExtra("RQS", 0);
+            if (rqs == RQS_STOP_SERVICE) {
+                stopSelf();
+            }
+        }
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Start Service");
+
+
+
         super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
@@ -400,6 +415,7 @@ public class TrackingService extends Service {
     public void onCreate() {
         Log.e(TAG, "onCreate");
         initializeLocationManager();
+        notifyServiceReceiver = new NotifyServiceReceiver();
         try {
             mLocationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
@@ -440,5 +456,30 @@ public class TrackingService extends Service {
                 }
             }
         }
+    }
+
+    public void muestraNotificacion() {
+
+        Log.d(TAG, "Enviando notificación");
+
+        Context context = getApplicationContext();
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this);
+
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        notificationBuilder.setContentTitle("Latest Coupon");
+        notificationBuilder.setContentText("Get Upto 10% Off on Mobiles");
+
+        Intent notificationClickIntent = new Intent(this, NotificationActionActivity.class);
+        PendingIntent notificationPendingIntent =
+                PendingIntent.getActivity(context, 0, notificationClickIntent, 0);
+
+        notificationBuilder.setContentIntent(notificationPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(1, notificationBuilder.build());
+
+
     }
 }

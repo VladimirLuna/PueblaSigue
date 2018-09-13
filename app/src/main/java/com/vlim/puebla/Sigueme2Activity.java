@@ -119,6 +119,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         tv_apie.setTypeface(tf);
         tv_encarro.setTypeface(tf);
 
+        muestraMensaje();
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
         if(locationProviders == null || locationProviders.equals("")){
@@ -626,6 +628,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             mMap.animateCamera(yourLocation);
 
             estaEnPuebla = new EstaEnPuebla(getApplicationContext());
+            ///////
             if(estaEnPuebla.estaEnPuebla(latitude, longitude)){
                 Log.d(TAG, "Está en Puebla");
             }
@@ -766,4 +769,16 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     public void onConnectionSuspended(int i) {
 
     }
+
+    public void muestraMensaje() {
+        new AlertDialog.Builder(Sigueme2Activity.this)
+                .setTitle("Sígueme y Cuídame")
+                .setMessage("Esta funcionalidad está sujeta a datos y batería del teléfono.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                }).show();
+    }
+
 }

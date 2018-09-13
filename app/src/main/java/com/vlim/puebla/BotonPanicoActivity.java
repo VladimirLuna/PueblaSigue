@@ -16,7 +16,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -39,19 +38,10 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +54,7 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
     Geocoder geocoder;
     String bestProvider;
     List<Address> user = null;
-    String latitud, longitud;
+    String latitud = "", longitud = "";
     JSONArray jsonArr;
     String JsonResponse = null;
     String responseString2 = null;
@@ -145,47 +135,51 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
             getLocation();
         }
 
-        progressDialog = new ProgressDialog(BotonPanicoActivity.this);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Enviando emergencia.");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setProgress(0);
-        progressDialog.show();
-
-
         estaEnPuebla = new EstaEnPuebla(getApplicationContext());
-        if(estaEnPuebla.estaEnPuebla(Double.valueOf(latitud), Double.valueOf(longitud))){
-            Log.d(TAG, "Está en Puebla");
+        if(!latitud.equals("")){
+            Log.d(TAG, "lat: " + latitud + ", lng: " + longitud);
+            if(estaEnPuebla.estaEnPuebla(Double.valueOf(latitud), Double.valueOf(longitud))){
+                Log.d(TAG, "Está en Puebla");
+                progressDialog = new ProgressDialog(BotonPanicoActivity.this);
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage("Enviando emergencia.");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setProgress(0);
+                progressDialog.show();
 
-            // Preparando envio
-            preparaEnvioPanico(idusuario, latitud, longitud);
+                // Preparando envio
+                enviaBotonPanico(idusuario, latitud, longitud);
 
-            // Enviando parametros boton panico
-            // Get instance of Vibrator from current Context
-            final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            // Enviando params
+                // Enviando parametros boton panico
+                // Get instance of Vibrator from current Context
+                final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                // Enviando params
 
-            if (vibrator.hasVibrator()) {
-                final long[] pattern = {100, 30, 100, 30, 100, 200, 200, 30, 200, 30, 200, 200, 100, 30, 100, 30, 100};   /*SOS*/
-                new Thread() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < 5; i++) { //repeat the pattern 5 times
-                            vibrator.vibrate(pattern, -1);
-                            try {
-                                Thread.sleep(2000); //the time, the complete pattern needs
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                if (vibrator.hasVibrator()) {
+                    final long[] pattern = {100, 30, 100, 30, 100, 200, 200, 30, 200, 30, 200, 200, 100, 30, 100, 30, 100};   /*SOS*/
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            for (int i = 0; i < 5; i++) { //repeat the pattern 5 times
+                                vibrator.vibrate(pattern, -1);
+                                try {
+                                    Thread.sleep(2000); //the time, the complete pattern needs
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
-                    }
-                }.start();
+                    }.start();
+                }
+            }
+            else{
+                showAlert(Config.ESTA_EN_PUEBLA);
             }
         }
         else{
-            showAlert(Config.ESTA_EN_PUEBLA);
+            Toast.makeText(getApplicationContext(), "Es necesario obtener una ubicación válida. Por favor intente de nuevo", Toast.LENGTH_LONG).show();
+            finish();
         }
-
 
 
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -196,7 +190,7 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
         });
     }
 
-    private void preparaEnvioPanico(String idusuario, String latitud, String longitud) {
+    /*private void preparaEnvioPanico(String idusuario, String latitud, String longitud) {
         JSONObject post_dict = new JSONObject();
 
         try {
@@ -212,17 +206,17 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
 
             enviaBotonPanico(String.valueOf(post_dict));
         }
-    }
+    }*/
 
-    private void enviaBotonPanico(String params) {
+    private void enviaBotonPanico(String IDusuario, String Lat, String Lng) {
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             final JSONObject jsonBody = new JSONObject();
 
-            JSONObject jsonObject = new JSONObject(params);
+            /*JSONObject jsonObject = new JSONObject(params);
             String IDusuario = jsonObject.getString("idusr");
             String Lat = jsonObject.getString("lat");
-            String Lng = jsonObject.getString("long");
+            String Lng = jsonObject.getString("long");*/
 
             jsonBody.put("idusr", IDusuario);
             jsonBody.put("lat", Lat);
@@ -244,7 +238,7 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
 
                         if(respuesta.equals("OK")){
                             Log.i(TAG, "Respuesta OK");
-                            showAlert("Su emergencia está siendo procesada");
+                            showAlert("Su emergencia fue recibida");
                         }
                         else{
                             Log.i(TAG, "Respuesta ERROR");
@@ -287,7 +281,7 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
         }
     }
 
-    private class UploadPanico extends AsyncTask<String, Integer, String> {
+    /*private class UploadPanico extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
             // setting progress bar to zero
@@ -369,7 +363,7 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
                 Log.i(TAG, "respuesta: " + respuesta);
                 if(respuesta.equals("OK")){
                     progressDialog.dismiss();
-                    showAlert("Su emergencia está siendo procesada");
+                    showAlert("Su emergencia fue recibida");
                 }
                 else{
                     progressDialog.dismiss();
@@ -386,9 +380,9 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
 
             super.onPostExecute(result);
         }
-    }
+    }*/
 
-    private void sendBotonPanico(String params) {
+    /*private void sendBotonPanico(String params) {
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             final JSONObject jsonBody = new JSONObject();
@@ -426,7 +420,7 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
                         //showAlert(result);
                         //Toast.makeText(getApplicationContext(), "Publicación registrada correctamente", Toast.LENGTH_LONG).show();
                         progressDialog.dismiss();
-                        showAlert("Su emergencia está siendo procesada");
+                        showAlert("Su emergencia fue recibida");
                         //finish();
                     }
                     else{
@@ -465,7 +459,7 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     // Location
     @Override
@@ -640,9 +634,6 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
         latitud = String.valueOf(loc.getLatitude());
         longitud = String.valueOf(loc.getLongitude());
         Log.i(TAG, "lat: " + loc.getLatitude() + ", long: " + loc.getLongitude());
-        /*tvLatitude.setText(Double.toString(loc.getLatitude()));
-        tvLongitude.setText(Double.toString(loc.getLongitude()));
-        tvTime.setText(DateFormat.getTimeInstance().format(loc.getTime()));*/
     }
 
     @Override
@@ -667,8 +658,6 @@ public class BotonPanicoActivity extends AppCompatActivity implements LocationLi
         alert.show();
 
     }
-
-
 
     @Override
     public void onBackPressed() { }

@@ -289,5 +289,4 @@ public class SiguemeyCuidameActivity extends FragmentActivity implements OnMapRe
                 Toast.LENGTH_SHORT).show();
     }
 
-
 }

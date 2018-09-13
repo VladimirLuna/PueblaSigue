@@ -2,6 +2,8 @@ package com.vlim.puebla;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -16,6 +19,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -171,14 +175,17 @@ public class MainActivity extends AppCompatActivity {
         btn_nueveonce.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nt_check = new NetworkConnection(getApplicationContext());
+                /*nt_check = new NetworkConnection(getApplicationContext());
                 if(nt_check.isOnline()){
                     Intent nueveOnceIntent = new Intent(MainActivity.this, Maps911Activity.class);
                     nueveOnceIntent.putExtra("idusuario", idusuario);
                     startActivity(nueveOnceIntent);
                 }else{
                     Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
-                }
+                }*/
+
+
+
             }
         });
 
@@ -489,6 +496,37 @@ public class MainActivity extends AppCompatActivity {
         public void onTick(long millisUntilFinished) {
             Log.d(TAG, "Contando " + (millisUntilFinished/1000));
         }
+
+    }
+
+    public void notifica() {
+
+        Log.d(TAG, "Enviando notificación");
+
+        /*NotificationManager nManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationCompat.Builder ncomp = new NotificationCompat.Builder(this);
+        ncomp.setContentTitle("My Notification");
+        ncomp.setContentText("Notification Listener Service Example");
+        ncomp.setTicker("Notification Listener Service Example");
+        ncomp.setSmallIcon(R.mipmap.ic_launcher);
+        ncomp.setAutoCancel(true);
+        nManager.notify((int)System.currentTimeMillis(),ncomp.build());*/
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(android.R.drawable.ic_dialog_alert);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.journaldev.com/"));
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        builder.setContentIntent(pendingIntent);
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+        builder.setContentTitle("Notifications Title");
+        builder.setContentText("Your notification content here.");
+        builder.setSubText("Tap to view the website.");
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        // Will display the notification in the notification bar
+        notificationManager.notify(1, builder.build());
+
 
     }
 
