@@ -824,7 +824,10 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.i(TAG, "onStatusChanged, provider: " + provider + ", status: " + status);
 
+        // preguntar si está dentro del buffer
+        bufferRuta();
     }
 
     @Override
@@ -841,9 +844,10 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         Log.d(TAG, "updateUI");
         /*Double latitude = loc.getLatitude();
         Double longitude = loc.getLongitude();*/
-        lastLatitude = String.valueOf(location.getLatitude());
-        lastLongitude = String.valueOf(location.getLongitude());
+        lastLatitude = String.valueOf(loc.getLatitude());
+        lastLongitude = String.valueOf(loc.getLongitude());
         Log.i(TAG, "lat: " + loc.getLatitude() + ", long: " + loc.getLongitude());
+
 
         MarkerOptions marker = new MarkerOptions().position(
                 new LatLng(location.getLatitude(), location.getLongitude()))
@@ -851,6 +855,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 .title("Reporte");
         mMap.clear();
         mMap.addMarker(marker);
+
+        bufferRuta();
     }
 
     private void showGPSDisabledAlertToUser(){
@@ -933,8 +939,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     ////////////////////////
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(30000);
-        mLocationRequest.setFastestInterval(15000);
+        mLocationRequest.setInterval(10000);     //10 segs
+        mLocationRequest.setFastestInterval(30000);
         mLocationRequest.setSmallestDisplacement(50);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -987,6 +993,9 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                     // ...
                     //////updateMarker(location);
                     Log.d(TAG, "update location marker");
+                    lastLatitude = String.valueOf(location.getLatitude());
+                    lastLongitude = String.valueOf(location.getLongitude());
+                    Log.d(TAG, "lat: " + lastLatitude + ", lng: " + lastLongitude);
                     bufferRuta();
                 }
             }
