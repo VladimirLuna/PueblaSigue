@@ -1,9 +1,13 @@
 package com.vlim.puebla;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -16,12 +20,15 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.telephony.SmsManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -38,10 +45,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -52,6 +69,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,7 +89,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     LocationManager locationManager;
     LatLng myPosition;
     Location location;
-    double latitude, longitude, end_latitude = 0, end_longitude = 0;
+    double end_latitude = 0, end_longitude = 0;
     ConstraintLayout menu_map, mensaje_map, menu_cancela;
     Double latEnvia = 0.0, lngEnvia = 0.0;
     // Toolbar
@@ -90,6 +110,13 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
 
     // valida ubicacion en puebla
     EstaEnPuebla estaEnPuebla;
+    Context context;
+///////
+    LocationCallback mLocationCallback;
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    FusedLocationProviderClient mFusedLocationProviderClient;
+    String idviaje = "0", nombreUsr;
+    String lastLatitude, lastLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +139,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         menu_map = findViewById(R.id.menu_map);
         menu_cancela = findViewById(R.id.menu_cancela);
 
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         tv_pregunta.setTypeface(tf);
         tv_cancelar.setTypeface(tf);
         tv_cancelar_viaje.setTypeface(tf);
@@ -132,7 +161,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                    Log.d(TAG, "lat ahorita: " + latitude + ", lng: " + longitude);
+                    Log.d(TAG, "lat ahorita: " + lastLatitude + ", lng: " + lastLongitude);
                     // TODO: Get info about the selected place.
                     Log.i(TAG, "Place: " + place.getName() + ", " + place.getAddress() + ", " + place.getLatLng());
                     end_latitude = place.getLatLng().latitude;
@@ -148,8 +177,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                     dataTransfer[1] = url;
                     dataTransfer[2] = new LatLng(end_latitude, end_longitude);
                     //dataTransfer[3] = new LatLng(latitude, longitude);
-                    dataTransfer[3] = latitude;
-                    dataTransfer[4] = longitude;
+                    dataTransfer[3] = Double.valueOf(lastLatitude);
+                    dataTransfer[4] = Double.valueOf(lastLongitude);
                     dataTransfer[5] = end_latitude;
                     dataTransfer[6] = end_longitude;
                     dataTransfer[7] = getApplicationContext();
@@ -180,7 +209,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         Cursor c = db.rawQuery("SELECT idusuario FROM Usuarios", null);
 
         if (c.moveToFirst()) {
-            Log.v(TAG, "hay cosas");
+            Log.v(TAG, "hay cosas inicio sigueme");
             //Recorremos el cursor hasta que no haya más registros
             do {
                 idusuario = c.getString(0);
@@ -188,7 +217,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             c.close();
         }
         else{
-            Log.v(TAG, "NO hay cosas");
+            Log.v(TAG, "NO hay cosas inicio");
         }
         db.close();
         //////
@@ -236,7 +265,10 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int which) {
-                                showAlertCancelado("Viaje cancelado");
+
+                                Log.d(TAG, "idViaje: " + idviaje);
+                                cancelarViaje();
+                                //showAlertCancelado("Viaje cancelado");
                             }
                         });
                 builder.show();
@@ -292,8 +324,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
 
                     JSONObject cosas = new JSONObject();
                     try {
-                        cosas.put("latusr", String.valueOf(latitude));
-                        cosas.put("lonusr", String.valueOf(longitude));
+                        cosas.put("latusr", String.valueOf(lastLatitude));
+                        cosas.put("lonusr", String.valueOf(lastLongitude));
                         cosas.put("latdest", String.valueOf(end_latitude));
                         cosas.put("londest", String.valueOf(end_longitude));
                         cosas.put("idusr", String.valueOf(idusuario));
@@ -319,6 +351,91 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
 
     }
 
+    private void cancelarViaje() {
+        progressDialog = new ProgressDialog(Sigueme2Activity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Cancelando viaje...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            final JSONObject jsonBody = new JSONObject();
+
+            jsonBody.put("idviaje", idviaje);
+
+            final String requestBody = jsonBody.toString();
+
+            Log.d(TAG, "envio Cancelar viaje: " + requestBody);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.CANCELA_VIAJE_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    progressDialog.dismiss();
+                    try {
+                        jsonArr = new JSONArray(response);
+                        JsonResponse = response;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, "VOLLEY response CANCELA VIAJE: " + response);
+
+                    String respuesta = null, mensaje = null;
+                    try {
+                        respuesta = jsonArr.getJSONObject(0).getString("respuesta");
+                        mensaje = jsonArr.getJSONObject(0).getString("mensaje");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.i(TAG, "respuesta: " + respuesta);
+                    if(respuesta.equals("OK")){
+
+                        Log.d(TAG, "CANCELANDO VIAJE");
+                        /*borraRuta();
+                        stopService(new Intent(getApplicationContext(), TrackingService.class));
+                        startActivity(getIntent());*/
+                        //finish();
+                        //showAlertOK(mensaje);
+                        showAlertCancelado("Viaje cancelado");
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "Error! Tu viaje no ha sido cancelado, por favor intenta de nuevo.", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "VOLLEY: " + error.toString());
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Error en la conexión.", Toast.LENGTH_LONG).show();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void buscaRutaActual() {
         String lat1B, lat2B, lng1B, lng2B, idviajeB;
         // busca ruta en proceso
@@ -334,7 +451,9 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 lng1B = c.getString(2);
                 lat2B = c.getString(3);
                 lng2B = c.getString(4);
-                idviajeB = c.getString(5);
+                idviaje = c.getString(5);
+
+                Log.d(TAG, "idViaje en progreso: " + idviaje);
 
             } while(c.moveToNext());
             c.close();
@@ -356,7 +475,10 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             dataTransferB[8] = colorRuta;
             getDirectionsData.execute(dataTransferB);*/
 
-            menu_cancela.setVisibility(View.VISIBLE);
+            if(idviaje != null){
+                menu_cancela.setVisibility(View.VISIBLE);
+            }
+
             /*img_apie.setVisibility(View.INVISIBLE);
             img_encarro.setVisibility(View.INVISIBLE);
             tv_apie.setVisibility(View.INVISIBLE);
@@ -423,17 +545,29 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                     try {
                         respuesta = jsonArr.getJSONObject(0).getString("respuesta");
                         mensaje = jsonArr.getJSONObject(0).getString("mensaje");
+                        idviaje = mensaje;
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-
-                    Log.i(TAG, "respuesta: " + respuesta);
+                    Log.i(TAG, "respuesta: " + respuesta + ", idViaje: " + idviaje);
                     if(respuesta.equals("OK")){
 
                         // inicia servicio, checa cada 5 minutos la posicion actual
                         Log.d(TAG, "Iniciando Servicio");
-                        startService(new Intent(getApplicationContext(), TrackingService.class));
+
+                        createLocationRequest();
+
+                        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            Log.d(TAG, "start foreground service");
+                            getApplicationContext().startForegroundService(new Intent(getApplicationContext(), TrackingService.class));
+                        } else {
+                            Log.d(TAG, "start service");
+                            startService(new Intent(getApplicationContext(), TrackingService.class));
+                        }*/
+
+
+                        ////startService(new Intent(getApplicationContext(), TrackingService.class));
                         // actualiza numero de ruta en tabla sigueme
 
                         // Abrimos la bd
@@ -487,7 +621,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         }
     }
 
-    private void showAlert(String message) {
+        private void showAlert(String message) {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setMessage(message).setTitle("Sígueme y cuídame")
                 .setCancelable(false)
@@ -548,8 +682,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         dataTransfer[0] = mMap;
         dataTransfer[1] = url;
         dataTransfer[2] = new LatLng(end_latitude, end_longitude);
-        dataTransfer[3] = latitude;
-        dataTransfer[4] = longitude;
+        dataTransfer[3] = lastLatitude;
+        dataTransfer[4] = lastLongitude;
         dataTransfer[5] = end_latitude;
         dataTransfer[6] = end_longitude;
         dataTransfer[7] = getApplicationContext();
@@ -617,19 +751,22 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         final Location location = locationManager.getLastKnownLocation(provider);
 
         if (location != null) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            Log.d(TAG, "1er vez mapa: " + latitude + ", " + longitude);
-            //LatLng latLng = new LatLng(latitude, longitude);
-            myPosition = new LatLng(latitude, longitude);
+            /*latitude = location.getLatitude();
+            longitude = location.getLongitude();*/
+            lastLatitude = String.valueOf(location.getLatitude());
+            lastLongitude = String.valueOf(location.getLongitude());
 
-            LatLng coordinate = new LatLng(latitude, longitude);
+            Log.d(TAG, "1er vez mapa: " + lastLatitude + ", " + lastLongitude);
+            //LatLng latLng = new LatLng(latitude, longitude);
+            myPosition = new LatLng(Double.valueOf(lastLatitude), Double.valueOf(lastLongitude));
+
+            LatLng coordinate = new LatLng(Double.valueOf(lastLatitude), Double.valueOf(lastLongitude));
             CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 19);
             mMap.animateCamera(yourLocation);
 
             estaEnPuebla = new EstaEnPuebla(getApplicationContext());
             ///////
-            if(estaEnPuebla.estaEnPuebla(latitude, longitude)){
+            if(estaEnPuebla.estaEnPuebla(Double.valueOf(lastLatitude), Double.valueOf(lastLongitude))){
                 Log.d(TAG, "Está en Puebla");
             }
             else{
@@ -668,8 +805,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         }
 
         if (location != null) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+            Double latitude = location.getLatitude();
+            Double longitude = location.getLongitude();
             myPosition = new LatLng(latitude, longitude);
             Log.d(TAG, "Location OK");
 
@@ -702,12 +839,14 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
 
     private void updateUI(Location loc) {
         Log.d(TAG, "updateUI");
-        latitude = loc.getLatitude();
-        longitude = loc.getLongitude();
+        /*Double latitude = loc.getLatitude();
+        Double longitude = loc.getLongitude();*/
+        lastLatitude = String.valueOf(location.getLatitude());
+        lastLongitude = String.valueOf(location.getLongitude());
         Log.i(TAG, "lat: " + loc.getLatitude() + ", long: " + loc.getLongitude());
 
         MarkerOptions marker = new MarkerOptions().position(
-                new LatLng(latitude, longitude))
+                new LatLng(location.getLatitude(), location.getLongitude()))
                 .snippet("Emergencia")
                 .title("Reporte");
         mMap.clear();
@@ -739,13 +878,20 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     }
 
     @Override
-    public void onBackPressed() { }
+    public void onBackPressed() {
+        if(idviaje == null){
+            borraRuta();
+        }
+        else{
+            Log.d(TAG, "Hay ruta en proceso, no borrar!");
+        }
+    }
 
     // Rutas
     private String getDirectionsUrl(String opcionRuta)
     {
         StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
-        googleDirectionsUrl.append("origin=" + latitude + "," + longitude);
+        googleDirectionsUrl.append("origin=" + lastLatitude + "," + lastLongitude);
         googleDirectionsUrl.append("&destination=" + end_latitude + "," + end_longitude);
         googleDirectionsUrl.append("&travelMode=" + opcionRuta);   // WALKING / DRIVING
         googleDirectionsUrl.append("&key=" + getApplicationContext().getString(R.string.google_maps_key_sigueme));
@@ -779,6 +925,385 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                         dialog.cancel();
                     }
                 }).show();
+    }
+
+
+
+
+    ////////////////////////
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(30000);
+        mLocationRequest.setFastestInterval(15000);
+        mLocationRequest.setSmallestDisplacement(50);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // All location settings are satisfied. The client can initialize
+                // location requests here.
+                // ...
+                /////bService.setVisibility(View.GONE);
+                startLocationUpdates();
+            }
+        });
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                int statusCode = ((ApiException) e).getStatusCode();
+                switch (statusCode) {
+                    case CommonStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied, but this can be fixed
+                        // by showing the user a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            ResolvableApiException resolvable = (ResolvableApiException) e;
+                            resolvable.startResolutionForResult(Sigueme2Activity.this,
+                                    REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException sendEx) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way
+                        // to fix the settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
+    }
+
+    private void startLocationUpdates() {
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                for (Location location : locationResult.getLocations()) {
+                    // Update UI with location data
+                    // ...
+                    //////updateMarker(location);
+                    Log.d(TAG, "update location marker");
+                    bufferRuta();
+                }
+            }
+
+            ;
+        };
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Toast.makeText(getApplicationContext(),"location permission required !!",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest,
+                mLocationCallback,
+                null /* Looper */);
+        /*button.setTag("f");
+        button.setText("STOP FOREGROUND TRACKING");*/
+//        Toast.makeText(getApplicationContext(),"Location update started",Toast.LENGTH_SHORT).show();
+    }
+
+    private void bufferRuta() {
+        // lee idviaje
+        Log.d(TAG, "Buffer Ruta");
+        userSQLiteHelper usdbh =
+                new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
+        SQLiteDatabase db = usdbh.getReadableDatabase();
+        //Cursor c = db.query("Usuarios", campos, "idusuario=?", args, null, null, null);
+        Cursor c = db.rawQuery("SELECT idviaje FROM RutaSigueme", null);
+
+        if (c.moveToFirst()) {
+            Log.v(TAG, "hay cosas buffer");
+            //do {
+            idviaje = c.getString(0);
+            //} while(c.moveToNext());
+        }
+        else{
+            Log.v(TAG, "NO hay cosas buffer");
+        }
+        db.close();
+        //////
+
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            final JSONObject jsonBody = new JSONObject();
+
+            jsonBody.put("idviaje", idviaje);
+            jsonBody.put("lat", lastLatitude);
+            jsonBody.put("lng", lastLongitude);
+            Log.d(TAG, "params buffer: idviaje: " + idviaje + ", lat: " + lastLatitude + ", lng: " + lastLongitude);
+
+            final String requestBody = jsonBody.toString();
+
+            Log.d(TAG, "params buffer: " + requestBody);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BUFFER_RUTA_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        jsonArr = new JSONArray(response);
+                        JsonResponse = response;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, "VOLLEY response buffer: " + response);
+                    //Toast.makeText(getApplicationContext(), "Buffer: " + response, Toast.LENGTH_LONG).show();
+                    JSONObject jsonObj = null;
+                    try {
+                        jsonObj = jsonArr.getJSONObject(0);
+                        if(jsonObj.getString("respuesta").equals("Error")){
+                            Toast.makeText(getApplicationContext(), "Ha salido de la ruta, enviando mensaje a contactos de emergencia", Toast.LENGTH_LONG).show();
+                            muestraNotificacion();
+
+                            enviaSMSContactos();
+                            borraRuta();
+                            stopService(new Intent(getApplicationContext(), TrackingService.class));
+                        }
+                        else{
+                            Log.d(TAG, "Sigue en ruta");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "VOLLEY: " + error.toString());
+                    Toast.makeText(getApplicationContext(), "Error en la conexión.", Toast.LENGTH_LONG).show();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void muestraNotificacion() {
+
+        Log.d(TAG, "Enviando notificación");
+
+        Context context = getApplicationContext();
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this);
+
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        notificationBuilder.setContentTitle("Latest Coupon");
+        notificationBuilder.setContentText("Get Upto 10% Off on Mobiles");
+
+        Intent notificationClickIntent = new Intent(this, NotificationActionActivity.class);
+        PendingIntent notificationPendingIntent =
+                PendingIntent.getActivity(context, 0, notificationClickIntent, 0);
+
+        notificationBuilder.setContentIntent(notificationPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(1, notificationBuilder.build());
+
+
+    }
+
+    private void enviaSMSContactos() {
+        // Busca contactos de emergencia
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            final JSONObject jsonBody = new JSONObject();
+
+            // obtiene idusr
+            userSQLiteHelper usdbh =
+                    new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
+            SQLiteDatabase db = usdbh.getReadableDatabase();
+            Cursor c = db.rawQuery("SELECT idusuario, nick, nombre FROM Usuarios", null);
+
+            if (c.moveToFirst()) {
+                Log.v(TAG, "hay cosas envia SMS");
+                //Recorremos el cursor hasta que no haya más registros
+                do {
+                    idusuario = c.getString(0);
+                    nombreUsr = c.getString(2);
+                } while(c.moveToNext());
+            }
+            else{
+                Log.v(TAG, "NO hay cosas SMS");
+            }
+            c.close();
+            db.close();
+            //////
+
+            jsonBody.put("idusr", idusuario);
+
+            final String requestBody = jsonBody.toString();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.GET_CONTACTOS_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        jsonArr = new JSONArray(response);
+                        JsonResponse = response;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //Log.i("VOLLEYresponse", String.valueOf(jsonArr));
+                    Log.i(TAG, "VOLLEY response contactos: " + response);
+
+                    for (int i = 0; i < jsonArr.length(); i++) {
+                        JSONObject jsonObj = null;
+                        try {
+                            jsonObj = jsonArr.getJSONObject(i);
+                            String id_usuario_contacto = jsonObj.getString("id_usuario_contacto");
+                            String nombre_completo = jsonObj.getString("nombre_completo");
+                            Log.i(TAG, id_usuario_contacto + ", " + nombre_completo);
+
+                            obtieneDetalleContacto(id_usuario_contacto);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "VOLLEY: " + error.toString());
+                    Toast.makeText(getApplicationContext(), "Error en la conexión.", Toast.LENGTH_LONG).show();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void obtieneDetalleContacto(String id_contacto) {
+
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            final JSONObject jsonBody = new JSONObject();
+
+            jsonBody.put("idusr", id_contacto);
+            final String requestBody = jsonBody.toString();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.GET_INFO_CONTACTO_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        jsonArr = new JSONArray(response);
+                        JsonResponse = response;
+                        Log.i(TAG, "response: " + jsonArr);
+
+                        for (int i = 0; i < jsonArr.length(); i++) {
+                            JSONObject jsonObj = null;
+                            try {
+                                jsonObj = jsonArr.getJSONObject(i);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            String nombre_completo = jsonObj.getString("nombre_completo");
+                            //String telefono = jsonObj.getString("telefono");
+                            String celular = jsonObj.getString("celular");
+                            //String correo_contacto = jsonObj.getString("correo_contacto");
+
+                            Log.i(TAG, "info contacto nombre: " + nombre_completo + ", tel: " + celular);
+
+                            String mensajeSMS = "Alerta: " + nombreUsr + " ha salido de su ruta. Su última ubicación es: http://maps.google.com/maps?saddr=" + lastLatitude + "," + lastLongitude;
+                            Log.d(TAG, "sms: " + mensajeSMS);
+
+
+                            PendingIntent sentPI = PendingIntent.getBroadcast(getApplicationContext(), 0,
+                                    new Intent("SMS_SENT"), 0);
+
+                            /*PendingIntent piEnvio   = PendingIntent.getBroadcast(this,0,new Intent(SENT_BROADCAST),0);
+                            PendingIntent piEntrega = PendingIntent.getBroadcast(this,0,new Intent(DELIVERED_BROADCAST),0);*/
+
+                            try{
+                                SmsManager sms = SmsManager.getDefault();
+                                sms.sendTextMessage(celular, null, mensajeSMS, null, null);
+                            }
+                            catch (Exception e) {
+                                Log.e(TAG, "SMS faild, please try again. " + e.getMessage());
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "VOLLEY: " + error.toString());
+                    Toast.makeText(getApplicationContext(), "Error en la comunicación.", Toast.LENGTH_LONG).show();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }

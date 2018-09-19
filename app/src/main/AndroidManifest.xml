@@ -125,7 +125,9 @@
         <activity android:name=".RegistroUsuarioActivity2" />
         <activity android:name=".AgregaContactoEmergenciaActivity" />
 
-        <service android:name=".TrackingService" />
+        <service android:name=".TrackingService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
 
         <activity android:name=".EditarContactoActivity" />
         <activity android:name=".RegistroUsuarioActivity3"></activity>

@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -405,9 +407,31 @@ public class TrackingService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Start Service");
 
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                notificationIntent, 0);
+
+        Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                R.drawable.amu_bubble_mask);
+
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle("Mujer Segura Puebla")
+                .setTicker("Sígueme y cuídame")
+                .setContentText("Sígueme y cuídame activo")
+                .setSmallIcon(R.drawable.amu_bubble_mask)
+                .setLargeIcon(
+                        Bitmap.createScaledBitmap(icon, 128, 128, false))
+                .setContentIntent(pendingIntent)
+                .setOngoing(true)
+                .build();
+
+        startForeground(Notification.FLAG_ONGOING_EVENT,notification);
 
 
-        super.onStartCommand(intent, flags, startId);
+
+        //super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
 

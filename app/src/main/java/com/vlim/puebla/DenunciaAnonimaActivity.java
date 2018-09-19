@@ -125,7 +125,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
     long totalSize = 0;
     String responseStringIncidencia = null;
     String responseStringIncidenciaArchivos = null;
-    String latitud, longitud;
+    String latitud="", longitud="";
     /*private ProgressBar progressBar;
     private TextView txtPercentage;*/
     ProgressDialog progressDialogLista, progressDialogEnvio, progressDialogVideo, progressDialogVideoGal;
@@ -371,19 +371,23 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
                 @Override
                 public void onClick(View v) {
                     estaEnPuebla = new EstaEnPuebla(getApplicationContext());
-                    if(estaEnPuebla.estaEnPuebla(Double.valueOf(latitud), Double.valueOf(longitud))){
-                        Log.d(TAG, "Está en Puebla!");
-                        descrp_denuncia = et_descripcion.getText().toString().trim();
-                        if (descrp_denuncia.equals("")) {
-                            et_descripcion.setError("Ingrese la descripcion de la denuncia");
-                        } else {
-                            enviaDenunciaAnonima();
+
+                    if(latitud!=""){
+                        if(estaEnPuebla.estaEnPuebla(Double.valueOf(latitud), Double.valueOf(longitud))){
+                            Log.d(TAG, "Está en Puebla!");
+                            descrp_denuncia = et_descripcion.getText().toString().trim();
+                            if (descrp_denuncia.equals("")) {
+                                et_descripcion.setError("Ingrese la descripcion de la denuncia");
+                            } else {
+                                enviaDenunciaAnonima();
+                            }
+                        }
+                        else{
+                            borraMedios();
+                            showAlert(Config.ESTA_EN_PUEBLA);
                         }
                     }
-                    else{
-                        borraMedios();
-                        showAlert(Config.ESTA_EN_PUEBLA);
-                    }
+
                 }
             });
 
@@ -594,10 +598,10 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
             db.close();
 
             if(medio != null){
-                Log.d(TAG, "Envia Reporte 911 Archivos");
+                Log.d(TAG, "Envia Reporte 089 Archivos");
                 // Envia denuncia anonima con archivos
                 String[] paramsArch = new String[]{idusuario, descrp_denuncia, latitud, longitud, tipo_submotivo};
-                Log.d(TAG, "Denuncia 911 c/arch: " + idusuario + ", " + descrp_denuncia + ", " + latitud + ", " + longitud + ", " + tipo_submotivo);
+                Log.d(TAG, "Denuncia 089 c/arch: " + idusuario + ", " + descrp_denuncia + ", " + latitud + ", " + longitud + ", " + tipo_submotivo);
                 SendDenunciaAnonimaArchivos anonimaSendArchivos = new SendDenunciaAnonimaArchivos();
                 anonimaSendArchivos.execute(paramsArch);
             }
@@ -606,15 +610,16 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
         else{   // Sin archivos
             Log.v(TAG, "NO hay MEDIOS");
             // Envio sin medios
-            Log.d(TAG, "Envia Reporte 911 sin Archivos");
+            Log.d(TAG, "Envia Reporte 089 sin Archivos");
             // Envia denuncia anonima sin archivos
             String[] paramsSinArch = new String[]{idusuario, descrp_denuncia, latitud, longitud, tipo_submotivo};
-            Log.d(TAG, "Denuncia 911 s/arch: " + idusuario + ", " + descrp_denuncia + ", " + latitud + ", " + longitud + ", " + tipo_submotivo);
+            Log.d(TAG, "Denuncia 089 s/arch: " + idusuario + ", " + descrp_denuncia + ", " + latitud + ", " + longitud + ", " + tipo_submotivo);
             SendDenunciaAnonima anonimaSend = new SendDenunciaAnonima();
             anonimaSend.execute(paramsSinArch);
         }
     }
 
+    // Envia Sin Medios
     public class SendDenunciaAnonima extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
@@ -674,7 +679,8 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
                 entityAnonima.addPart("descripcion", new StringBody(descrpDenuSend, Charset.forName("UTF-8")));
                 entityAnonima.addPart("lat", new StringBody(latitudSend));
                 entityAnonima.addPart("long", new StringBody(longitudSend));
-                entityAnonima.addPart("idsubmotivo", new StringBody(submotivoSend));
+                entityAnonima.addPart("denuncia", new StringBody("denuncia"));
+                entityAnonima.addPart("idmotivo", new StringBody(submotivoSend));
 
                 totalSize = entityAnonima.getContentLength();
                 httppostAnonima.setEntity(entityAnonima);
@@ -779,11 +785,11 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
 
             Log.i(TAG, "prepara arch: idusr: " + idusrSend +", descrpLugar: " + descrpLugSend);
 
-            HttpClient httpclient911Arch = new DefaultHttpClient();
-            HttpPost httpPost911Arch = new HttpPost(Config.NUEVEONCEARCHIVOS_URL);
+            HttpClient httpclient089Arch = new DefaultHttpClient();
+            HttpPost httpPost089Arch = new HttpPost(Config.CERO89_ARCHIVOS_URL);
 
             try {
-                AndroidMultiPartEntity entity911Arch = new AndroidMultiPartEntity(
+                AndroidMultiPartEntity entity089Arch = new AndroidMultiPartEntity(
                         new AndroidMultiPartEntity.ProgressListener() {
                             @Override
                             public void transferred(long num) {
@@ -823,7 +829,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
                                 fileOutputStream.close();
                                 Log.i(TAG, "Send file: " + fileGal);
 
-                                entity911Arch.addPart("file", new FileBody(fileGal));
+                                entity089Arch.addPart("file", new FileBody(fileGal));
 
                             }catch (FileNotFoundException e) {
                                 Log.e(TAG, e.getMessage(), e);
@@ -841,7 +847,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
                             //fileVideoCompressedPath
 
                             File sourceVideo = new File(fileVideoCompressedPath);
-                            entity911Arch.addPart("file", new FileBody(sourceVideo));
+                            entity089Arch.addPart("file", new FileBody(sourceVideo));
                         }
                         c.moveToNext();
                     }
@@ -851,18 +857,20 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
                     Log.d(TAG, "No hay fotos!");
                 }
 
-                entity911Arch.addPart("idusr", new StringBody(idusrSend));
-                entity911Arch.addPart("descripcion", new StringBody(descrpLugSend, Charset.forName("UTF-8")));
-                entity911Arch.addPart("lat", new StringBody(latitudSend));
-                entity911Arch.addPart("long", new StringBody(longitudSend));
-                entity911Arch.addPart("idsubmotivo", new StringBody(motivoSend));
+                entity089Arch.addPart("idusr", new StringBody(idusrSend));
+                entity089Arch.addPart("descripcion", new StringBody(descrpLugSend, Charset.forName("UTF-8")));
+                entity089Arch.addPart("lat", new StringBody(latitudSend));
+                entity089Arch.addPart("long", new StringBody(longitudSend));
+                entity089Arch.addPart("denuncia", new StringBody("denuncia"));
+                entity089Arch.addPart("idmotivo", new StringBody(motivoSend));
 
-                totalSize = entity911Arch.getContentLength();
-                httpPost911Arch.setEntity(entity911Arch);
+
+                totalSize = entity089Arch.getContentLength();
+                httpPost089Arch.setEntity(entity089Arch);
 
                 Log.i(TAG, "Total size: " + totalSize/1048576 + " MB");
 
-                HttpResponse response = httpclient911Arch.execute(httpPost911Arch);
+                HttpResponse response = httpclient089Arch.execute(httpPost089Arch);
                 HttpEntity r_entity = response.getEntity();
 
                 int statusCode = response.getStatusLine().getStatusCode();
