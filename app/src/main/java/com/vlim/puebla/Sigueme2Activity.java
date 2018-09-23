@@ -19,6 +19,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -78,6 +80,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCallback, LocationListener, AdapterView.OnItemClickListener,
         GoogleApiClient.ConnectionCallbacks{
@@ -118,6 +122,16 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     String idviaje = "0", nombreUsr;
     String lastLatitude, lastLongitude;
 
+    private Handler mHandler;
+    private Runnable mRunnable;
+
+    Timer timerAsync;
+    TimerTask timerTaskAsync;
+    int times = 0;
+    String lat1B, lat2B, lng1B, lng2B, idviajeB;
+    int abduccion = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,6 +163,11 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         tv_encarro.setTypeface(tf);
 
         muestraMensaje();
+        ////enviaSMSContactos();
+        //repiteEnvioUbicacion();
+
+        // Initialize a new instance of Handler
+        mHandler = new Handler();
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
@@ -275,6 +294,14 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             }
         });
 
+        tv_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                borraRuta();
+                finish();
+            }
+        });
+
         tv_comenzar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -348,6 +375,37 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 // ----------------------------------------------------------------------------------------
             }
         });
+
+    }
+
+    private void enviaMensajeSMStest(String celular, String mensaje) {
+        Log.d(TAG, "SMS TEST!");
+
+        PackageManager pm = this.getPackageManager();
+
+        if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY) &&
+                !pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY_CDMA)) {
+            Toast.makeText(this, "Lo sentimos, tu dispositivo probablemente no pueda enviar SMS...", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            try{
+                SmsManager sms = SmsManager.getDefault();
+                //sms.sendTextMessage("+525555056736", null, "Hola!, mensaje test nalgas", null, null);
+                sms.sendTextMessage(celular, null, mensaje, null, null);
+                Log.d(TAG, "Enviando sms");
+            }
+            catch (Exception e) {
+                Log.e(TAG, "SMS faild, please try again. " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        /*try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
 
     }
 
@@ -437,7 +495,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     }
 
     private void buscaRutaActual() {
-        String lat1B, lat2B, lng1B, lng2B, idviajeB;
+
         // busca ruta en proceso
         userSQLiteHelper usdbh =
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
@@ -453,9 +511,10 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 lng2B = c.getString(4);
                 idviaje = c.getString(5);
 
-                Log.d(TAG, "idViaje en progreso: " + idviaje);
+                Log.d(TAG, "idViaje en progreso: " + idviaje + ", lat1B: " + lat1B + ", lngB: " + lng1B);
 
             } while(c.moveToNext());
+            //Log.d(TAG, "idViaje en progreso: " + idviaje + ", lat1B: " + lat1B + ", lngB: " + lng1B);
             c.close();
 
             // Pintar ruta
@@ -565,8 +624,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                             Log.d(TAG, "start service");
                             startService(new Intent(getApplicationContext(), TrackingService.class));
                         }*/
-
-
+                        
                         ////startService(new Intent(getApplicationContext(), TrackingService.class));
                         // actualiza numero de ruta en tabla sigueme
 
@@ -682,8 +740,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         dataTransfer[0] = mMap;
         dataTransfer[1] = url;
         dataTransfer[2] = new LatLng(end_latitude, end_longitude);
-        dataTransfer[3] = lastLatitude;
-        dataTransfer[4] = lastLongitude;
+        dataTransfer[3] = Double.valueOf(lastLatitude);
+        dataTransfer[4] = Double.valueOf(lastLongitude);
         dataTransfer[5] = end_latitude;
         dataTransfer[6] = end_longitude;
         dataTransfer[7] = getApplicationContext();
@@ -828,6 +886,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
 
         // preguntar si está dentro del buffer
         bufferRuta();
+        yaLlego();
     }
 
     @Override
@@ -857,6 +916,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         mMap.addMarker(marker);
 
         bufferRuta();
+        yaLlego();
     }
 
     private void showGPSDisabledAlertToUser(){
@@ -934,14 +994,12 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     }
 
 
-
-
     ////////////////////////
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);     //10 segs
-        mLocationRequest.setFastestInterval(30000);
-        mLocationRequest.setSmallestDisplacement(50);
+        mLocationRequest.setInterval(Config.INTERVALO_ACTUALIZACION_BUFFER);     //1 min
+        mLocationRequest.setFastestInterval(Config.INTERVALO_MIN_ACTUALIZACION_BUFFER);
+        mLocationRequest.setSmallestDisplacement(5);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
@@ -997,6 +1055,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                     lastLongitude = String.valueOf(location.getLongitude());
                     Log.d(TAG, "lat: " + lastLatitude + ", lng: " + lastLongitude);
                     bufferRuta();
+                    yaLlego();
                 }
             }
 
@@ -1022,6 +1081,240 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     }
 
     private void bufferRuta() {
+
+        if(abduccion == 1){
+            Log.d(TAG, "Abducido, no revisa buffer");
+
+        }
+        else{
+            Log.d(TAG, "Revisa ruta");
+            // lee idviaje
+            Log.d(TAG, "Buffer Ruta");
+            userSQLiteHelper usdbh =
+                    new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
+            SQLiteDatabase db = usdbh.getReadableDatabase();
+            //Cursor c = db.query("Usuarios", campos, "idusuario=?", args, null, null, null);
+            Cursor c = db.rawQuery("SELECT idviaje FROM RutaSigueme", null);
+
+            if (c.moveToFirst()) {
+                Log.v(TAG, "hay cosas buffer");
+                //do {
+                idviaje = c.getString(0);
+                //} while(c.moveToNext());
+            }
+            else{
+                Log.v(TAG, "NO hay cosas buffer");
+            }
+            db.close();
+            //////
+
+            try {
+                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                final JSONObject jsonBody = new JSONObject();
+
+                jsonBody.put("idviaje", idviaje);
+                jsonBody.put("lat", lastLatitude);
+                jsonBody.put("lng", lastLongitude);
+                Log.d(TAG, "params buffer: idviaje: " + idviaje + ", lat: " + lastLatitude + ", lng: " + lastLongitude);
+
+                final String requestBody = jsonBody.toString();
+
+                Log.d(TAG, "params buffer: " + requestBody);
+
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BUFFER_RUTA_URL, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            jsonArr = new JSONArray(response);
+                            JsonResponse = response;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.i(TAG, "VOLLEY response buffer: " + response);
+                        //Toast.makeText(getApplicationContext(), "Buffer: " + response, Toast.LENGTH_LONG).show();
+                        JSONObject jsonObj = null;
+                        try {
+                            jsonObj = jsonArr.getJSONObject(0);
+                            if(jsonObj.getString("respuesta").equals("Error")){
+                                Toast.makeText(getApplicationContext(), "Ha salido de la ruta, enviando mensaje a contactos de emergencia", Toast.LENGTH_LONG).show();
+                                muestraNotificacion();
+                                enviaSMSContactos();
+                                borraRuta();
+                                stopService(new Intent(getApplicationContext(), TrackingService.class));
+                                abduccion = 1;
+                                repiteEnvioUbicacion();
+                            }
+                            else{
+                                Log.d(TAG, "Sigue en ruta");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "VOLLEY: " + error.toString());
+                        Toast.makeText(getApplicationContext(), "Error en la conexión.", Toast.LENGTH_LONG).show();
+                    }
+                }) {
+                    @Override
+                    public String getBodyContentType() {
+                        return "application/json; charset=utf-8";
+                    }
+
+                    @Override
+                    public byte[] getBody() throws AuthFailureError {
+                        try {
+                            return requestBody == null ? null : requestBody.getBytes("utf-8");
+                        } catch (UnsupportedEncodingException uee) {
+                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                            return null;
+                        }
+                    }
+                };
+
+                requestQueue.add(stringRequest);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void yaLlego() {
+        // ya llego al destino?
+        //xx.123456    diferencia a partir del cuarto decimal
+        Log.d(TAG, "Checando si ya llegó al destino");
+        buscaRutaActual();
+        Log.d(TAG, "latF: " + lat2B + ", lngF: " + lng2B);
+
+        Log.d(TAG, "Ya llegó?, actual: " + lastLatitude + ", " + lastLongitude);
+        Double diff = Math.abs(Double.valueOf(lat2B)-Double.valueOf(lastLatitude));
+        Log.d(TAG, "Diff: " + diff);
+        if(diff > 0.00002){
+            Log.d(TAG, "No ha llegado");
+        }
+        else{
+            Log.d(TAG, "Ya llegó");
+            // Terminar viaje
+            terminaViaje();
+        }
+
+    }
+
+    private void terminaViaje() {
+
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            final JSONObject jsonBody = new JSONObject();
+
+            jsonBody.put("idviaje", idviaje);
+
+            final String requestBody = jsonBody.toString();
+
+            Log.d(TAG, "envio Terminar viaje: " + requestBody);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.FIN_RUTA_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    progressDialog.dismiss();
+                    try {
+                        jsonArr = new JSONArray(response);
+                        JsonResponse = response;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, "VOLLEY response TERMINA VIAJE: " + response);
+
+                    String respuesta = null, mensaje = null;
+                    try {
+                        respuesta = jsonArr.getJSONObject(0).getString("respuesta");
+                        mensaje = jsonArr.getJSONObject(0).getString("mensaje");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.i(TAG, "respuesta: " + respuesta);
+                    if(respuesta.equals("OK")){
+
+                        Log.d(TAG, "TERMINANDO VIAJE");
+                        //showAlertCancelado("Viaje terminado");
+                        Toast.makeText(getApplicationContext(),"Has llegado a tu destino. \nTerminando viaje.", Toast.LENGTH_LONG).show();
+
+                        borraRuta();
+                        stopLocationUpdates();
+                        stopService(new Intent(getApplicationContext(), TrackingService.class));
+                        vibrar();
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "Error! Tu viaje no ha sido terminado, por favor intenta de nuevo.", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "VOLLEY: " + error.toString());
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Error en la conexión.", Toast.LENGTH_LONG).show();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    private void vibrar() {
+        final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        if (vibrator.hasVibrator()) {
+            final long[] pattern = {0, 500, 1000};
+            new Thread() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < 5; i++) { //repeat the pattern 5 times
+                        vibrator.vibrate(pattern, -1);
+                        try {
+                            Thread.sleep(2000); //the time, the complete pattern needs
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }.start();
+        }
+    }
+
+    private void stopLocationUpdates() {
+        Log.d(TAG, "stopLocation Updates");
+        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+    }
+
+    private void abduccionEmergencia() {
         // lee idviaje
         Log.d(TAG, "Buffer Ruta");
         userSQLiteHelper usdbh =
@@ -1031,13 +1324,13 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         Cursor c = db.rawQuery("SELECT idviaje FROM RutaSigueme", null);
 
         if (c.moveToFirst()) {
-            Log.v(TAG, "hay cosas buffer");
+            Log.v(TAG, "hay cosas abduccion");
             //do {
             idviaje = c.getString(0);
             //} while(c.moveToNext());
         }
         else{
-            Log.v(TAG, "NO hay cosas buffer");
+            Log.v(TAG, "NO hay cosas abduccion");
         }
         db.close();
         //////
@@ -1049,13 +1342,13 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             jsonBody.put("idviaje", idviaje);
             jsonBody.put("lat", lastLatitude);
             jsonBody.put("lng", lastLongitude);
-            Log.d(TAG, "params buffer: idviaje: " + idviaje + ", lat: " + lastLatitude + ", lng: " + lastLongitude);
+            Log.d(TAG, "params abduccion: idviaje: " + idviaje + ", lat: " + lastLatitude + ", lng: " + lastLongitude);
 
             final String requestBody = jsonBody.toString();
 
-            Log.d(TAG, "params buffer: " + requestBody);
+            Log.d(TAG, "params abduccion: " + requestBody);
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BUFFER_RUTA_URL, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.ABDUCCION_EMERGENCIA_RUTA_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -1064,22 +1357,26 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Log.i(TAG, "VOLLEY response buffer: " + response);
+                    Log.i(TAG, "VOLLEY response abduccion: " + response);
                     //Toast.makeText(getApplicationContext(), "Buffer: " + response, Toast.LENGTH_LONG).show();
                     JSONObject jsonObj = null;
                     try {
                         jsonObj = jsonArr.getJSONObject(0);
-                        if(jsonObj.getString("respuesta").equals("Error")){
-                            Toast.makeText(getApplicationContext(), "Ha salido de la ruta, enviando mensaje a contactos de emergencia", Toast.LENGTH_LONG).show();
-                            muestraNotificacion();
 
+
+                        /*if(jsonObj.getString("respuesta").equals("Error")){
+                            Toast.makeText(getApplicationContext(), "Ha salido de la ruta, enviando posición.", Toast.LENGTH_LONG).show();
+                            muestraNotificacion();
                             enviaSMSContactos();
                             borraRuta();
+                            stopLocationUpdates();
+
+                            abduccionEmergencia();
                             stopService(new Intent(getApplicationContext(), TrackingService.class));
                         }
                         else{
                             Log.d(TAG, "Sigue en ruta");
-                        }
+                        }*/
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -1115,6 +1412,41 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         }
     }
 
+    private void repiteEnvioUbicacion() {
+        Log.d(TAG, "repite envio ubicación");
+
+        timerAsync = new Timer();
+        timerTaskAsync = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        if(times < 30){
+                            Log.i(TAG,"Enviando posición después de abducción...: " + times);
+                            abduccionEmergencia();
+                            times++;
+                        }
+                        else{
+                            Log.d(TAG, "Termina repetición.");
+                            timerAsync.cancel();
+                            stopLocationUpdates();                        }
+                    }
+                });
+            }
+        };
+        /// delay 1 seg, repite cada 3 segundos
+        timerAsync.schedule(timerTaskAsync, 1000, 60000);
+
+    }
+
+    private void stopRepeatingTask() {
+        mHandler.removeCallbacks(mRunnable);
+    }
+
+    private void startRepeatingTask() {
+        mRunnable.run();
+    }
+
     public void muestraNotificacion() {
 
         Log.d(TAG, "Enviando notificación");
@@ -1124,8 +1456,8 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 new NotificationCompat.Builder(this);
 
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
-        notificationBuilder.setContentTitle("Latest Coupon");
-        notificationBuilder.setContentText("Get Upto 10% Off on Mobiles");
+        notificationBuilder.setContentTitle("Puebla");
+        notificationBuilder.setContentText("Sígueme y Cuídame");
 
         Intent notificationClickIntent = new Intent(this, NotificationActionActivity.class);
         PendingIntent notificationPendingIntent =
@@ -1167,6 +1499,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             db.close();
             //////
 
+
             jsonBody.put("idusr", idusuario);
 
             final String requestBody = jsonBody.toString();
@@ -1184,19 +1517,145 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                     Log.i(TAG, "VOLLEY response contactos: " + response);
 
                     for (int i = 0; i < jsonArr.length(); i++) {
-                        JSONObject jsonObj = null;
-                        try {
-                            jsonObj = jsonArr.getJSONObject(i);
-                            String id_usuario_contacto = jsonObj.getString("id_usuario_contacto");
-                            String nombre_completo = jsonObj.getString("nombre_completo");
-                            Log.i(TAG, id_usuario_contacto + ", " + nombre_completo);
 
-                            obtieneDetalleContacto(id_usuario_contacto);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                                JSONObject jsonObj = null;
+                                try {
+                                    jsonObj = jsonArr.getJSONObject(i);
+                                    String id_usuario_contacto = jsonObj.getString("id_usuario_contacto");
+                                    String nombre_completo = jsonObj.getString("nombre_completo");
+                                    Log.i(TAG, id_usuario_contacto + ", " + nombre_completo);
+
+                                    //Thread.sleep(1000);
+                                    ///obtieneDetalleContacto(id_usuario_contacto);
+                                    //enviaMensajeSMStest("+525555056736", "Hola!");
+
+
+                                    // obtiene detalle contacto
+                                    try {
+                                        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                                        final JSONObject jsonBody = new JSONObject();
+
+                                        jsonBody.put("idusr", id_usuario_contacto);
+                                        final String requestBody = jsonBody.toString();
+
+                                        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.GET_INFO_CONTACTO_URL, new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try {
+                                                    jsonArr = new JSONArray(response);
+                                                    JsonResponse = response;
+                                                    final String[] nombre_completo = new String[1];
+                                                    final String[] celular = new String[1];
+                                                    Log.i(TAG, "response: " + jsonArr);
+
+                                                    for (int i = 0; i < jsonArr.length(); i++) {
+
+
+
+                                                                JSONObject jsonObj = null;
+                                                                try {
+                                                                    jsonObj = jsonArr.getJSONObject(i);
+
+                                                                    nombre_completo[0] = jsonObj.getString("nombre_completo");
+                                                                    //String telefono = jsonObj.getString("telefono");
+                                                                    celular[0] = "+52" + jsonObj.getString("celular");
+                                                                    //String correo_contacto = jsonObj.getString("correo_contacto");
+                                                                } catch (JSONException e) {
+                                                                    e.printStackTrace();
+                                                                }
+
+
+                                                                Log.i(TAG, "info contacto nombre: " + nombre_completo[0] + ", tel: " + celular[0]);
+                                                                buscaRutaActual();
+                                                                String id_ruta = idviaje;
+                                                                Log.d(TAG, "id_ruta: " + idviaje);
+
+                                                                String mensajeSMS = "Alerta: " + nombre_completo[0] + " se ha desviado de su ruta. Comuniquese al 01 800 624 2330 con el ID RUTA: "
+                                                                        + id_ruta +" para mayor informacion";
+
+                                                                Log.d(TAG, "sms: " + mensajeSMS);
+                                                                String celSMS = celular[0];
+                                                                String nombreCom = nombre_completo[0];
+
+                                                                ////enviaMensajeSMStest(celSMS, mensajeSMS.trim());
+
+
+                                                                PackageManager pm = getApplicationContext().getPackageManager();
+
+                                                                if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY) &&
+                                                                        !pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY_CDMA)) {
+                                                                    Toast.makeText(getApplicationContext(), "Lo sentimos, tu dispositivo probablemente no pueda enviar SMS...", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                                else{
+                                                                    try{
+                                                                        SmsManager sms = SmsManager.getDefault();
+                                                                        //sms.sendTextMessage("+525555056736", null, "Hola!, mensaje test nalgas", null, null);
+                                                                        sms.sendTextMessage(celSMS, null, mensajeSMS, null, null);
+                                                                        Log.d(TAG, "Enviando sms");
+                                                                    }
+                                                                    catch (Exception e) {
+                                                                        Log.e(TAG, "SMS faild, please try again. " + e.getMessage());
+                                                                        e.printStackTrace();
+                                                                    }
+                                                                }
+                                                            }
+
+
+
+
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+
+                                        }, new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Log.e(TAG, "VOLLEY: " + error.toString());
+                                                Toast.makeText(getApplicationContext(), "Error en la comunicación.", Toast.LENGTH_LONG).show();
+                                            }
+                                        }) {
+                                            @Override
+                                            public String getBodyContentType() {
+                                                return "application/json; charset=utf-8";
+                                            }
+
+                                            @Override
+                                            public byte[] getBody() throws AuthFailureError {
+                                                try {
+                                                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                                                } catch (UnsupportedEncodingException uee) {
+                                                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                                                    return null;
+                                                }
+                                            }
+                                        };
+
+                                        requestQueue.add(stringRequest);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+
+
+
+                                    ////////////////
+
+
+                                    Log.d(TAG, "Espera...");
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+
+
+
+
+
                 }
 
 
@@ -1229,7 +1688,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         }
     }
 
-    private void obtieneDetalleContacto(String id_contacto) {
+    /*private void obtieneDetalleContacto(String id_contacto) {
 
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -1244,40 +1703,38 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                     try {
                         jsonArr = new JSONArray(response);
                         JsonResponse = response;
+                        final String[] nombre_completo = new String[1];
+                        final String[] celular = new String[1];
                         Log.i(TAG, "response: " + jsonArr);
 
                         for (int i = 0; i < jsonArr.length(); i++) {
-                            JSONObject jsonObj = null;
-                            try {
-                                jsonObj = jsonArr.getJSONObject(i);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            String nombre_completo = jsonObj.getString("nombre_completo");
-                            //String telefono = jsonObj.getString("telefono");
-                            String celular = jsonObj.getString("celular");
-                            //String correo_contacto = jsonObj.getString("correo_contacto");
-
-                            Log.i(TAG, "info contacto nombre: " + nombre_completo + ", tel: " + celular);
-
-                            String mensajeSMS = "Alerta: " + nombreUsr + " ha salido de su ruta. Su última ubicación es: http://maps.google.com/maps?saddr=" + lastLatitude + "," + lastLongitude;
-                            Log.d(TAG, "sms: " + mensajeSMS);
 
 
-                            PendingIntent sentPI = PendingIntent.getBroadcast(getApplicationContext(), 0,
-                                    new Intent("SMS_SENT"), 0);
+                            final int finalI = i;
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    JSONObject jsonObj = null;
+                                    try {
+                                        jsonObj = jsonArr.getJSONObject(finalI);
 
-                            /*PendingIntent piEnvio   = PendingIntent.getBroadcast(this,0,new Intent(SENT_BROADCAST),0);
-                            PendingIntent piEntrega = PendingIntent.getBroadcast(this,0,new Intent(DELIVERED_BROADCAST),0);*/
+                                        nombre_completo[0] = jsonObj.getString("nombre_completo");
+                                        //String telefono = jsonObj.getString("telefono");
+                                        celular[0] = "+52" + jsonObj.getString("celular");
+                                        //String correo_contacto = jsonObj.getString("correo_contacto");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
 
-                            try{
-                                SmsManager sms = SmsManager.getDefault();
-                                sms.sendTextMessage(celular, null, mensajeSMS, null, null);
-                            }
-                            catch (Exception e) {
-                                Log.e(TAG, "SMS faild, please try again. " + e.getMessage());
-                                e.printStackTrace();
-                            }
+
+                                    Log.i(TAG, "info contacto nombre: " + nombre_completo[0] + ", tel: " + celular[0]);
+
+                                    String mensajeSMS = "Alerta: " + nombreUsr + " ha salido de su ruta. Su última ubicación es: https://www.google.com/maps/search/?api=1&query=" + lastLatitude + "," + lastLongitude;
+                                    Log.d(TAG, "sms: " + mensajeSMS);
+
+                                    enviaMensajeSMStest(celular[0], mensajeSMS);
+                                }
+                            }, 2000);
 
                         }
 
@@ -1313,6 +1770,6 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 }

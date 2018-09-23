@@ -175,14 +175,14 @@ public class MainActivity extends AppCompatActivity {
         btn_nueveonce.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*nt_check = new NetworkConnection(getApplicationContext());
+                nt_check = new NetworkConnection(getApplicationContext());
                 if(nt_check.isOnline()){
                     Intent nueveOnceIntent = new Intent(MainActivity.this, Maps911Activity.class);
                     nueveOnceIntent.putExtra("idusuario", idusuario);
                     startActivity(nueveOnceIntent);
                 }else{
                     Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
-                }*/
+                }
 
 
 
