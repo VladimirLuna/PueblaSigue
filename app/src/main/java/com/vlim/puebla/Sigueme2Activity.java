@@ -111,6 +111,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     JSONArray jsonArr;
     String JsonResponse = null;
     String colorRuta = "naranja";
+    String nombreUsuario;
 
     // valida ubicacion en puebla
     EstaEnPuebla estaEnPuebla;
@@ -1421,7 +1422,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
             public void run() {
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
-                        if(times < 30){
+                        if(times < 360){
                             Log.i(TAG,"Enviando posición después de abducción...: " + times);
                             abduccionEmergencia();
                             times++;
@@ -1429,13 +1430,14 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                         else{
                             Log.d(TAG, "Termina repetición.");
                             timerAsync.cancel();
-                            stopLocationUpdates();                        }
+                            stopLocationUpdates();
+                        }
                     }
                 });
             }
         };
         /// delay 1 seg, repite cada 3 segundos
-        timerAsync.schedule(timerTaskAsync, 1000, 60000);
+        timerAsync.schedule(timerTaskAsync, 1000, 5000);
 
     }
 
@@ -1496,6 +1498,26 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                 Log.v(TAG, "NO hay cosas SMS");
             }
             c.close();
+            //////
+
+            // lee datos del usuario
+            String[] campos = new String[] {"idusuario", "nick", "nombre"};
+
+            //Cursor c = db.query("Usuarios", campos, "idusuario=?", args, null, null, null);
+            Cursor c2 = db.rawQuery("SELECT nombre FROM Usuarios", null);
+
+            if (c2.moveToFirst()) {
+                Log.v(TAG, "hay cosas");
+                //Recorremos el cursor hasta que no haya más registros
+                do {
+                    nombreUsuario = c2.getString(0);
+                    //Toast.makeText(getApplicationContext(), idusuario + ", " + nick + ", " + nombre, Toast.LENGTH_LONG).show();
+                } while(c2.moveToNext());
+            }
+            else{
+                Log.v(TAG, "NO hay cosas");
+            }
+            c2.close();
             db.close();
             //////
 
@@ -1566,17 +1588,16 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                                                                 }
 
 
-                                                                Log.i(TAG, "info contacto nombre: " + nombre_completo[0] + ", tel: " + celular[0]);
+                                                                Log.i(TAG, "info contacto nombre: " + nombreUsuario + ", tel: " + celular[0]);
                                                                 buscaRutaActual();
                                                                 String id_ruta = idviaje;
                                                                 Log.d(TAG, "id_ruta: " + idviaje);
 
-                                                                String mensajeSMS = "Alerta: " + nombre_completo[0] + " se ha desviado de su ruta. Comuniquese al 01 800 624 2330 con el ID RUTA: "
+                                                                String mensajeSMS = "Alerta: " + nombreUsuario + " se ha desviado de su ruta. Comuniquese al 911 con el ID RUTA: "
                                                                         + id_ruta +" para mayor informacion";
 
                                                                 Log.d(TAG, "sms: " + mensajeSMS);
                                                                 String celSMS = celular[0];
-                                                                String nombreCom = nombre_completo[0];
 
                                                                 ////enviaMensajeSMStest(celSMS, mensajeSMS.trim());
 
@@ -1595,7 +1616,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                                                                         Log.d(TAG, "Enviando sms");
                                                                     }
                                                                     catch (Exception e) {
-                                                                        Log.e(TAG, "SMS faild, please try again. " + e.getMessage());
+                                                                        Log.e(TAG, "SMS failed, please try again. " + e.getMessage());
                                                                         e.printStackTrace();
                                                                     }
                                                                 }

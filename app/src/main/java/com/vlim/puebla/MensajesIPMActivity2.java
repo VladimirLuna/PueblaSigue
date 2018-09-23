@@ -4,8 +4,10 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -32,6 +34,9 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class MensajesIPMActivity2 extends ListActivity{
 
@@ -192,7 +197,6 @@ public class MensajesIPMActivity2 extends ListActivity{
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        //Log.i("VOLLEYresponse", String.valueOf(jsonArr));
                         Log.i("VOLLEYresponse", response);
 
                         // recarga activity
@@ -300,8 +304,6 @@ public class MensajesIPMActivity2 extends ListActivity{
                 e.printStackTrace();
             }
         }
-
-
     }
 
     private void leeMensajes(String response) {
@@ -312,7 +314,13 @@ public class MensajesIPMActivity2 extends ListActivity{
             JSONArray array = new JSONArray(response);
             JSONObject obj;
 
+
+            List<JSONObject> myJsonArrayAsList = new ArrayList<JSONObject>();
+
             for (int i = 0; i < array.length(); i++) {
+
+                myJsonArrayAsList.add(array.getJSONObject(i));
+
                 obj = array.getJSONObject(i);
                 id_mensaje_conv = obj.getString("id_mensaje_conv");
                 id_conversacion = obj.getString("id_conversacion");
@@ -320,7 +328,8 @@ public class MensajesIPMActivity2 extends ListActivity{
                 autor = obj.getString("autor");
 
                 Log.i("secre", id_mensaje_conv + ", " + conversacion + ", " + id_conversacion + ", " + autor);
-                Log.d(TAG, "lado autor: " + Integer.valueOf(autor));
+
+                //Log.d(TAG, "lado autor: " + Integer.valueOf(autor));
 
                 /*if(autor.equals(autorIPM)){
                     Log.d(TAG, "bubble IPM. left: " + conversacion);
@@ -337,14 +346,56 @@ public class MensajesIPMActivity2 extends ListActivity{
                     msg_type.setText("");
                 }*/
 
-                if(autor.equals(idusuario)){
+                /*if(autor.equals(idusuario)){
+                    Log.d(TAG, "autor usuario");
                    messages.add(new Message(conversacion, true));
                 }
                 else{
+                    Log.d(TAG, "autor IPM");
                     messages.add(new Message(conversacion, false));
-                }
+                }*/
+
+                //messages.add(new Message(conversacion, true));
 
             } // for
+
+
+
+            Collections.sort(myJsonArrayAsList, new Comparator<JSONObject>() {
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                public int compare(JSONObject jsonObjectA, JSONObject jsonObjectB) {
+                    int compare = 0;
+                    try
+                    {
+                        int keyA = Integer.valueOf(jsonObjectA.getString("id_mensaje_conv"));
+                        int keyB = Integer.valueOf(jsonObjectB.getString("id_mensaje_conv"));
+                        compare = Integer.compare(keyA, keyB);
+                        Log.d(TAG, "keyA: " + keyA + ", B: " + keyB + ", compare: " + compare);
+
+
+                    }
+                    catch(JSONException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    return compare;
+                }
+            });
+
+            Log.d(TAG, "list orden: " + myJsonArrayAsList);
+            for (int i = 0; i < myJsonArrayAsList.size(); i++) {
+                Log.d(TAG, String.valueOf(myJsonArrayAsList.get(i)));
+
+                if(idusuario.equals(myJsonArrayAsList.get(i).get("autor"))){
+                    messages.add(new Message(String.valueOf(myJsonArrayAsList.get(i).get("conversacion")), true));
+                }
+                else{
+                    messages.add(new Message(String.valueOf(myJsonArrayAsList.get(i).get("conversacion")), false));
+                }
+
+            }
+
 
             adapter = new AwesomeAdapter(getApplicationContext(), messages);
             setListAdapter(adapter);

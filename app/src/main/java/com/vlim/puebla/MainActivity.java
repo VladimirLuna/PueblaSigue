@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         toolbar.setTitle("");
         toolbar.setSubtitle("");
         setSupportActionBar(toolbar);
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor c = db.rawQuery("SELECT idusuario, nick, nombre FROM Usuarios", null);
 
         if (c.moveToFirst()) {
-            Log.v("SQL23", "hay cosas");
+            Log.v(TAG, "hay cosas");
             //Recorremos el cursor hasta que no haya más registros
             do {
                 idusuario = c.getString(0);
