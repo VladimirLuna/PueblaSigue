@@ -383,6 +383,7 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
                             }
                         }
                         else{
+                            Log.d(TAG, "Debes estar en puebla");
                             borraMedios();
                             showAlert(Config.ESTA_EN_PUEBLA);
                         }
@@ -848,6 +849,15 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
 
                             File sourceVideo = new File(fileVideoCompressedPath);
                             entity089Arch.addPart("file", new FileBody(sourceVideo));
+                        }
+                        else if(tipo.equals("audio")){
+                            Log.i(TAG, "AUDIO path original: " + medioURL);
+                            /*File sourceVideo = new File(videoPathDBSend);
+                            entityAnonimaArch.addPart("file", new FileBody(sourceVideo));*/
+                            //fileVideoCompressedPath
+
+                            File sourceAudio = new File(medioURL);
+                            entity089Arch.addPart("file", new FileBody(sourceAudio));
                         }
                         c.moveToNext();
                     }
