@@ -302,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
                 if(nt_check.isOnline()){
                     Intent secretarioIntent = new Intent(MainActivity.this, MensajesIPMActivity2.class);
                     secretarioIntent.putExtra("idusuario", idusuario);
+                    secretarioIntent.putExtra("bandera", "0");
                     startActivity(secretarioIntent);
                 }else{
                     Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();

@@ -359,11 +359,9 @@ public class DenunciaAnonimaActivity extends AppCompatActivity implements Locati
                             e.printStackTrace();
                         }
 
-
                         db.close();
                         c.close();
                     }
-
                 }
             });
 

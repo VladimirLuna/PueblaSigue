@@ -3,8 +3,6 @@ package com.vlim.puebla;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -43,7 +41,7 @@ public class RecuperaPasswordActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     JSONArray jsonArr;
     String JsonResponse = null;
-    String idusuario = "";
+    String idusuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +76,7 @@ public class RecuperaPasswordActivity extends AppCompatActivity {
         btn_enviar.setTypeface(tf);
 
         // lee datos del usuario
-        String[] campos = new String[] {"idusuario", "nick", "nombre"};
+        /*String[] campos = new String[] {"idusuario", "nick", "nombre"};
 
         userSQLiteHelper usdbh =
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
@@ -91,6 +89,7 @@ public class RecuperaPasswordActivity extends AppCompatActivity {
             //Recorremos el cursor hasta que no haya más registros
             do {
                 idusuario = c.getString(0);
+                Log.d(TAG, "idusr bd: " + idusuario);
             } while(c.moveToNext());
             c.close();
         }
@@ -98,7 +97,7 @@ public class RecuperaPasswordActivity extends AppCompatActivity {
             Log.v(TAG, "NO hay cosas");
         }
         db.close();
-        //////
+        //////*/
 
         btn_enviar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +125,7 @@ public class RecuperaPasswordActivity extends AppCompatActivity {
                 }
 
                 if(username.length() > 1 && cel.length() > 1 && pass1.length() > 1){
-                    preparaEnvio(username, pass1, cel);
+                    preparaEnvio(username, cel, pass1);
                 }
 
             }
@@ -144,7 +143,6 @@ public class RecuperaPasswordActivity extends AppCompatActivity {
         JSONObject post_dict = new JSONObject();
 
         try {
-            //post_dict.put("idusr" , idusuario);
             post_dict.put("username" , username);
             post_dict.put("cel", cel);
             post_dict.put("newpass", newpass);
@@ -178,9 +176,11 @@ public class RecuperaPasswordActivity extends AppCompatActivity {
             jsonBody.put("username", username);
             jsonBody.put("cel", cel);
             jsonBody.put("newpass", newpass);
-            final String requestBody = jsonBody.toString();
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.CAMBIO_PASS_URL, new Response.Listener<String>() {
+            final String requestBody = jsonBody.toString();
+            Log.d(TAG, "params: " + requestBody);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.CAMBIO_PASS_AFUERA_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -254,7 +254,7 @@ public class RecuperaPasswordActivity extends AppCompatActivity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         finish();
-                        startActivity(getIntent());
+                        //startActivity(getIntent());
                     }
                 });
         AlertDialog alert = builder.create();

@@ -34,7 +34,8 @@ public class Config {
     public static final String UPDATE_IMAGEN_URL = HOST + "Escudo_Puebla/servicios/updateImagen"; //file, idusr
     public static final String UPDATE_TOKEN_URL = HOST + "Escudo_Puebla/servicios/updateToken"; //idusr, idusr
     public static final String UPDATE_NICKNAME_URL = HOST + "Escudo_Puebla/servicios/updateNickname";
-    public static final String CAMBIO_PASS_URL = HOST + "/Escudo_Puebla/servicios/cambioPass";     // username, cel, newpass
+
+    //public static final String CAMBIO_PASS_AFUERA_URL = HOST + "/Escudo_Puebla/servicios/cambioPass";     // username, cel, newpass
     public static final String FOLIOS_URL = HOST + "Escudo_Puebla/servicios/getFolios";
     public static final String GET_MENSAJES_SECRETARIO_URL = HOST + "Escudo_Puebla/servicios/getMensajesSecretario";
     public static final String CERO89_ARCHIVOS_URL = HOST + "Escudo_Puebla/servicios/089Archivos";
@@ -53,7 +54,8 @@ public class Config {
     public static final String FIN_RUTA_URL = HOST + "Escudo_Puebla/servicios/finViaje";
 
     // Ajustes cambio de password
-    public static final String AJUSTES_CAMBIO_PASS_URL = HOST + "Escudo_Puebla/servicios/AjustescambioPass";   //{"idusr":"valor","newpass":"valor"} || [{"respuesta":OK, "mensaje":Se cambio el password}] ó [{"respuesta":Error, "mensaje":No se pudo cambiar el password}]
+    public static final String AJUSTES_CAMBIO_PASS_DENTRO_URL = HOST + "Escudo_Puebla/servicios/AjustescambioPass";   //{"idusr":"valor","newpass":"valor"} || [{"respuesta":OK, "mensaje":Se cambio el password}] ó [{"respuesta":Error, "mensaje":No se pudo cambiar el password}]
+    public static final String CAMBIO_PASS_AFUERA_URL = HOST + "Escudo_Puebla/servicios/cambioPass";     // username, cel, newpass
     // Contactos de emergencia
     public static final String GET_CONTACTOS_URL = HOST + "Escudo_Puebla/servicios/getContactos";   //{"idusr":"valor"} || [{"id_usuario_contacto":valor, "nombre_completo":"valor"}]
     public static final String GET_INFO_CONTACTO_URL = HOST + "Escudo_Puebla/servicios/getInfoContacto";   //{"idusr":"valor"} || [{"nombre_completo":valor, "telefono":"valor", "celular":"valor", "correo_contacto":"valor"}]

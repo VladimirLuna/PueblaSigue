@@ -188,7 +188,7 @@ public class AjustesInfoActivity extends AppCompatActivity {
             jsonBody.put("newpass", newpass);
             final String requestBody = jsonBody.toString();
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.AJUSTES_CAMBIO_PASS_URL, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.AJUSTES_CAMBIO_PASS_DENTRO_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {

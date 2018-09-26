@@ -2,6 +2,7 @@ package com.vlim.puebla;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,7 +42,6 @@ import java.util.List;
 
 public class MensajesIPMActivity2 extends ListActivity{
 
-    ////private ListView listView;
     boolean myMessage = false;
     String idusuario = "";
     JSONArray jsonArr;
@@ -59,6 +60,7 @@ public class MensajesIPMActivity2 extends ListActivity{
 
     ArrayList<Message> messages;
     AwesomeAdapter adapter;
+    String bandera = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,9 @@ public class MensajesIPMActivity2 extends ListActivity{
 
         Intent i= getIntent();
         idusuario = i.getStringExtra("idusuario");
+        bandera = i.getStringExtra("bandera");
+
+        Log.d(TAG, "bandera ini: " + bandera);
 
         ///listView = findViewById(R.id.list_msg);
         tv_titulo_toolbar = findViewById(R.id.tv_titulo_toolbar);
@@ -93,6 +98,10 @@ public class MensajesIPMActivity2 extends ListActivity{
             Toast.makeText(getApplicationContext(), "Se requiere conexión a Internet.", Toast.LENGTH_LONG).show();
         }
 
+        if(bandera.equals("0")){
+            muestraMensaje();
+        }
+
         obtieneComentarios();
 
         btn_chat_send.setOnClickListener(new View.OnClickListener() {
@@ -100,24 +109,19 @@ public class MensajesIPMActivity2 extends ListActivity{
             public void onClick(View v) {
                 if (msg_type.getText().toString().trim().equals("")) {
                     //Toast.makeText(MensajesSecretarioActivity.this, "Por favor escribe tu mensaje...", Toast.LENGTH_SHORT).show();
-                    msg_type.setError("Error. Escribe tu mensaje por favor.");
+                    msg_type.setError("Escribe tu mensaje por favor.");
                 } else {
                     //add message to list
-                    Log.i("bandera", "true");
-                    //chatSecretario(editText.getText().toString(), myMessage);
-                    /*editText.setFocusable(false);
-                    editText.setText("");*/
+                    Log.i(TAG, "bandera envio mensaje: " + bandera);
 
-                    /*ChatBubble ChatBubble = new ChatBubble(editText.getText().toString(), true);
-                    ChatBubbles.add(ChatBubble);
-                    adapter.notifyDataSetChanged();
-                    editText.setText("");*/
-                    /*if (myMessage) {
-                        myMessage = false;
-                    } else {
-                        myMessage = true;
-                    }*/
-                    nuevoMensajeSecretario(id_conversacion, msg_type.getText().toString(), idusuario);
+                    if(!id_conversacion.equals("")){
+                        nuevoMensajeSecretario(id_conversacion, msg_type.getText().toString(), idusuario);
+                    }
+                    else{
+                        Log.d(TAG, "no hay id conversacion");
+                        msg_type.getText().toString();
+                    }
+
                 }
             }
         });
@@ -144,6 +148,7 @@ public class MensajesIPMActivity2 extends ListActivity{
                 finish();
                 Intent secretarioIntent = new Intent(MensajesIPMActivity2.this, MensajesIPMActivity2.class);
                 secretarioIntent.putExtra("idusuario", idusuario);
+                secretarioIntent.putExtra("bandera", "1");
                 startActivity(secretarioIntent);
             }
         });
@@ -156,6 +161,17 @@ public class MensajesIPMActivity2 extends ListActivity{
             }
         });
 
+    }
+
+    public void muestraMensaje() {
+        new AlertDialog.Builder(MensajesIPMActivity2.this)
+                .setTitle("Mensajes IPM")
+                .setMessage("Por cuestiones de seguridad sus mensajes serán borrados al minuto de conversación. Y la dependencia guardará la conversación por 30 días.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                }).show();
     }
 
     private void nuevoMensajeSecretario(String id_conversacion, String conversacion, String autor) {
@@ -200,8 +216,14 @@ public class MensajesIPMActivity2 extends ListActivity{
                         Log.i("VOLLEYresponse", response);
 
                         // recarga activity
+                        //startActivity(getIntent());
                         finish();
-                        startActivity(getIntent());
+
+                        Intent secretarioIntent = new Intent(MensajesIPMActivity2.this, MensajesIPMActivity2.class);
+                        secretarioIntent.putExtra("idusuario", idusuario);
+                        secretarioIntent.putExtra("bandera", "1");
+                        startActivity(secretarioIntent);
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -258,7 +280,9 @@ public class MensajesIPMActivity2 extends ListActivity{
                 JSONObject jsonObject = new JSONObject(String.valueOf(post_dict));
                 String idusr = jsonObject.getString("idusr");
                 jsonBody.put("idusr", idusr);
+                jsonBody.put("bandera", bandera);
                 final String requestBody = jsonBody.toString();
+                Log.d(TAG, "mensajes: " + requestBody);
 
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.GET_MENSAJES_SECRETARIO_URL, new Response.Listener<String>() {
                     @Override
@@ -314,7 +338,6 @@ public class MensajesIPMActivity2 extends ListActivity{
             JSONArray array = new JSONArray(response);
             JSONObject obj;
 
-
             List<JSONObject> myJsonArrayAsList = new ArrayList<JSONObject>();
 
             for (int i = 0; i < array.length(); i++) {
@@ -359,8 +382,6 @@ public class MensajesIPMActivity2 extends ListActivity{
 
             } // for
 
-
-
             Collections.sort(myJsonArrayAsList, new Comparator<JSONObject>() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
@@ -372,7 +393,6 @@ public class MensajesIPMActivity2 extends ListActivity{
                         int keyB = Integer.valueOf(jsonObjectB.getString("id_mensaje_conv"));
                         compare = Integer.compare(keyA, keyB);
                         Log.d(TAG, "keyA: " + keyA + ", B: " + keyB + ", compare: " + compare);
-
 
                     }
                     catch(JSONException e)
@@ -396,7 +416,6 @@ public class MensajesIPMActivity2 extends ListActivity{
 
             }
 
-
             adapter = new AwesomeAdapter(getApplicationContext(), messages);
             setListAdapter(adapter);
 
@@ -406,7 +425,6 @@ public class MensajesIPMActivity2 extends ListActivity{
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void onBackPressed() { }
@@ -425,13 +443,14 @@ public class MensajesIPMActivity2 extends ListActivity{
             //startActivity(getIntent());
             Intent secretarioIntent = new Intent(MensajesIPMActivity2.this, MensajesIPMActivity2.class);
             secretarioIntent.putExtra("idusuario", idusuario);
+            secretarioIntent.putExtra("bandera", "1");
             startActivity(secretarioIntent);
 
         }
 
         @Override
         public void onTick(long millisUntilFinished) {
-            //Log.d(TAG, "Contando " + (millisUntilFinished/1000));
+            Log.d(TAG, "Contando " + (millisUntilFinished/1000));
         }
 
     }
