@@ -141,7 +141,7 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
                 if(tagValido == 1){
                     // Envia parámetros
                     Log.d(TAG, "envia parametros");
-                    preparaContacto(idusuario, nombre, telefono, celular, correo);
+                    registraContacto(idusuario, nombre, telefono, celular, correo);
                 }
             }
         });
@@ -154,7 +154,7 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
         });
     }
 
-    private void preparaContacto(String idusr, String nombre, String tel, String cel, String correo) {
+    /*private void registraContacto(String idusr, String nombre, String tel, String cel, String correo) {
         JSONObject post_dict = new JSONObject();
 
         try {
@@ -170,27 +170,28 @@ public class AgregaContactoEmergenciaActivity extends AppCompatActivity {
         if (post_dict.length() > 0) {
             Log.v(TAG, "postdic len: " + String.valueOf(post_dict));
 
+            registraContacto(String.valueOf(post_dict));
+        }
+    }*/
+
+    private void registraContacto(String idusr, String nombre, String tel, String cel, String correo) {
+        try {
             progressDialog = new ProgressDialog(AgregaContactoEmergenciaActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setMessage("Registrando contacto...");
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setProgress(0);
             progressDialog.show();
-            registraContacto(String.valueOf(post_dict));
-        }
-    }
 
-    private void registraContacto(String params) {
-        try {
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             final JSONObject jsonBody = new JSONObject();
 
-            JSONObject jsonObject = new JSONObject(params);
+            /*JSONObject jsonObject = new JSONObject(params);
             String idusr = jsonObject.getString("idusr");
             String nombre = jsonObject.getString("nombre");
             String tel = jsonObject.getString("tel");
             String cel = jsonObject.getString("cel");
-            String correo = jsonObject.getString("correo");
+            String correo = jsonObject.getString("correo");*/
 
             jsonBody.put("idusr", idusr);
             jsonBody.put("nombre", nombre);

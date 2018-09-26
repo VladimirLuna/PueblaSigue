@@ -1195,7 +1195,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
         Log.d(TAG, "Ya llegó?, actual: " + lastLatitude + ", " + lastLongitude);
         Double diff = Math.abs(Double.valueOf(lat2B)-Double.valueOf(lastLatitude));
         Log.d(TAG, "Diff: " + diff);
-        if(diff > 0.00002){
+        if(diff > 0.001){   // 200m del destino
             Log.d(TAG, "No ha llegado");
         }
         else{
