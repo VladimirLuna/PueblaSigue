@@ -1,16 +1,12 @@
 package com.vlim.puebla;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,14 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Medios_2 extends Fragment {
     String TAG = "PUEBLA";
-    private List<FotosBDModel> fotosList = new ArrayList<>();
-    private RecyclerView fotosRecyclerView;
-    private RecyclerViewHorizontalListAdapter fotosAdapter;
+    /*private List<FotosBDModel> videosList = new ArrayList<>();
+    private RecyclerView videosRecyclerView;
+    private RecyclerViewHorizontalListAdapter videosAdapter;*/
     String medioURL = "";
     //Constructor default
     public Medios_2(){};
@@ -67,12 +60,15 @@ public class Medios_2 extends Fragment {
             Log.d(TAG, "No hay videos! Medios2");
         }
 
-        vid_preview.setOnClickListener(new View.OnClickListener() {
+        tv_video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "abrir rollo de fotos.");
+                Log.d(TAG, "abrir rollo de videos.");
 
-                AlertDialog.Builder alertPass = new AlertDialog.Builder(getContext());
+                Intent videos = new Intent(getContext(), GaleriaVideosReporte911Activity.class);
+                startActivityForResult(videos, Config.OPEN_GAL);
+
+                /*AlertDialog.Builder alertPass = new AlertDialog.Builder(getContext());
                 alertPass.setTitle("Videos");
                 LayoutInflater inflater = getLayoutInflater();
                 final View dialogView = inflater.inflate(R.layout.custom_dialog_videos, null);
@@ -99,7 +95,7 @@ public class Medios_2 extends Fragment {
                             //Put actions for CANCEL button here, or leave in blank
                         }
                     });*/
-                alertPass.show();
+                /*alertPass.show();*/
 
                 /*}
                 else{

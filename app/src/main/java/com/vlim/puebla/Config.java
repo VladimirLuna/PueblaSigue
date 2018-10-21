@@ -6,6 +6,7 @@ public class Config {
     static int VERSION_DB = 6;
     static int INTERVALO_ACTUALIZACION_BUFFER = 3000;   // 1 seg
     static int INTERVALO_MIN_ACTUALIZACION_BUFFER = 2000;
+    static int OPEN_GAL = 222;
 
     private static final String HOST = "http://201.139.97.155:8080/";   /* Puebla */
     //public static final String HOST54 = "http://54.183.159.116:8182/";   /* VLIM */

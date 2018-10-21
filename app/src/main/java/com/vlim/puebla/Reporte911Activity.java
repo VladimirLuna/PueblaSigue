@@ -559,7 +559,14 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                 new userSQLiteHelper(this, "DBUsuarios", null, Config.VERSION_DB);
         SQLiteDatabase db = usdbh.getWritableDatabase();
 
-        if(requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE_OLDIE){
+        Log.d(TAG, "request code: " + requestCode);
+
+        if( requestCode == Config.OPEN_GAL ) {
+            Log.d(TAG, "back from borrar foto o no...");
+
+        }
+
+        else if(requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE_OLDIE){
 
             if (resultCode == RESULT_OK) {
                 Log.i(TAG, "Imagen capturada oldie");
@@ -736,8 +743,13 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
                         .show();
             }
         }
+
         else{
             Log.e(TAG, "error en camara!");
+            // reload activity
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
         db.close();
     }
@@ -1662,7 +1674,7 @@ public class Reporte911Activity extends AppCompatActivity implements LocationLis
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy");
-        borraMedios();
+        //borraMedios();
         super.onDestroy();
     }
 

@@ -140,7 +140,8 @@
 
         <activity android:name=".EditarContactoActivity" />
         <activity android:name=".RegistroUsuarioActivity3" />
-        <activity android:name=".GaleriaFotosReporte911Activity"></activity>
+        <activity android:name=".GaleriaFotosReporte911Activity" />
+        <activity android:name=".GaleriaVideosReporte911Activity"></activity>
     </application>
 
 </manifest>

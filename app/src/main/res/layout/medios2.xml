@@ -24,8 +24,8 @@
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
-        android:text="Video capturado"
-        android:textSize="19sp"
+        android:text="Ver videos"
+        android:textSize="17sp"
         android:visibility="invisible" />
 
 

@@ -1,14 +1,11 @@
 package com.vlim.puebla;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,11 +71,11 @@ public class Medios_1 extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "abrir rollo de fotos.");
 
-                /*Intent galeria = new Intent(getContext(), GaleriaFotosReporte911Activity.class);
-                startActivity(galeria);*/
+                Intent galeria = new Intent(getContext(), GaleriaFotosReporte911Activity.class);
+                startActivityForResult(galeria, Config.OPEN_GAL);
 
 
-                AlertDialog.Builder alertPass = new AlertDialog.Builder(getContext());
+                /*AlertDialog.Builder alertPass = new AlertDialog.Builder(getContext());
                 alertPass.setTitle("Fotos");
                 LayoutInflater inflater = getLayoutInflater();
                 final View dialogView = inflater.inflate(R.layout.custom_dialog_fotos, null);
@@ -101,7 +98,7 @@ public class Medios_1 extends Fragment {
                         //Put actions for OK button here
                     }
                 });
-                alertPass.show();
+                alertPass.show();*/
 
             }
         });
@@ -205,4 +202,5 @@ public class Medios_1 extends Fragment {
         fotosList.add(cauliflower);*/
         fotosAdapter.notifyDataSetChanged();
     }
+
 }
