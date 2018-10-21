@@ -554,6 +554,7 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
     }
 
     private void nuevaRuta(JSONObject cosasObject, JSONObject rutaObject) {
+
         progressDialog = new ProgressDialog(Sigueme2Activity.this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Generando nueva ruta...");
@@ -640,8 +641,20 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
                         } else {
                             Log.v(TAG, "No Hay base");
                         }
-                        showAlertOK("Se ha comenzado la ruta.");   // mensaje es el numero de ruta
+
+
+                        //showAlertOK("Se ha comenzado la ruta.");   // mensaje es el numero de ruta
                         //finish();
+
+
+                        // verifica si el destino está en Puebla
+                        if(estaEnPuebla.estaEnPuebla(Double.valueOf(end_latitude), Double.valueOf(end_longitude))){
+                            Log.d(TAG, "Está en Puebla");
+                            showAlertOK("Se ha comenzado la ruta.");
+                        }
+                        else{
+                            showAlertOK("Se ha comenzado la ruta.\n" + Config.RUTA_DESTINO_FUERA_PUEBLA);
+                        }
                     }
                     else{
                         Toast.makeText(getApplicationContext(), "Error! Tu ruta no ha sido generada correctamente, por favor intenta de nuevo.", Toast.LENGTH_LONG).show();
@@ -887,7 +900,21 @@ public class Sigueme2Activity extends FragmentActivity implements OnMapReadyCall
 
         // preguntar si está dentro del buffer
         bufferRuta();
+        // sigue en Puebla?
+        sigueEnPuebla();
         yaLlego();
+    }
+
+    private void sigueEnPuebla() {
+        if(estaEnPuebla.estaEnPuebla(Double.valueOf(end_latitude), Double.valueOf(end_longitude))){
+            Log.d(TAG, "Sigue ruta dentro de Puebla");
+            //showAlertOK("Se ha comenzado la ruta.");
+        }
+        else{
+            Log.d(TAG, "ya se salió de Puebla!");
+            //showAlertOK("Se ha comenzado la ruta.\n" + Config.RUTA_DESTINO_FUERA_PUEBLA);
+            Toast.makeText(getApplicationContext(), "Has salido de Puebla", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

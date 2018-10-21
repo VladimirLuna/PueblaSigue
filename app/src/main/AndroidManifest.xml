@@ -20,9 +20,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-feature android:name="android.hardware.telephony" android:required="true" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="true" />
+
     <uses-permission
         android:name="android.permission.MEDIA_CONTENT_CONTROL"
         tools:ignore="ProtectedPermissions" />
@@ -45,7 +49,10 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/PueblaTheme">
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
         <activity
             android:name=".SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -127,12 +134,13 @@
         <activity android:name=".RegistroUsuarioActivity2" />
         <activity android:name=".AgregaContactoEmergenciaActivity" />
 
-        <service android:name=".TrackingService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
-
+        <service
+            android:name=".TrackingService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity android:name=".EditarContactoActivity" />
-        <activity android:name=".RegistroUsuarioActivity3"></activity>
+        <activity android:name=".RegistroUsuarioActivity3" />
+        <activity android:name=".GaleriaFotosReporte911Activity"></activity>
     </application>
 
 </manifest>

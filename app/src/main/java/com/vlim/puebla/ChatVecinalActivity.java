@@ -248,6 +248,7 @@ public class ChatVecinalActivity extends AppCompatActivity implements SwipeRefre
                                 modelPublicaciones.setVideoMensaje(battleObj.optString("video"));
                             }
                             //modelWarDetails.setUsuario(battleObj.optString("id_usuario"));
+                            Log.d(TAG, "img retrieved: " + battleObj.optString("imgPerfil"));
                             modelPublicaciones.setImagenUsuario(battleObj.optString("imgPerfil"));
                             listPublicaciones.add(modelPublicaciones);
 

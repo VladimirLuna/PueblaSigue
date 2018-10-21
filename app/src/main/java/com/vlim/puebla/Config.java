@@ -67,4 +67,5 @@ public class Config {
     public static final String UPDATE_INFO_USUARIO = HOST + "Escudo_Puebla/servicios/updateInfoUsuario  ";   //{"idusr":"valor"} || [{"id_cat089":valor, "nombre":"valor"}]
 
     public static final String ESTA_EN_PUEBLA = "No se pueden realizar registros fuera del estado de Puebla.";
+    public static final String RUTA_DESTINO_FUERA_PUEBLA = "El destino de tu viaje está fuera de Puebla.";
 }

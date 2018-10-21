@@ -57,6 +57,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
         //setting data on each row of list according to position.
 
+        Log.d(TAG, "titulo: " + listWarDetails.get(position).getTitulo());
+
         holder.txtTitulo.setText(listWarDetails.get(position).getTitulo());
         holder.txtTitulo.setTypeface(tf);
         //holder.txtUsuario.setText("Usuario: " + listWarDetails.get(position).getUsuario());

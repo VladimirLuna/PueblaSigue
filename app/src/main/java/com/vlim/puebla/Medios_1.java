@@ -74,6 +74,10 @@ public class Medios_1 extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "abrir rollo de fotos.");
 
+                /*Intent galeria = new Intent(getContext(), GaleriaFotosReporte911Activity.class);
+                startActivity(galeria);*/
+
+
                 AlertDialog.Builder alertPass = new AlertDialog.Builder(getContext());
                 alertPass.setTitle("Fotos");
                 LayoutInflater inflater = getLayoutInflater();
@@ -83,6 +87,7 @@ public class Medios_1 extends Fragment {
                 fotosRecyclerView = dialogView.findViewById(R.id.idRecyclerViewHorizontalList);
                 // add a divider after each item for more clarity
                 fotosRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.HORIZONTAL));
+
                 fotosAdapter = new RecyclerViewHorizontalListAdapter(fotosList, getContext());
 
                 populateFotosList();
@@ -96,17 +101,8 @@ public class Medios_1 extends Fragment {
                         //Put actions for OK button here
                     }
                 });
-                    /*alertPass.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            //Put actions for CANCEL button here, or leave in blank
-                        }
-                    });*/
                 alertPass.show();
 
-                /*}
-                else{
-                    Log.v(TAG, "NO hay MEDIOS");
-                }*/
             }
         });
 
